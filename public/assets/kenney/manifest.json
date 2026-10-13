@@ -304,5 +304,41 @@
     "textures": [
       "assets/kenney/modular-buildings/Textures/colormap.png"
     ]
+  },
+  {
+    "id": "train-kit/train-locomotive-a",
+    "file": "assets/kenney/train-kit/train-locomotive-a.glb",
+    "source": "3D assets/Train Kit/Models/GLB format/train-locomotive-a.glb",
+    "pack": "Train Kit",
+    "license": "CC0-1.0",
+    "bytes": 154620,
+    "sha256": "8dfe9d20667c1534652286149fb0e1639ff48975a4187d3ad2fd956add0bba2a",
+    "textures": [
+      "assets/kenney/train-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "train-kit/train-locomotive-passenger-a",
+    "file": "assets/kenney/train-kit/train-locomotive-passenger-a.glb",
+    "source": "3D assets/Train Kit/Models/GLB format/train-locomotive-passenger-a.glb",
+    "pack": "Train Kit",
+    "license": "CC0-1.0",
+    "bytes": 119852,
+    "sha256": "fc4eddc8056dd838747fa5cc4a2aae7f94379c00d202d2048461573887e371f3",
+    "textures": [
+      "assets/kenney/train-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "train-kit/railroad-straight",
+    "file": "assets/kenney/train-kit/railroad-straight.glb",
+    "source": "3D assets/Train Kit/Models/GLB format/railroad-straight.glb",
+    "pack": "Train Kit",
+    "license": "CC0-1.0",
+    "bytes": 34736,
+    "sha256": "bcbd501f74b754b61f2ddb5cba2d45d5d694bfd25c497fa72af65202a53930d9",
+    "textures": [
+      "assets/kenney/train-kit/Textures/colormap.png"
+    ]
   }
 ]
