@@ -1,3 +1,5 @@
+> Registro histórico: describe decisiones y evolución hasta las cinco salas; para el contrato vigente ver [Arquitectura actual](../ARQUITECTURA.md).
+
 # Arquitectura prevista del MVP
 
 Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md), el [inicio en el museo](Revision_etapa_3.md), una [prueba aislada de la Polaroid](Revision_etapa_4.md), el [circuito original de la etapa 5](Revision_etapa_5.md), ahora reducido a cinco salas visitables y el [ciclo romano](Revision_etapa_6.md). El laboratorio temporal de fotografía ya fue retirado. El catálogo y `areaOrder` alimentan la ubicación física, la señalización y el panfleto. La etapa 7 incorpora Egipto, el guardado local, reinicio y cierre con dos recuerdos. Las ampliaciones medieval, japonesa y lunar completan cinco viajes y cinco recuerdos.
@@ -18,7 +20,7 @@ Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotograf
 
 ## Salas, estados y progresión
 
-Las medidas físicas compartidas viven en [museumLayout.ts](../src/museum/museumLayout.ts). `roomSlots` define dos posiciones de 10,8 × 16 a la izquierda, una galería transversal de 24,9 × 10 al fondo y otras dos de 10,8 × 16 de regreso por la derecha. Roma conserva su tamaño, exhibición y luz cálida. Hall, envolvente, colisiones, ubicación del jugador y mapa utilizan esas referencias.
+Las medidas físicas compartidas viven en [museumLayout.ts](../../src/museum/museumLayout.ts). `roomSlots` define dos posiciones de 10,8 × 16 a la izquierda, una galería transversal de 24,9 × 10 al fondo y otras dos de 10,8 × 16 de regreso por la derecha. Roma conserva su tamaño, exhibición y luz cálida. Hall, envolvente, colisiones, ubicación del jugador y mapa utilizan esas referencias.
 
 - `areaOrder` asigna las épocas a esas posiciones: Egipto → Roma → Medieval → Japón Feudal → Luna. También determina números y letreros.
 - Todas las puertas se abren con E; las luces se encienden con un breve parpadeo. Las épocas pendientes son visitables y no bloquean el acceso a Roma.

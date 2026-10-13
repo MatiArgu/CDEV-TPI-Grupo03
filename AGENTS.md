@@ -1,41 +1,26 @@
 # AGENTS.md
 
-Guía para asistentes de IA que colaboren en **Museo de viajes en el tiempo**.
+Guía para asistentes que colaboren en **Museo de viajes en el tiempo**. Leer primero [CLAUDE.md](CLAUDE.md). [EXAMPLE.md](EXAMPLE.md) contiene ejemplos generales, no la arquitectura del juego.
 
-Antes de trabajar, leer [CLAUDE.md](CLAUDE.md): sus principios de razonamiento, simplicidad, cambios acotados y verificación también se aplican aquí. [EXAMPLE.md](EXAMPLE.md) contiene ejemplos generales de esos principios; no describe la arquitectura de este juego.
+## Fuentes de verdad
 
-## Estado del repositorio y fuentes de verdad
+- El código y [package.json](package.json) describen lo que funciona hoy. [README.md](README.md) explica cómo jugar y ejecutar el proyecto; [docs/README.md](docs/README.md) organiza las guías vigentes.
+- [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md) resume los contratos implementados; [docs/CODEMAP.md](docs/CODEMAP.md) ubica los módulos y [docs/VERIFICACION.md](docs/VERIFICACION.md) indica cómo comprobarlos.
+- [docs/historico/](docs/historico/README.md) conserva planes, especificaciones, inventarios y revisiones anteriores. Sirve para rastrear decisiones; sus estados y metas antiguas no reemplazan al código ni a las guías actuales.
+- Ante una contradicción nueva o un requisito decisivo que falte, explicitarlo antes de implementar. No presentar características planificadas como si ya funcionaran.
 
-- El repositorio contiene documentación y un prototipo Three.js + TypeScript + Vite de las etapas 1 a 7 y las ampliaciones de Medieval, Japón y Luna. Egipto, Roma, Medieval, Japón y Luna integran exhibición, fotografía, mundo histórico, interacción final y regreso. El panfleto y las fotos se guardan localmente por ID; hay reinicio y efecto de disparo con opción de silencio. La [renovación visual con Kenney](docs/Revision_visual_Kenney.md) incorpora modelos locales con licencias; las fábricas de escenas requieren cargar previamente los modelos mediante `loadModels()`. Los comandos disponibles están en [package.json](package.json).
-- [docs/CODEMAP.md](docs/CODEMAP.md) ubica los módulos actuales y sus responsabilidades.
-- [README.md](README.md) resume el proyecto. [docs/Proyecto_general.md](docs/Proyecto_general.md) define la experiencia, la jugabilidad y la dirección artística.
-- [docs/Plan_de_desarrollo.md](docs/Plan_de_desarrollo.md) divide el trabajo en siete entregas originales y ampliaciones de Medieval, Japón y Luna con criterios de aceptación. Sus decisiones aclaradas prevalecen sobre los puntos correspondientes de la especificación maestra. No implementar las siete entregas de una vez ni avanzar a la siguiente sin revisar la anterior.
-- [docs/Arquitectura_prevista.md](docs/Arquitectura_prevista.md) fija decisiones transversales. El catálogo, las cinco salas, los cinco ciclos históricos y la persistencia están implementados.
-- Ante una contradicción nueva o un requisito decisivo que falte, explicitarla antes de implementar. No presentar características planificadas como si ya funcionaran.
+## Alcance actual
 
-## Alcance del MVP
+- Juego 3D de escritorio en navegador, en primera persona, con exploración, Polaroid y viajes a momentos históricos. Museo ficticio inspirado en el Louvre; cinco salas en U: Egipto, Roma, Medieval, Japón y Luna. Las cinco exhibiciones y los cinco viajes son jugables.
+- `areaOrder` en [catalog.ts](src/game/catalog.ts) determina sala, número, señalización, panfleto y progresión. Conservar IDs estables. La disponibilidad de un viaje y su progreso son conceptos distintos; una sala pendiente puede recorrerse si se agrega en el futuro.
+- La foto debe representar el render y solo iniciar el viaje si el artefacto es visible dentro del encuadre, incluso en un borde. La foto inválida también se revela. Se completa un área al cumplir su interacción histórica y regresar; en la Luna se aborda la nave y se despega.
+- El panfleto físico, la Polaroid, la pausa, las transiciones y Pointer Lock comparten estados de control. El guardado local conserva panfleto y fotos por ID y permite reiniciar. Liberar recursos de cada mundo al salir.
+- Mantener la estética low-poly ilustrada, materiales toon, colores pastel y efectos livianos. No sumar combate, tercera persona, supervivencia, inventario complejo, motor distinto o backend sin un pedido concreto.
 
-- Crear un videojuego 3D **jugable en navegador de escritorio**, en primera persona, basado en exploración, fotografía y viajes a momentos históricos congelados. No sustituir la interacción por un video o una maqueta.
-- El museo es ficticio, con exterior inspirado en el Louvre. Tiene cinco salas en U: Egipto y Roma a la izquierda; Medieval en el salón transversal; Japón Feudal y Luna de regreso por la derecha. Todas se pueden recorrer. Egipto, Roma, Medieval, Japón y Luna son jugables, en ese orden.
-- Mantener el orden Egipto → Roma → Medieval → Japón → Luna. Las puertas se abren con E sin exigir completar una época; la disponibilidad WIP impide viajar, pero no caminar por la sala. La foto válida inicia el viaje; el área se completa al interactuar con el artefacto histórico y volver al museo; en la Luna se sube a la nave y se inicia el ascenso desde la cabina.
-- Preservar la mecánica central: la Polaroid captura lo que muestra el render, se revela y solo activa el viaje si el artefacto está visible dentro del encuadre, aunque esté en un borde. Una foto inválida también se revela y permite reintentar.
-- Mantener la estética ilustrada *Stylized Hand-Drawn Anime 3D*: geometría low-poly, colores pastel, materiales toon, contornos selectivos y efectos livianos. Priorizar la calidad de la escena y del revelado sobre el tamaño de los mundos.
-- Evitar combate, tercera persona, supervivencia, inventarios complejos y nuevas épocas salvo que se soliciten expresamente.
+## Trabajo y verificación
 
-## Implementación cuando corresponda a la etapa
-
-- Usar Three.js, TypeScript y Vite; HTML/CSS para interfaces superpuestas cuando ayuden. No introducir otro motor, backend o dependencias grandes sin una necesidad acordada.
-- Separar escena y render, controles y colisiones, interacción, fotografía, panfleto, progreso, transiciones, ayuda y audio. Compartir las mecánicas entre Egipto, Roma, Medieval, Japón y Luna sin crear abstracciones especulativas.
-- Dar a cada época un ID estable. `areaOrder` es la única fuente del orden: de él dependen sala física, número, señalización, panfleto y secuencia de activación. Separar disponibilidad WIP/jugable del progreso `locked`/`active`/`completed`; las WIP nunca se activan.
-- Coordinar los estados de juego, cámara, panfleto, pausa y Pointer Lock para evitar acciones incompatibles. El guardado local debe seguir asociando progreso y fotos a IDs estables y permitir reiniciar.
-- Liberar escenas y recursos que dejen de usarse. Preferir colisiones, luces y geometrías sencillas que funcionen con fluidez en navegadores modernos de escritorio.
-- Mantener la documentación alineada con las decisiones implementadas, especialmente si cambia el alcance de una entrega o el contrato del catálogo.
-
-## Flujo y verificación
-
-- Elegir la entrega solicitada y revisar sus criterios de aceptación antes de editar. Mantener cambios pequeños y enfocados; no anticipar contenido de etapas posteriores salvo lo necesario para la entrega actual.
-- No hacer commits directos a `main`. Usar una rama descriptiva para cambios que se vayan a integrar y mensajes Conventional Commits cuando se solicite un commit.
-- Si solo cambia documentación, verificar enlaces, coherencia con los otros documentos y `git diff --check`. No afirmar que se ejecutó o compiló el juego mientras no exista código.
-- Cuando exista código, ejecutar las comprobaciones disponibles de tipos y compilación, y probar en el navegador el recorrido afectado. Revisar visualmente cada escenario nuevo antes de seguir.
-- Para fotografía y progreso, comprobar al menos los casos definidos en [Arquitectura prevista](docs/Arquitectura_prevista.md#pruebas-de-arquitectura-obligatorias): encuadre y oclusión, reordenamiento de Egipto, persistencia por ID, ayuda tras 20 segundos y controles durante transiciones.
-- Antes de dar una entrega por terminada, contrastarla con su aceptación en el plan y comunicar lo que se verificó y lo que queda pendiente. No agregar secretos, archivos `.env` reales ni recursos sin permiso de uso.
+- Mantener cambios pequeños y documentación alineada con el comportamiento implementado. Los modelos Kenney incorporados tienen manifiesto y licencias en `public/assets/kenney/`; las fábricas de escenas requieren `loadModels()` antes de crear los escenarios.
+- No hacer commits directos a `main`. Para integrar cambios, usar una rama descriptiva y Conventional Commits cuando se solicite un commit.
+- Para cambios solo de documentación: revisar enlaces y coherencia, y ejecutar `git diff --check`.
+- Para cambios de código: ejecutar `npm run typecheck` y `npm run build`; probar en navegador el recorrido afectado y revisar visualmente cada escenario nuevo. Para fotografía y progreso, seguir los [casos de verificación](docs/VERIFICACION.md).
+- Comunicar qué se comprobó y qué queda pendiente. No agregar secretos, `.env` reales ni recursos sin permiso de uso.

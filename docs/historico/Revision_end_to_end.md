@@ -74,11 +74,13 @@ Los hooks de inspección se inyectan por DevTools en la respuesta de desarrollo;
 - Prueba continua: **PASS**, cinco viajes y cinco fotografías reales, regreso al hall, recarga de las cinco fotos y reinicio a una partida vacía, sin errores de ejecución.
 - Comprobación de escenas: **PASS** en fotografía, seis perímetros, 17 puntos de techo, liberación/recreación y reordenamiento por ID.
 
-| Vista | Evidencia |
+Las capturas de QA ya no se versionan; la tabla conserva los nombres y las vistas registradas en esta revisión.
+
+| Vista | Registro |
 | --- | --- |
-| Exterior e interior | [Patio](capturas/e2e-patio.png), [hall](capturas/e2e-hall.png), [Roma](capturas/e2e-roma.png) |
-| Sombras egipcias | [Patio ceremonial sin rayas de autosombra](capturas/e2e-egipto.png) |
-| Recorrido japonés | [Puente y torii](capturas/e2e-japon-llegada.png) |
-| Regreso lunar | [Cabina](capturas/e2e-luna-cabina.png) |
-| Cinco viajes realizados | [Panfleto con las cinco fotos](capturas/e2e-cinco-recuerdos.png) |
-| Persistencia | [Cinco recuerdos después de recargar](capturas/e2e-recarga-cinco.png) |
+| Exterior e interior | Patio (`e2e-patio.png`), hall (`e2e-hall.png`), Roma (`e2e-roma.png`) |
+| Sombras egipcias | Patio ceremonial sin rayas de autosombra (`e2e-egipto.png`) |
+| Recorrido japonés | Puente y torii (`e2e-japon-llegada.png`) |
+| Regreso lunar | Cabina (`e2e-luna-cabina.png`) |
+| Cinco viajes realizados | Panfleto con las cinco fotos (`e2e-cinco-recuerdos.png`) |
+| Persistencia | Cinco recuerdos después de recargar (`e2e-recarga-cinco.png`) |

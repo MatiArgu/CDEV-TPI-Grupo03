@@ -1,6 +1,6 @@
 # Renovación visual con Kenney
 
-> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](../CODEMAP.md).
 
 ## Reorganización del edificio y del hall
 
@@ -12,7 +12,7 @@ La planta del hall se alinea con las alas y la fachada: **24,9 unidades de ancho
 - Mampostería, cornisas y cubiertas continuas para conectar el pabellón de entrada, el hall y ambas alas. La iluminación mantiene el esquema cálido y los focos sobre las piezas.
 - Cartel de fin del recorrido frente al hall y orientación corregida de la señalización del ala de regreso.
 
-Capturas: [hall desde la entrada](capturas/estructura-hall.png), [pasillo lateral](capturas/estructura-lateral.png), [mirada hacia el acceso](capturas/estructura-regreso.png) y [envolvente del edificio](capturas/estructura-exterior.png).
+Capturas: hall desde la entrada (captura no conservada), pasillo lateral (captura no conservada), mirada hacia el acceso (captura no conservada) y envolvente del edificio (captura no conservada).
 
 Verificado en Chrome: recorrido completo hasta el regreso con 1/10, foto válida e inválida, pausa durante la transición; tres pasillos longitudinales, cruce transversal, ambos muros del hall, detección de ubicación, acceso a Roma y cierre del retorno WIP. Se comprobaron techo y suelo en 63 posiciones y nueve puntos del umbral. Tipos y build correctos; continúa el aviso de Vite por el bundle principal de aproximadamente 714 kB. La medición de FPS con GPU real sigue pendiente.
 
@@ -134,7 +134,7 @@ Las vistas generales se renderizaron con las mismas fábricas de escena del jueg
 
 ## Recursos y carga
 
-Se integraron **28 modelos de cinco paquetes**, con sus licencias CC0 y sus texturas externas. El [informe de selección](Seleccion_Kenney.md) contiene el alcance de la exploración, el inventario completo y las recomendaciones. El [manifiesto](../public/assets/kenney/manifest.json) identifica cada archivo y su procedencia.
+Se integraron **28 modelos de cinco paquetes**, con sus licencias CC0 y sus texturas externas. El [informe de selección](Seleccion_Kenney.md) contiene el alcance de la exploración, el inventario completo y las recomendaciones. El [manifiesto](../../public/assets/kenney/manifest.json) identifica cada archivo y su procedencia.
 
 `src/rendering/assets.ts` carga la selección antes de habilitar la visita. Convierte materiales a toon, ajusta colores de vegetación y madera y normaliza tamaños y apoyo en el suelo. Los sólidos nuevos tienen colisiones; los objetos de la exhibición también participan en la oclusión fotográfica. Los bounds de colisión se calculan después de aplicar la posición de la sala.
 
@@ -183,11 +183,11 @@ Revisión del 13 de octubre de 2026. Sustituye la planta anterior de diez salas 
 - 108 comprobaciones de techo y 108 de suelo entre hall y salas, más umbrales: sin huecos. Intercambiar Egipto y Luna actualizó sala, número y panfleto manteniendo cinco posiciones.
 - Revisión visual de los objetos sostenidos y las cinco salas realizada con Chrome/SwiftShader; rendimiento en GPU real no medido. Las cuatro exhibiciones pendientes, sus mundos históricos y la persistencia siguen sin implementarse.
 
-![Polaroid sostenida con las manos](capturas/polaroid-en-manos.png)
+Polaroid sostenida con las manos (captura no conservada)
 
-![Fotografía real durante el revelado en la mano](capturas/polaroid-revelado-fisico.png)
+Fotografía real durante el revelado en la mano (captura no conservada)
 
-![Panfleto físico con el recorrido nuevo y el recuerdo de Roma](capturas/panfleto-fisico-cinco-salas.png)
+Panfleto físico con el recorrido nuevo y el recuerdo de Roma (captura no conservada)
 
 
 ## Patio, paredes y ciclo completo de Egipto
@@ -214,11 +214,11 @@ Segunda revisión del 13 de octubre de 2026. Esta sección actualiza el estado d
 
 | Escenario | Captura |
 | --- | --- |
-| Patio, suelo y cielo | [Vista exterior](capturas/patio-cielo-pavimento.png) |
-| Paredes de Roma | [Sala romana](capturas/roma-paredes-paneladas.png) |
-| Exhibición egipcia | [Escarabajo y sala](capturas/egipto-exhibicion.png) |
-| Viaje a Egipto | [Patio ceremonial](capturas/egipto-templo-patio.png) y [templo](capturas/egipto-templo-interior.png) |
-| Ambos viajes completados | [Panfleto con dos recuerdos](capturas/egipto-roma-dos-recuerdos.png) |
+| Patio, suelo y cielo | Vista exterior (captura no conservada) |
+| Paredes de Roma | Sala romana (captura no conservada) |
+| Exhibición egipcia | Escarabajo y sala (captura no conservada) |
+| Viaje a Egipto | Patio ceremonial (captura no conservada) y templo (captura no conservada) |
+| Ambos viajes completados | Panfleto con dos recuerdos (captura no conservada) |
 
 
 ## Fluidez, cielo suave y reorganización del hall
@@ -246,9 +246,9 @@ Son contadores de trabajo de render, no una medición de FPS. Chrome usa SwiftSh
 
 ### Capturas
 
-- [Patio y cielo con gradiente](capturas/cielo-gradiente-patio.png).
-- [Columnas y eje central del hall](capturas/hall-columnas-esbeltas.png).
-- [Distribución lateral con espacios entre objetos](capturas/hall-lateral-espaciado.png).
+- Patio y cielo con gradiente (captura no conservada).
+- Columnas y eje central del hall (captura no conservada).
+- Distribución lateral con espacios entre objetos (captura no conservada).
 
 
 ### Verificación de esta revisión
@@ -289,12 +289,12 @@ Ampliación del 13 de octubre de 2026:
 
 | Vista | Captura |
 | --- | --- |
-| Artefacto medieval | [Llave en la sala](capturas/medieval-sala.png) |
-| Colección medieval | [Maqueta y armas](capturas/medieval-maqueta.png) y [paso transversal](capturas/medieval-galeria.png) |
-| Mundo medieval | [Patio de la fortaleza](capturas/medieval-patio.png) |
-| Egipto | [Obelisco votivo](capturas/egipto-kenney-obelisco.png) y [palmeras](capturas/egipto-kenney-palmeras.png) |
-| Roma | [Trofeo y gladius](capturas/roma-kenney-coleccion.png) |
-| Progreso | [Tres recuerdos en el panfleto](capturas/egipto-roma-medieval-recuerdos.png) |
+| Artefacto medieval | Llave en la sala (captura no conservada) |
+| Colección medieval | Maqueta y armas (captura no conservada) y paso transversal (captura no conservada) |
+| Mundo medieval | Patio de la fortaleza (captura no conservada) |
+| Egipto | Obelisco votivo (captura no conservada) y palmeras (captura no conservada) |
+| Roma | Trofeo y gladius (captura no conservada) |
+| Progreso | Tres recuerdos en el panfleto (captura no conservada) |
 
 - Compilado de producción: 50 modelos y siete texturas cargados sin fallos; inicio jugable verificado.
 
@@ -323,10 +323,10 @@ Ampliación del 13 de octubre de 2026:
 
 | Vista | Captura |
 | --- | --- |
-| Sala japonesa | [Máscara, katanas y linterna](capturas/japon-sala.png) |
-| Entrada del jardín | [Camino y torii](capturas/japon-jardin.png) |
-| Cruce del arroyo | [Puente entre cerezos](capturas/japon-puente.png) |
-| Destino del viaje | [Templo](capturas/japon-templo.png) y [máscara Oni](capturas/japon-mascara.png) |
+| Sala japonesa | Máscara, katanas y linterna (captura no conservada) |
+| Entrada del jardín | Camino y torii (captura no conservada) |
+| Cruce del arroyo | Puente entre cerezos (captura no conservada) |
+| Destino del viaje | Templo (captura no conservada) y máscara Oni (captura no conservada) |
 
 - Producción: 51 modelos y siete texturas cargados sin fallos; inicio jugable verificado.
 
@@ -356,8 +356,8 @@ Ampliación del 13 de octubre de 2026:
 
 | Vista | Captura |
 | --- | --- |
-| Sala lunar | [Maqueta y colección](capturas/luna-sala.png) |
-| Llegada | [Panorama desde el visor](capturas/luna-panorama.png) |
-| Momento congelado | [Astronautas colocando la bandera](capturas/luna-bandera.png) |
-| Nave a escala completa | [Escalerilla y módulo lunar](capturas/luna-nave.png) |
-| Regreso | [Cabina y controles](capturas/luna-cabina-jugable.png) |
+| Sala lunar | Maqueta y colección (captura no conservada) |
+| Llegada | Panorama desde el visor (captura no conservada) |
+| Momento congelado | Astronautas colocando la bandera (captura no conservada) |
+| Nave a escala completa | Escalerilla y módulo lunar (captura no conservada) |
+| Regreso | Cabina y controles (captura no conservada) |

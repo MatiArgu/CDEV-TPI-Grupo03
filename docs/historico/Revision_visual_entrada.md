@@ -1,6 +1,6 @@
 # Revisión visual del acceso al museo
 
-> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](../CODEMAP.md).
 
 Esta revisión vuelve sobre la llegada del jugador al museo, ya implementada en la etapa 3. La referencia visual aportada para el acceso se tradujo a la estética ilustrada del juego: piedra cálida, perspectiva profunda, tragaluz, molinetes y un guardia de uniforme azul. El patio, el panfleto y el orden de las salas conservan su función.
 

@@ -1,6 +1,6 @@
 # Revisión de la etapa 2 — movimiento
 
-> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](../CODEMAP.md).
 
 Esta revisión registra el patio de prueba tal como estaba en la etapa 2. El recorrido principal actual usa el museo de las etapas 3 y 5; el modo de inspección visual de la etapa 1 sigue disponible con `?view=far`, `?view=mid` y `?view=near`.
 

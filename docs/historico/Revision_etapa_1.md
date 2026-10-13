@@ -1,6 +1,6 @@
 # Revisión de la etapa 1 — motor visual
 
-> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](../CODEMAP.md).
 
 La escena de prueba usa Three.js, TypeScript y Vite. Combina fachada clásica ficticia, dos árboles, jardineras y un casco sobre pedestal. No representa todavía una sala definitiva ni habilita viaje temporal.
 

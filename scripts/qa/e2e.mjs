@@ -1,5 +1,5 @@
 // Uses a separate Chrome profile. Never run against a personal browser/save.
-// Start Vite and Chrome as described in docs/Revision_end_to_end.md.
+// Start Vite and Chrome as described in docs/VERIFICACION.md.
 import {call,evaluate,pause,shot,close,onEvent} from './cdp.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
