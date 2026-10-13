@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { Collider } from './scene';
 
-type Mode = 'intro' | 'playing' | 'paused' | 'pamphlet';
+type Mode = 'intro' | 'playing' | 'paused' | 'pamphlet' | 'camera' | 'revealing' | 'transition';
 
 export type Interaction = { label: string; activate: () => void };
 
@@ -12,6 +12,16 @@ type PlayerOptions = {
   canOpenPamphlet: () => boolean;
   onPamphletChange: (open: boolean) => void;
   onPositionChange: (position: THREE.Vector2) => void;
+  onCameraChange?: (equipped: boolean) => void;
+  canEquipCamera?: () => boolean;
+  onShutter?: () => void;
+};
+
+export type PlayerControls = {
+  update: (delta: number) => void;
+  setCinematic: (mode: 'revealing' | 'transition') => void;
+  finishCinematic: (cameraEquipped: boolean) => void;
+  teleport: (start: THREE.Vector2) => void;
 };
 
 const eyeHeight = 1.7;
@@ -22,7 +32,7 @@ export function createPlayerControls(
   camera: THREE.PerspectiveCamera,
   canvas: HTMLCanvasElement,
   options: PlayerOptions,
-): (delta: number) => void {
+): PlayerControls {
   const menu = document.querySelector<HTMLElement>('#game-menu')!;
   const menuTitle = document.querySelector<HTMLElement>('#menu-title')!;
   const menuText = document.querySelector<HTMLElement>('#menu-text')!;
@@ -40,6 +50,8 @@ export function createPlayerControls(
   let pitch = 0;
   let bobPhase = 0;
   let bobOffset = 0;
+  let cameraEquipped = false;
+  let cinematic: 'revealing' | 'transition' | null = null;
 
   camera.rotation.order = 'YXZ';
   camera.position.set(position.x, eyeHeight, position.y);
@@ -49,7 +61,7 @@ export function createPlayerControls(
     const wasPamphlet = mode === 'pamphlet';
     mode = next;
     app.dataset.playState = mode;
-    if (mode !== 'playing') {
+    if (mode !== 'playing' && mode !== 'camera') {
       pressed.clear();
       interaction = null;
       prompt.hidden = true;
@@ -57,7 +69,7 @@ export function createPlayerControls(
       camera.position.y = eyeHeight;
     }
     if (wasPamphlet !== (mode === 'pamphlet')) options.onPamphletChange(mode === 'pamphlet');
-    menu.hidden = mode === 'playing' || mode === 'pamphlet';
+    menu.hidden = mode !== 'intro' && mode !== 'paused';
     if (mode === 'paused') {
       menuTitle.textContent = 'En pausa';
       menuText.textContent = 'El recorrido se detuvo. Hacé clic para volver y recuperar el mouse.';
@@ -81,22 +93,33 @@ export function createPlayerControls(
   menuButton.addEventListener('click', requestControl);
   canvas.addEventListener('click', () => {
     if (mode === 'paused') void requestControl();
+    else if (mode === 'camera' && document.pointerLockElement === canvas) {
+      cinematic = 'revealing';
+      setMode('revealing');
+      options.onShutter?.();
+    }
   });
   document.addEventListener('pointerlockchange', () => {
-    if (document.pointerLockElement === canvas) setMode('playing');
-    else if (mode === 'playing' || mode === 'pamphlet') setMode('paused');
+    if (document.pointerLockElement === canvas) setMode(cinematic ?? (cameraEquipped ? 'camera' : 'playing'));
+    else if (mode !== 'intro' && mode !== 'paused') setMode('paused');
   });
   document.addEventListener('pointerlockerror', () => {
     if (mode !== 'playing') menuText.textContent = 'No se pudo capturar el mouse. Hacé clic para intentarlo de nuevo.';
   });
   document.addEventListener('mousemove', (event) => {
-    if (mode !== 'playing' || document.pointerLockElement !== canvas) return;
+    if ((mode !== 'playing' && mode !== 'camera') || document.pointerLockElement !== canvas) return;
     yaw -= event.movementX * 0.0022;
     pitch = THREE.MathUtils.clamp(pitch - event.movementY * 0.0022, -1.35, 1.35);
   });
   document.addEventListener('keydown', (event) => {
     if (event.code === 'Escape') {
-      if (mode === 'playing' || mode === 'pamphlet') pause();
+      if (mode !== 'intro' && mode !== 'paused') pause();
+      return;
+    }
+    if (event.code === 'KeyC' && !event.repeat && options.onCameraChange && (mode === 'playing' || mode === 'camera') && (cameraEquipped || options.canEquipCamera?.() !== false)) {
+      cameraEquipped = !cameraEquipped;
+      options.onCameraChange(cameraEquipped);
+      setMode(cameraEquipped ? 'camera' : 'playing');
       return;
     }
     if (event.code === 'KeyM' && !event.repeat) {
@@ -104,8 +127,8 @@ export function createPlayerControls(
       else if (mode === 'pamphlet') setMode(document.pointerLockElement === canvas ? 'playing' : 'paused');
       return;
     }
-    if (mode !== 'playing') return;
-    if (event.code === 'KeyE' && !event.repeat && interaction) {
+    if (mode !== 'playing' && mode !== 'camera') return;
+    if (mode === 'playing' && event.code === 'KeyE' && !event.repeat && interaction) {
       interaction.activate();
       interaction = null;
       prompt.hidden = true;
@@ -119,7 +142,7 @@ export function createPlayerControls(
   document.addEventListener('keyup', (event) => pressed.delete(event.code));
   window.addEventListener('blur', () => {
     pressed.clear();
-    if (mode === 'playing' || mode === 'pamphlet') pause();
+    if (mode !== 'intro' && mode !== 'paused') pause();
   });
 
   function blocked(x: number, z: number): boolean {
@@ -130,10 +153,10 @@ export function createPlayerControls(
     });
   }
 
-  return (delta: number) => {
+  function update(delta: number): void {
     const step = Math.min(delta, 0.05);
     let moving = false;
-    if (mode === 'playing' && document.pointerLockElement === canvas) {
+    if ((mode === 'playing' || mode === 'camera') && document.pointerLockElement === canvas) {
       const forward = Number(pressed.has('KeyW')) - Number(pressed.has('KeyS'));
       const sideways = Number(pressed.has('KeyD')) - Number(pressed.has('KeyA'));
       const length = Math.hypot(forward, sideways);
@@ -152,7 +175,7 @@ export function createPlayerControls(
       }
       camera.rotation.set(pitch, yaw, 0);
       camera.getWorldDirection(gaze);
-      interaction = options.findInteraction(position, gaze);
+      interaction = mode === 'playing' ? options.findInteraction(position, gaze) : null;
       prompt.hidden = !interaction;
       if (interaction) promptLabel.textContent = interaction.label;
     }
@@ -161,5 +184,31 @@ export function createPlayerControls(
     bobOffset = THREE.MathUtils.lerp(bobOffset, targetBob, Math.min(step * 14, 1));
     camera.position.set(position.x, eyeHeight + bobOffset, position.y);
     options.onPositionChange(position);
+  }
+
+  return {
+    update,
+    setCinematic: (next) => {
+      cinematic = next;
+      if (mode !== 'paused') setMode(next);
+    },
+    finishCinematic: (equipped) => {
+      cinematic = null;
+      if (cameraEquipped !== equipped) {
+        cameraEquipped = equipped;
+        options.onCameraChange?.(equipped);
+      }
+      if (mode === 'revealing' || mode === 'transition') setMode(equipped ? 'camera' : 'playing');
+    },
+    teleport: (start) => {
+      position.copy(start);
+      yaw = 0;
+      pitch = 0;
+      bobOffset = 0;
+      camera.position.set(position.x, eyeHeight, position.y);
+      camera.rotation.set(0, 0, 0);
+      pressed.clear();
+      options.onPositionChange(position);
+    },
   };
 }

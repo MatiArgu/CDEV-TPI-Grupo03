@@ -1,6 +1,6 @@
 # Arquitectura prevista del MVP
 
-Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md) y el [inicio en el museo](Revision_etapa_3.md). El catálogo y `areaOrder` ya alimentan el panfleto y el número del futuro sector romano; los módulos de sala, la fotografía y el progreso siguen previstos.
+Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md), el [inicio en el museo](Revision_etapa_3.md) y una [prueba aislada de la Polaroid](Revision_etapa_4.md). El catálogo y `areaOrder` ya alimentan el panfleto y el número del futuro sector romano; la integración de la fotografía en las salas, los mundos históricos y el progreso siguen previstos.
 
 ## Catálogo y orden de las áreas
 

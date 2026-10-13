@@ -10,7 +10,7 @@ El recorrido principal empieza en el patio de un museo ficticio inspirado en el 
 4. Al desplegarlo por primera vez se enciende una luz cálida y aparece la señal del futuro sector romano. El jugador puede atravesar la entrada y recorrer el hall hasta ese umbral cerrado.
 5. **Escape** pausa y libera el puntero, incluso con el panfleto abierto. Un clic en **Volver al recorrido** recupera Pointer Lock.
 
-El catálogo en `src/catalog.ts` aporta IDs estables, nombres y artefactos. Su lista `areaOrder` determina los números y posiciones del panfleto y el número de la señal romana. Ninguna de las diez áreas tiene aún sala histórica jugable: los módulos físicos llegan en la etapa 5, y la fotografía y los viajes en etapas posteriores.
+El catálogo en `src/catalog.ts` aporta IDs estables, nombres y artefactos. Su lista `areaOrder` determina los números y posiciones del panfleto y el número de la señal romana. Ninguna de las diez áreas tiene aún sala histórica jugable: los módulos físicos llegan en la etapa 5. La [etapa 4](Revision_etapa_4.md) ensaya la fotografía y un viaje en un laboratorio temporal separado.
 
 ## Capturas de inspección
 
