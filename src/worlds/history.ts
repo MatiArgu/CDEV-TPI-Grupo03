@@ -8,6 +8,14 @@ export type HistoricalWorld = {
   colliders: Collider[];
   spawn: THREE.Vector2;
   artifact: THREE.Vector3;
+  boarding?: {
+    state: () => 'outside' | 'climbing' | 'cabin' | 'launching' | 'finished';
+    seat: THREE.Vector3;
+    cabinColliders: Collider[];
+    start: (camera: THREE.PerspectiveCamera) => void;
+    launch: () => void;
+    update: (delta: number, camera: THREE.PerspectiveCamera) => 'cabin' | 'return' | undefined;
+  };
   helpActive: () => boolean;
   update: (delta: number) => void;
   dispose: () => void;

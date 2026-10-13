@@ -8,6 +8,8 @@ import { createPamphlet } from './game/pamphlet';
 import { createPlayerControls } from './game/player';
 import { artifactVisible, captureFrame, createCameraModel, getFrameBounds, playShutter } from './game/photo';
 import { createRomeWorld } from './worlds/rome';
+import { createMoonWorld } from './worlds/moon';
+import { createSpaceHelmet } from './game/spaceHelmet';
 import { createJapanWorld } from './worlds/japan';
 import { createMedievalWorld } from './worlds/medieval';
 import { createEgyptWorld } from './worlds/egypt';
@@ -96,7 +98,13 @@ try {
     updateScene = updateMuseum;
     const pamphletView = createPamphlet(camera);
     const cameraModel = createCameraModel(camera);
-    hasHeldItems = () => pamphletView.root.visible || cameraModel.root.visible;
+    const spaceHelmet = createSpaceHelmet(camera);
+    const setSpacesuit = (enabled: boolean) => {
+      spaceHelmet.root.visible = enabled;
+      pamphletView.root.traverse(object => object.userData.setSpacesuit?.(enabled));
+      camera.far = enabled ? 230 : 100; camera.updateProjectionMatrix();
+    };
+    hasHeldItems = () => pamphletView.root.visible || cameraModel.root.visible || spaceHelmet.root.visible;
     const toast = document.querySelector<HTMLElement>('#game-toast')!;
     const help = document.querySelector<HTMLElement>('#player-help')!;
     const viewfinder = document.querySelector<HTMLElement>('#photo-viewfinder')!;
@@ -175,21 +183,35 @@ try {
         cameraModel.hidePrint();
         scene.remove(camera);
         museumColliders = [...world.colliders];
-        history = active === 'japon' ? createJapanWorld() : active === 'egipto' ? createEgyptWorld() : active === 'medieval' ? createMedievalWorld() : createRomeWorld();
+        history = active === 'luna' ? createMoonWorld() : active === 'japon' ? createJapanWorld() : active === 'egipto' ? createEgyptWorld() : active === 'medieval' ? createMedievalWorld() : createRomeWorld();
+        setSpacesuit(active === 'luna');
         scene = history.scene;
         scene.add(camera);
         world.colliders.splice(0, world.colliders.length, ...history.colliders);
         controls.teleport(history.spawn);
         updateScene = (delta) => {
-          if (app.dataset.playState !== 'playing' || !history) return;
+          if (!history) return;
+          const boarding = history.boarding;
+          if (boarding && ['climbing', 'launching', 'finished'].includes(boarding.state())) {
+            const result = boarding.update(app.dataset.playState === 'transition' ? delta : 0, camera);
+            if (result === 'cabin') {
+              world.colliders.splice(0, world.colliders.length, ...boarding.cabinColliders);
+              controls.teleport(new THREE.Vector2(boarding.seat.x, boarding.seat.z), 0, boarding.seat.y - 1.7);
+              controls.finishCinematic(false);
+              help.textContent = 'MIRAR CON EL MOUSE · E INICIAR ASCENSO · ESC PAUSAR';
+              showToast('Ya estás a bordo. Iniciá el ascenso desde los controles frente a vos.');
+            } else if (result === 'return') void finishHistory();
+            return;
+          }
+          if (app.dataset.playState !== 'playing') return;
           const hadHelp = history.helpActive();
           history.update(delta);
-          if (!hadHelp && history.helpActive()) showToast(history.id === 'japon' ? 'Los pétalos señalan el camino entre los torii hacia el templo.' : history.id === 'egipto' ? 'Un rastro de luz recorre el templo hacia el altar.' : history.id === 'medieval' ? 'Un rastro dorado cruza el patio hacia la llave.' : 'Un rastro tenue recorre la pasarela hacia el casco.');
+          if (!hadHelp && history.helpActive()) showToast(history.id === 'luna' ? 'Las huellas iluminadas llevan a la escalerilla de la nave.' : history.id === 'japon' ? 'Los pétalos señalan el camino entre los torii hacia el templo.' : history.id === 'egipto' ? 'Un rastro de luz recorre el templo hacia el altar.' : history.id === 'medieval' ? 'Un rastro dorado cruza el patio hacia la llave.' : 'Un rastro tenue recorre la pasarela hacia el casco.');
         };
       });
       controls.finishCinematic(false);
-      help.textContent = 'WASD CAMINAR · SHIFT CORRER · E RECOGER · M PANFLETO · ESC PAUSAR';
-      showToast(active === 'japon' ? 'El jardín quedó detenido en el tiempo. Cruzá el puente y buscá la máscara bajo el techo del templo.' : active === 'egipto' ? 'El tiempo se detuvo en el templo. Buscá el escarabajo del sol.' : active === 'medieval' ? 'El tiempo se detuvo en la fortaleza. Recuperá la llave junto al portón.' : 'El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
+      help.textContent = active === 'luna' ? 'WASD CAMINAR · E SUBIR A LA NAVE · M PANFLETO · ESC PAUSAR' : 'WASD CAMINAR · SHIFT CORRER · E RECOGER · M PANFLETO · ESC PAUSAR';
+      showToast(active === 'luna' ? 'El primer paso quedó detenido en el tiempo. Explorá el alunizaje y subí a la nave para iniciar el regreso.' : active === 'japon' ? 'El jardín quedó detenido en el tiempo. Cruzá el puente y buscá la máscara bajo el techo del templo.' : active === 'egipto' ? 'El tiempo se detuvo en el templo. Buscá el escarabajo del sol.' : active === 'medieval' ? 'El tiempo se detuvo en la fortaleza. Recuperá la llave junto al portón.' : 'El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
     }
 
     async function finishHistory(): Promise<void> {
@@ -201,6 +223,7 @@ try {
         scene.remove(camera);
         history!.dispose();
         history = null;
+        setSpacesuit(false);
         scene = world.scene;
         scene.add(camera);
         world.colliders.splice(0, world.colliders.length, ...museumColliders);
@@ -210,7 +233,7 @@ try {
         pamphletView.complete(completedId, acceptedPhoto!);
         const room = world.rooms.find((item) => item.id === completedId)!;
         (room.root.userData.setLight as (strength: number) => void)(0);
-        const facesSouth = completedId === 'japon' && room.center.x > 0;
+        const facesSouth = (completedId === 'japon' || completedId === 'luna') && room.center.x > 0;
         controls.teleport(new THREE.Vector2(room.center.x, room.center.y + (facesSouth ? -4.15 : 4.15)), facesSouth ? Math.PI : 0);
         updateScene = updateMuseum;
       });
@@ -226,8 +249,20 @@ try {
       start: hasPamphlet ? new THREE.Vector2(0, -17.8) : world.spawn,
       findInteraction: (position, gaze) => {
         if (history) {
+          const boarding = history.boarding;
+          if (boarding?.state() === 'cabin') {
+            if (gaze.z > -0.25) return null;
+            return { label: 'Iniciar ascenso · volver al museo', activate: () => {
+              controls.setCinematic('transition'); boarding.launch();
+              showToast('Ascenso iniciado. El viaje de regreso te lleva al museo.');
+            } };
+          }
           const toArtifact = history.artifact.clone().sub(new THREE.Vector3(position.x, 1.7, position.y));
-          if (Math.hypot(toArtifact.x, toArtifact.z) > 2.9 || gaze.dot(toArtifact.normalize()) < 0.38) return null;
+          if (Math.hypot(toArtifact.x, toArtifact.z) > (boarding ? 1.9 : 2.9) || gaze.dot(toArtifact.normalize()) < 0.38) return null;
+          if (boarding) return { label: 'Subir por la escalerilla de la nave', activate: () => {
+            controls.setCinematic('transition'); boarding.start(camera);
+            showToast('Subiendo a la cabina…');
+          } };
           return { label: `Recoger ${areaCatalog[history.id].artifact.toLowerCase()}`, activate: () => { void finishHistory(); } };
         }
         if (!hasPamphlet) {
@@ -310,6 +345,7 @@ try {
     const updatePlayer = updateControls;
     updateControls = (delta) => {
       updatePlayer(delta);
+      if (spaceHelmet.root.visible) spaceHelmet.update();
       const running = app.dataset.playState !== 'paused' && app.dataset.playState !== 'intro';
       if (running) {
         pamphletView.update(delta);

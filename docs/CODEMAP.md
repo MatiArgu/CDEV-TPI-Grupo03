@@ -1,7 +1,7 @@
 # Codemap del museo
 
 Guía breve del código actual. Stack: **Three.js + TypeScript + Vite**, sin backend.
-Egipto, Roma, Medieval y Japón tienen viajes jugables; Luna se puede recorrer.
+Egipto, Roma, Medieval, Japón y Luna tienen viajes jugables.
 
 ## Estructura
 
@@ -37,11 +37,12 @@ docs/                    Especificación, arquitectura, revisiones y capturas
 | Patio, casas, andén y tren | [museum/courtyard.ts](../src/museum/courtyard.ts); jardines y pirámide en `museum.ts` |
 | Interior del hall y guardia | [museum/hall.ts](../src/museum/hall.ts), [guard.ts](../src/museum/guard.ts) |
 | Acabados, pedestales y focos compartidos | [museum/exhibition.ts](../src/museum/exhibition.ts) |
-| Contenido de Egipto, Roma, Medieval y Japón, incluida cada exhibición | [worlds/egypt.ts](../src/worlds/egypt.ts), [rome.ts](../src/worlds/rome.ts), [medieval.ts](../src/worlds/medieval.ts), [japan.ts](../src/worlds/japan.ts) |
+| Contenido de Egipto, Roma, Medieval, Japón y Luna, incluida cada exhibición | [worlds/egypt.ts](../src/worlds/egypt.ts), [rome.ts](../src/worlds/rome.ts), [medieval.ts](../src/worlds/medieval.ts), [japan.ts](../src/worlds/japan.ts), [moon.ts](../src/worlds/moon.ts) |
 | Contrato `HistoricalWorld` y liberación de recursos | [worlds/history.ts](../src/worlds/history.ts) |
 | Carga de modelos y materiales toon | [rendering/assets.ts](../src/rendering/assets.ts), [visual.ts](../src/rendering/visual.ts) |
 | Cielo, agrupación estática y casco compartido | [rendering/sky.ts](../src/rendering/sky.ts), [staticMeshes.ts](../src/rendering/staticMeshes.ts), [helmet.ts](../src/rendering/helmet.ts) |
 | Máscara Oni, katanas, torii, techos y cerezos | [rendering/japanese.ts](../src/rendering/japanese.ts) |
+| Nave, astronautas, cielo lunar y visor | [rendering/lunar.ts](../src/rendering/lunar.ts), [game/spaceHelmet.ts](../src/game/spaceHelmet.ts); subida y ascenso en `worlds/moon.ts` |
 | Escena de demostración independiente | [study/studyScene.ts](../src/study/studyScene.ts) |
 
 ## Flujo principal
@@ -53,8 +54,8 @@ flowchart LR
   Main --> Museum[Museo y salas]
   Main --> Player[Controles y modos]
   Player --> Photo[Foto y validación]
-  Photo --> World[Egipto, Roma, Medieval o Japón]
-  World --> Return[Recogida y regreso]
+  Photo --> World[Una de las cinco épocas]
+  World --> Return[Interacción y regreso]
   Return --> Paper[Panfleto]
   Return --> Save[Guardado por ID]
   Main --> Study[Modo de estudio opcional]

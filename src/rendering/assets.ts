@@ -5,6 +5,12 @@ import type { Collider } from '../game/collision';
 import { materials as mat, outline, toon } from './visual';
 
 const sources = {
+  astronaut: 'space-kit/astronautA',
+  astronautPartner: 'space-kit/astronautB',
+  rocketEngine: 'space-kit/rocket_baseA',
+  lunarDish: 'space-kit/satelliteDish',
+  lunarBoulder: 'space-kit/rock_largeB',
+  lunarRocks: 'space-kit/rocks_smallA',
   bamboo: 'nature-kit/crops_bambooStageB',
   key: 'mini-dungeon/key',
   chest: 'mini-dungeon/chest',
@@ -72,6 +78,7 @@ export async function loadModels(): Promise<void> {
   await Promise.all((Object.entries(sources) as [ModelId, string][]).map(async ([id, path]) => {
     if (templates.has(id)) return;
     const { scene } = await loader.loadAsync(`${import.meta.env.BASE_URL}assets/kenney/${path}.glb`);
+    if (id === 'astronaut' || id === 'astronautPartner') scene.rotation.y = -Math.PI / 2;
     const converted = new Map<THREE.Material, THREE.MeshToonMaterial>();
     scene.traverse((object) => {
       if (!(object instanceof THREE.Mesh)) return;
@@ -102,7 +109,7 @@ export async function loadModels(): Promise<void> {
         ? object.material.map((material) => convert(material as THREE.MeshStandardMaterial))
         : convert(object.material as THREE.MeshStandardMaterial);
       object.castShadow = true;
-      object.receiveShadow = !['oak', 'tree', 'slenderTree', 'cypress', 'bush', 'smallBush', 'flowers', 'yellowFlowers', 'leaves', 'palm', 'bentPalm', 'locomotive', 'passengerCar'].includes(id);
+      object.receiveShadow = !path.startsWith('space-kit/') && !['oak', 'tree', 'slenderTree', 'cypress', 'bush', 'smallBush', 'flowers', 'yellowFlowers', 'leaves', 'palm', 'bentPalm', 'locomotive', 'passengerCar'].includes(id);
       object.userData.sharedAsset = true;
       if (['statue', 'column', 'brokenColumn', 'rowboat'].includes(id)) {
         outline(object, 0.22);

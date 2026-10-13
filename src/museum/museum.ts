@@ -7,6 +7,7 @@ import { createGallery, type GalleryDoor, type GalleryRoom } from './gallery';
 import { createGuard } from './guard';
 import { createHall } from './hall';
 import { galleryLayout, museumLayout } from './museumLayout';
+import { installMoonExhibit } from '../worlds/moon';
 import { installJapanExhibit } from '../worlds/japan';
 import { installMedievalExhibit } from '../worlds/medieval';
 import { installEgyptExhibit } from '../worlds/egypt';
@@ -339,7 +340,9 @@ export function createMuseumScene(): MuseumWorld {
   const egyptExhibit = installEgyptExhibit(gallery.rooms.find((room) => room.id === 'egipto')!);
   const medievalExhibit = installMedievalExhibit(gallery.rooms.find((room) => room.id === 'medieval')!);
   const japanExhibit = installJapanExhibit(gallery.rooms.find((room) => room.id === 'japon')!);
+  const moonExhibit = installMoonExhibit(gallery.rooms.find((room) => room.id === 'luna')!);
   const exhibits = new Map<AreaId, { artifact: THREE.Object3D; photoSolids: THREE.Object3D[] }>([
+    ['luna', { artifact: moonExhibit.artifact, photoSolids: [...gallery.photoSolids, ...moonExhibit.photoSolids] }],
     ['japon', { artifact: japanExhibit.artifact, photoSolids: [...gallery.photoSolids, ...japanExhibit.photoSolids] }],
     ['medieval', { artifact: medievalExhibit.artifact, photoSolids: [...gallery.photoSolids, ...medievalExhibit.photoSolids] }],
     ['egipto', { artifact: egyptExhibit.artifact, photoSolids: [...gallery.photoSolids, ...egyptExhibit.photoSolids] }],
@@ -359,7 +362,7 @@ export function createMuseumScene(): MuseumWorld {
   ];
   colliders.push(...entranceGate.colliders);
   colliders.push(...gallery.colliders);
-  colliders.push(...romeExhibit.colliders, ...egyptExhibit.colliders, ...medievalExhibit.colliders, ...japanExhibit.colliders);
+  colliders.push(...romeExhibit.colliders, ...egyptExhibit.colliders, ...medievalExhibit.colliders, ...japanExhibit.colliders, ...moonExhibit.colliders);
   for (const side of [-1, 1]) {
     for (const x of [side * 3.3, side * 5.55]) {
       colliders.push({ minX: x - 0.45, maxX: x + 0.45, minZ: -3.56, maxZ: -2.67 });
