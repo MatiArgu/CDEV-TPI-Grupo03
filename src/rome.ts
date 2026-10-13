@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { modelCollider, placeModel } from './assets';
 import type { AreaId } from './catalog';
-import { galleryLayout, type GalleryRoom } from './gallery';
+import type { GalleryRoom } from './gallery';
+import { galleryLayout } from './museumLayout';
 import { exhibition, exhibitSpot, plinth } from './exhibition';
 import { createRouteHelp } from './help';
 import { createRomanHelmet as helmet } from './helmet';

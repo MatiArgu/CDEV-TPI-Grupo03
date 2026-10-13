@@ -23,6 +23,8 @@ Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotograf
 
 ## Salas, estados y progresión
 
+Las medidas físicas compartidas viven en [museumLayout.ts](../src/museumLayout.ts): ancho exterior, límites del hall, paso y centros de las alas, altura de muros y nivel de suelo. Hall, galería, envolvente exterior y detección de ubicación utilizan esas referencias. Las salas mantienen 10,8 × 16 unidades; el hall ocupa el ancho completo del edificio y conecta sus dos pasillos laterales con las puertas del circuito.
+
 - En la etapa 3 solo existía el hall y un umbral cerrado hacia el futuro sector romano. La etapa 5 ubica diez módulos en una U: cinco de ida, un cruce al fondo y cinco de regreso. Cada módulo recibe el ID situado en esa posición de `areaOrder`; su grupo local permite incorporar una exhibición sin fijarla a coordenadas globales. La primera puerta se abre con E y enciende la sala con un breve parpadeo. Las posteriores requieren la finalización de la sala precedente.
 - Número de sala, señalización y posición en el panfleto se calculan a partir de `areaOrder`. El texto de disponibilidad de sala y panfleto se deriva del catálogo. Una prueba anterior movió `egipto` al octavo lugar y actualizó sala, letrero y panfleto, pero ese orden ya no es recorrible con las puertas WIP cerradas. Necesita un acceso alternativo antes de usarse en el juego.
 - **Disponibilidad** (`WIP` o jugable) y **progreso** (`locked`, `active`, `completed`) son conceptos distintos. Una sala WIP tiene posición física y señalización, pero permanece cerrada y nunca se vuelve `active`.

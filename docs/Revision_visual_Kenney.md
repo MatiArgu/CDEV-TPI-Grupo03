@@ -1,5 +1,22 @@
 # Renovación visual con Kenney
 
+## Reorganización del edificio y del hall
+
+La planta del hall se alinea con las alas y la fachada: **24,9 unidades de ancho**, con límites y nivel de suelo compartidos en `src/museumLayout.ts`. Roma conserva sus 10,8 × 16 unidades, la distribución de piezas, el casco al 55 % y sus cinco focos.
+
+- Nave central con columnas y arcos alineados; dos pasillos laterales conducen directamente a las puertas. La última fila de columnas deja visibles los carteles desde el acceso.
+- Vitrinas, esculturas, cuadros y bancos agrupados en los laterales. La zona posterior queda libre para distribuir la circulación.
+- Bóveda y casetones conectados, cara interior de la fachada revestida con los mismos acabados, umbrales a nivel y pared posterior sin volúmenes duplicados.
+- Mampostería, cornisas y cubiertas continuas para conectar el pabellón de entrada, el hall y ambas alas. La iluminación mantiene el esquema cálido y los focos sobre las piezas.
+- Cartel de fin del recorrido frente al hall y orientación corregida de la señalización del ala de regreso.
+
+Capturas: [hall desde la entrada](capturas/estructura-hall.png), [pasillo lateral](capturas/estructura-lateral.png), [mirada hacia el acceso](capturas/estructura-regreso.png) y [envolvente del edificio](capturas/estructura-exterior.png).
+
+Verificado en Chrome: recorrido completo hasta el regreso con 1/10, foto válida e inválida, pausa durante la transición; tres pasillos longitudinales, cruce transversal, ambos muros del hall, detección de ubicación, acceso a Roma y cierre del retorno WIP. Se comprobaron techo y suelo en 63 posiciones y nueve puntos del umbral. Tipos y build correctos; continúa el aviso de Vite por el bundle principal de aproximadamente 714 kB. La medición de FPS con GPU real sigue pendiente.
+
+Las secciones siguientes documentan las revisiones anteriores.
+
+
 ## Actualización del interior — referencia de sala romana
 
 La referencia aportada se aplica al hall, la exhibición romana y la arquitectura común de las diez salas: paredes verde carbón, losas de piedra cálida, bases oscuras y molduras de bronce. La geometría sigue siendo low-poly y el sombreado de las piezas es toon. Las áreas WIP comparten los acabados, pero conservan sus puertas cerradas y no incorporan exhibiciones nuevas.
@@ -8,6 +25,16 @@ La referencia aportada se aplica al hall, la exhibición romana y la arquitectur
 - **Roma:** techo de 5,4 m, columnas altas, esculturas y reliquias sobre pedestales, mural elevado y cartelería oscura. El casco de bronce queda centrado bajo un foco cálido con sombra; dos pasos laterales permiten rodearlo.
 - **Luz:** la luz general disminuye gradualmente al atravesar el acceso. El ajuste se realiza antes de cada render, también al fotografiar. Los cinco focos de Roma acompañan el encendido de la puerta y se apagan al completar la sala. El patio conserva su iluminación diurna.
 - **Coste:** las losas se dibujan con instancias; los haces son geometría transparente suave. Solo el foco central agrega un mapa de sombras de 512 × 512. Las luces generales de salas que no se abrieron permanecen fuera del render. No se agregaron modelos, texturas externas ni dependencias.
+
+### Ampliación de las salas
+
+Las diez salas pasan de **6,9 × 12,4 a 10,8 × 16 unidades**, aproximadamente el doble de superficie. Los centros de las alas pasan a x = ±7,05 y el cruce de la U se desplaza con el nuevo paso. Muros, techos, suelo, molduras y detección de sala usan las dimensiones de `galleryLayout`.
+
+En Roma, las piezas y sus focos se distribuyen junto a las nuevas paredes laterales. El casco de la exhibición se reduce al **55 % de su tamaño anterior**, y su pedestal pasa de 1,8 × 1,6 a 1,25 × 1,12 unidades de base, con una colisión ajustada al nuevo volumen. Se conserva su identificación como artefacto fotografiable.
+
+Capturas de las nuevas proporciones: [desde la entrada](capturas/roma-ampliada-entrada.png), [cerca del pedestal](capturas/roma-ampliada-detalle.png) y [en el visor](capturas/roma-ampliada-visor.png). Las capturas de atmósfera siguientes muestran la distribución anterior a esta ampliación.
+
+Verificación de la ampliación: tipos y build correctos; recorrido completo hasta el regreso con 1/10; fotografía centrada, en borde y con oclusión parcial/total; ocho obstáculos, pedestal central, ambos pasos laterales, muros exteriores y 30 puntos de detección de sala. Reordenar Egipto al puesto 8 conserva su ID, número y posición en el panfleto.
 
 ### Capturas actuales
 

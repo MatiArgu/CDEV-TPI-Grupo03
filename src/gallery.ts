@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { areaCatalog, areaOrder, availabilityCopy, type AreaId } from './catalog';
 import type { Collider } from './scene';
 import { exhibition, stoneFloor } from './exhibition';
+import { galleryLayout, museumLayout } from './museumLayout';
 import { box, inkStroke, mesh, outline, toon } from './visual';
 
 export type GalleryRoom = {
@@ -24,17 +25,11 @@ export type GalleryDoor = {
   room: GalleryRoom | null;
 };
 
-export const galleryLayout = {
-  frontZ: -21.45,
-  step: 16,
-  wingX: 7.05,
-  innerX: 1.65,
-} as const;
 const { frontZ, step, wingX, innerX } = galleryLayout;
 const firstZ = frontZ - step / 2;
 const backZ = frontZ - step * 5;
 const wingWidth = (wingX - innerX) * 2;
-const outerX = innerX + wingWidth;
+const outerX = museumLayout.halfWidth;
 
 function roomSign(id: AreaId, number: number): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
@@ -90,7 +85,7 @@ export function createGallery(scene: THREE.Scene): {
   const dark = new THREE.Color(0x171d1a);
 
   function wall(width: number, depth: number, x: number, z: number): void {
-    const surface = box(width, 5.4, depth, cream, [x, 2.7, z], scene);
+    const surface = box(width, museumLayout.wallHeight, depth, cream, [x, museumLayout.wallHeight / 2, z], scene);
     surface.castShadow = surface.receiveShadow = true;
     photoSolids.push(surface);
     colliders.push({ minX: x - width / 2, maxX: x + width / 2, minZ: z - depth / 2, maxZ: z + depth / 2 });
@@ -140,7 +135,7 @@ export function createGallery(scene: THREE.Scene): {
       const sign = mesh(new THREE.PlaneGeometry(2.55, 0.8),
         new THREE.MeshBasicMaterial({ map: roomSign(target, areaOrder.indexOf(target) + 1), side: THREE.DoubleSide }),
         axis === 'z' ? [x, 3.45, z + (x < 0 ? 0.19 : -0.19)] : [x - 0.19, 3.45, z], scene);
-      if (axis === 'x') sign.rotation.y = Math.PI / 2;
+      sign.rotation.y = axis === 'x' ? -Math.PI / 2 : x > 0 ? Math.PI : 0;
       sign.castShadow = false;
     }
   }
@@ -150,7 +145,7 @@ export function createGallery(scene: THREE.Scene): {
     const x = side * wingX;
     box(wingWidth + 0.2, 0.14, step * 5 + 0.2, stone, [x, 0.02, (frontZ + backZ) / 2], scene).castShadow = false;
     box(wingWidth + 0.2, 0.2, step * 5 + 0.2, cream, [x, 5.5, (frontZ + backZ) / 2], scene);
-    wall(0.32, step * 5 + 0.2, side * outerX, (frontZ + backZ) / 2);
+    wall(museumLayout.wallThickness, step * 5 + 0.2, side * outerX, (frontZ + backZ) / 2);
     wall(0.28, step * 4, side * innerX, frontZ - step * 2);
     for (let boundary = 1; boundary < 5; boundary++) {
       const targetIndex = side < 0 ? boundary : 10 - boundary;
@@ -177,7 +172,7 @@ export function createGallery(scene: THREE.Scene): {
     const surface = new THREE.MeshBasicMaterial({ color: dark.clone() });
     const floor = box(wingWidth - 0.16, 0.014, step - 0.24, surface, [0, 0.12, 0], root);
     floor.castShadow = floor.receiveShadow = false;
-    stoneFloor(root, wingWidth - 0.2, step - 0.28, 0, 0, 0.145);
+    stoneFloor(root, wingWidth - 0.2, step - 0.28, 0, 0, museumLayout.floorY);
     for (const side of [-1, 1]) {
       box(0.045, 0.014, step - 0.35, trim, [side * (wingWidth / 2 - 0.31), 0.17, 0], root).castShadow = false;
       box(0.07, 0.2, step - 0.35, doorMaterial, [side * (wingWidth / 2 - 0.18), 0.26, 0], root);

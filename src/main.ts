@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { loadModels } from './assets';
 import { areaCatalog, areaOrder, availabilityCopy, availabilityOf, type AreaId } from './catalog';
-import { galleryLayout } from './gallery';
+import { galleryLayout, museumLayout } from './museumLayout';
 import { createMuseumScene } from './museum';
 import { createPamphlet } from './pamphlet';
 import { createPlayerControls } from './player';
@@ -284,7 +284,7 @@ try {
         ) {
           app.dataset.location = 'gallery';
           delete app.dataset.room;
-        } else if (position.y < -4.8 && position.y > -21.1 && Math.abs(position.x) < 8.1) {
+        } else if (position.y < museumLayout.frontZ - 0.5 && position.y > museumLayout.hallBackZ && Math.abs(position.x) < museumLayout.halfWidth - 0.3) {
           app.dataset.location = 'hall';
           delete app.dataset.room;
           if (!enteredHall) {
