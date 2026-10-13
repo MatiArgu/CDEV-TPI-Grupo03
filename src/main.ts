@@ -6,7 +6,6 @@ import { createMuseumScene } from './museum';
 import { createPamphlet } from './pamphlet';
 import { createPlayerControls } from './player';
 import { createStudyScene } from './scene';
-import './style.css';
 
 const container = document.querySelector<HTMLDivElement>('#scene')!;
 const error = document.querySelector<HTMLDivElement>('#error')!;
@@ -187,10 +186,13 @@ try {
   function resize(): void {
     const width = container.clientWidth;
     const height = container.clientHeight;
+    if (!width || !height) return;
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
   }
+  const resizeObserver = new ResizeObserver(resize);
+  resizeObserver.observe(container);
   window.addEventListener('resize', resize);
   resize();
 
