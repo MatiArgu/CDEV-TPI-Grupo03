@@ -1,0 +1,308 @@
+[
+  {
+    "id": "nature-kit/tree_oak",
+    "file": "assets/kenney/nature-kit/tree_oak.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/tree_oak.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 14644,
+    "sha256": "d7fd8773674928c50c11b66d12c636d49bdcc15a8b1c7fbb98e6f63a3439a3f3",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/tree_detailed",
+    "file": "assets/kenney/nature-kit/tree_detailed.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/tree_detailed.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 31412,
+    "sha256": "c041daf2f0fb1d49e4325227cbcd58667adbe51e9b55e8c1f0a94b74cc521b3b",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/tree_thin",
+    "file": "assets/kenney/nature-kit/tree_thin.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/tree_thin.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 17200,
+    "sha256": "f0f1f6861fe0446963d3be216cc628324f538bb0841bc9a8e14140313f64e2f3",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/tree_pineRoundD",
+    "file": "assets/kenney/nature-kit/tree_pineRoundD.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/tree_pineRoundD.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 13748,
+    "sha256": "a5051944fbfae7900cef8314c4a5d977b6b29bcd4e4ae5dea9d80980e65a411a",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/plant_bush",
+    "file": "assets/kenney/nature-kit/plant_bush.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/plant_bush.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 4396,
+    "sha256": "ae7b1beb39e242b13f5f29e3ec23ef21034b814f82297b8aa00a9bf4e1b09590",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/plant_bushSmall",
+    "file": "assets/kenney/nature-kit/plant_bushSmall.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/plant_bushSmall.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 3212,
+    "sha256": "a9620a7d1fb165ae68d323676f80dbb2a9e3aafb21110d18d18d90b07026b91d",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/flower_redA",
+    "file": "assets/kenney/nature-kit/flower_redA.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/flower_redA.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 7104,
+    "sha256": "171930b7789ddbf735af3745576b5393750beb9133b9ff4a444bb6bb2986c020",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/flower_yellowC",
+    "file": "assets/kenney/nature-kit/flower_yellowC.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/flower_yellowC.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 7616,
+    "sha256": "4115c017390b3e157466a8719e9e2af6c5385505135e7012982b9410760ba9f3",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/grass_leafs",
+    "file": "assets/kenney/nature-kit/grass_leafs.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/grass_leafs.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 4608,
+    "sha256": "8bc4c0b17c2e64c34e1acbf7c4a2fd8c04cfcd7155328e61767887b2ced112c7",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/rock_smallA",
+    "file": "assets/kenney/nature-kit/rock_smallA.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/rock_smallA.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 3044,
+    "sha256": "df9fff9d711e61370e8df0caa2514c89b8f8a8dc6c6fafaf4eb2ec79c5ae07c1",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/pot_large",
+    "file": "assets/kenney/nature-kit/pot_large.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/pot_large.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 6168,
+    "sha256": "57e60214bc6ab1dc3764c9ffe80091ff45f2bfd49fbc313c1b68dcaab1537aef",
+    "textures": []
+  },
+  {
+    "id": "furniture-kit/bench",
+    "file": "assets/kenney/furniture-kit/bench.glb",
+    "source": "3D assets/Furniture Kit/Models/GLTF format/bench.glb",
+    "pack": "Furniture Kit",
+    "license": "CC0-1.0",
+    "bytes": 10756,
+    "sha256": "ba05a6d23a5a5a44da016757632070e47ff7587ce10e2f6d6d52328b4cf5489b",
+    "textures": []
+  },
+  {
+    "id": "furniture-kit/benchCushion",
+    "file": "assets/kenney/furniture-kit/benchCushion.glb",
+    "source": "3D assets/Furniture Kit/Models/GLTF format/benchCushion.glb",
+    "pack": "Furniture Kit",
+    "license": "CC0-1.0",
+    "bytes": 12500,
+    "sha256": "5186ad938f8b9eff255361fd1fdc48a81f08c318161cde27c93753ab95a2d354",
+    "textures": []
+  },
+  {
+    "id": "furniture-kit/pottedPlant",
+    "file": "assets/kenney/furniture-kit/pottedPlant.glb",
+    "source": "3D assets/Furniture Kit/Models/GLTF format/pottedPlant.glb",
+    "pack": "Furniture Kit",
+    "license": "CC0-1.0",
+    "bytes": 7576,
+    "sha256": "5b760eda2766f75fda36b2c5df652a1662f82981ef64cd8fa7fe7bcd386b3a15",
+    "textures": []
+  },
+  {
+    "id": "furniture-kit/plantSmall1",
+    "file": "assets/kenney/furniture-kit/plantSmall1.glb",
+    "source": "3D assets/Furniture Kit/Models/GLTF format/plantSmall1.glb",
+    "pack": "Furniture Kit",
+    "license": "CC0-1.0",
+    "bytes": 8224,
+    "sha256": "2b9c022feb47be857b2c4fdc29f36522766ba9b70c578c31d7c05d71b4377d15",
+    "textures": []
+  },
+  {
+    "id": "mini-arena/column",
+    "file": "assets/kenney/mini-arena/column.glb",
+    "source": "3D assets/Mini Arena/Models/GLB format/column.glb",
+    "pack": "Mini Arena",
+    "license": "CC0-1.0",
+    "bytes": 17156,
+    "sha256": "348c4df691e78fb9dc507a62e8f20fc2c75e87cdab7e110024d2ac6c2df9e2ed",
+    "textures": [
+      "assets/kenney/mini-arena/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-arena/column-damaged",
+    "file": "assets/kenney/mini-arena/column-damaged.glb",
+    "source": "3D assets/Mini Arena/Models/GLB format/column-damaged.glb",
+    "pack": "Mini Arena",
+    "license": "CC0-1.0",
+    "bytes": 14328,
+    "sha256": "b5e361991de08c699de57a04d9d331e1013df76e3b902f79d3557917a92cf2b5",
+    "textures": [
+      "assets/kenney/mini-arena/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-arena/statue",
+    "file": "assets/kenney/mini-arena/statue.glb",
+    "source": "3D assets/Mini Arena/Models/GLB format/statue.glb",
+    "pack": "Mini Arena",
+    "license": "CC0-1.0",
+    "bytes": 51032,
+    "sha256": "e733e5f71d04f8e98cf852251dc5aef11073847c49f47f60ffb9ef827f931a4f",
+    "textures": [
+      "assets/kenney/mini-arena/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-arena/character-soldier",
+    "file": "assets/kenney/mini-arena/character-soldier.glb",
+    "source": "3D assets/Mini Arena/Models/GLB format/character-soldier.glb",
+    "pack": "Mini Arena",
+    "license": "CC0-1.0",
+    "bytes": 178520,
+    "sha256": "0bb906e70fff3f10a76e9704a8df18e6757670cdc6784ff6864e1bc1ecea66c6",
+    "textures": [
+      "assets/kenney/mini-arena/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-arena/weapon-spear",
+    "file": "assets/kenney/mini-arena/weapon-spear.glb",
+    "source": "3D assets/Mini Arena/Models/GLB format/weapon-spear.glb",
+    "pack": "Mini Arena",
+    "license": "CC0-1.0",
+    "bytes": 7168,
+    "sha256": "3f661110d7b8f6f7cda48eb14360432fe2e92fbb48184cde46dc70242e2bcbb4",
+    "textures": [
+      "assets/kenney/mini-arena/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-arena/banner",
+    "file": "assets/kenney/mini-arena/banner.glb",
+    "source": "3D assets/Mini Arena/Models/GLB format/banner.glb",
+    "pack": "Mini Arena",
+    "license": "CC0-1.0",
+    "bytes": 22124,
+    "sha256": "5f4d18fa9b72689593eb85fb9c755203de37bfb2d373da3a38f6d704f99b04bb",
+    "textures": [
+      "assets/kenney/mini-arena/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "pirate-kit/boat-row-large",
+    "file": "assets/kenney/pirate-kit/boat-row-large.glb",
+    "source": "3D assets/Pirate Kit/Models/GLB format/boat-row-large.glb",
+    "pack": "Pirate Kit",
+    "license": "CC0-1.0",
+    "bytes": 15972,
+    "sha256": "b496c0d5f9053ebc7e9b9a39a4770d5ccaff5510c51b7c72c1b8391442e61d0f",
+    "textures": [
+      "assets/kenney/pirate-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "pirate-kit/tool-paddle",
+    "file": "assets/kenney/pirate-kit/tool-paddle.glb",
+    "source": "3D assets/Pirate Kit/Models/GLB format/tool-paddle.glb",
+    "pack": "Pirate Kit",
+    "license": "CC0-1.0",
+    "bytes": 6864,
+    "sha256": "2a387ead62c44ec4218d664582a956f92a66b3c7db168d68394ccfabefae58b8",
+    "textures": [
+      "assets/kenney/pirate-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "pirate-kit/barrel",
+    "file": "assets/kenney/pirate-kit/barrel.glb",
+    "source": "3D assets/Pirate Kit/Models/GLB format/barrel.glb",
+    "pack": "Pirate Kit",
+    "license": "CC0-1.0",
+    "bytes": 14092,
+    "sha256": "7616dedf7c1023afa6ecd3c52a4609460aae0e582dee14e60ec5e47c1174793b",
+    "textures": [
+      "assets/kenney/pirate-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "pirate-kit/crate",
+    "file": "assets/kenney/pirate-kit/crate.glb",
+    "source": "3D assets/Pirate Kit/Models/GLB format/crate.glb",
+    "pack": "Pirate Kit",
+    "license": "CC0-1.0",
+    "bytes": 9232,
+    "sha256": "b525674e07c8b83667512a8dd93be0d7684358347d0e64d2bb16b156ac382ed1",
+    "textures": [
+      "assets/kenney/pirate-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "pirate-kit/platform-planks",
+    "file": "assets/kenney/pirate-kit/platform-planks.glb",
+    "source": "3D assets/Pirate Kit/Models/GLB format/platform-planks.glb",
+    "pack": "Pirate Kit",
+    "license": "CC0-1.0",
+    "bytes": 6524,
+    "sha256": "4313f45d4feb8cd01adbb4b4785f368c7df091f33e473dea536172868805b167",
+    "textures": [
+      "assets/kenney/pirate-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "modular-buildings/window-white-round-top",
+    "file": "assets/kenney/modular-buildings/window-white-round-top.glb",
+    "source": "3D assets/Modular Buildings/Models/GLB format/window-white-round-top.glb",
+    "pack": "Modular Buildings",
+    "license": "CC0-1.0",
+    "bytes": 5916,
+    "sha256": "0c1764efacecdfbd6d01e03724b5c9b0e18fb23e017bfa7ca7c6b243e401a650",
+    "textures": [
+      "assets/kenney/modular-buildings/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "modular-buildings/window-white-tall",
+    "file": "assets/kenney/modular-buildings/window-white-tall.glb",
+    "source": "3D assets/Modular Buildings/Models/GLB format/window-white-tall.glb",
+    "pack": "Modular Buildings",
+    "license": "CC0-1.0",
+    "bytes": 4504,
+    "sha256": "63acf228cfd610f7bdfaac82a0499467ec2492ac6dfcde4ad8d069fe703c7fdc",
+    "textures": [
+      "assets/kenney/modular-buildings/Textures/colormap.png"
+    ]
+  }
+]

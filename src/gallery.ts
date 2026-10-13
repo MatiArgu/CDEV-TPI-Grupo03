@@ -167,6 +167,7 @@ export function createGallery(scene: THREE.Scene): {
     root.userData.roomNumber = index + 1;
     scene.add(root);
     const accent = new THREE.Color(areaCatalog[id].accent);
+    const litSurface = new THREE.Color(0xede4d1).lerp(accent, 0.14);
     const surface = new THREE.MeshBasicMaterial({ color: dark.clone() });
     const floor = box(wingWidth - 0.16, 0.014, step - 0.24, surface, [0, 0.12, 0], root);
     floor.castShadow = floor.receiveShadow = false;
@@ -182,7 +183,7 @@ export function createGallery(scene: THREE.Scene): {
     inkStroke([[wallX, 0.51, -step / 2 + 0.45], [wallX, 0.55, -0.6], [wallX, 0.52, step / 2 - 0.45]], root, 0.35);
     const lamp = mesh(new THREE.IcosahedronGeometry(0.23, 0), new THREE.MeshBasicMaterial({ color: dark.clone() }), [0, 3.58, 0], root);
     lamp.castShadow = false;
-    const light = new THREE.PointLight(accent, 0, 9);
+    const light = new THREE.PointLight(0xffedce, 0, 9);
     light.position.set(0, 3.35, 0);
     root.add(light);
     const insideSign = mesh(new THREE.PlaneGeometry(3.3, 1.03),
@@ -192,7 +193,7 @@ export function createGallery(scene: THREE.Scene): {
     insideSign.visible = false;
     rooms.push({ id, number: index + 1, root, center: new THREE.Vector2(x, z) });
     root.userData.setLight = (strength: number) => {
-      surface.color.copy(dark).lerp(accent, strength);
+      surface.color.copy(dark).lerp(litSurface, strength);
       (lamp.material as THREE.MeshBasicMaterial).color.copy(dark).lerp(new THREE.Color(0xfff0c8), strength);
       light.intensity = strength * 3;
       insideSign.visible = strength > 0.08;
