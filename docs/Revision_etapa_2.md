@@ -27,3 +27,5 @@ El retorno mediante clic es deliberado: después de liberar Pointer Lock con Esc
 - Revisión visual del modo normal y del modo de estudio en Chrome de escritorio.
 
 Pendiente de revisión en el equipo de desarrollo: fluidez con aceleración gráfica real y recorrido manual de todas las zonas sólidas. Esta entrega no añade el museo ni la fotografía.
+
+**Cambio posterior:** al comenzar la etapa 6 se añadió carrera con Shift. La velocidad normal sigue siendo 3,2 unidades/s y con Shift pasa a 5,4 unidades/s; la tecla se limpia al pausar o abrir una interfaz.

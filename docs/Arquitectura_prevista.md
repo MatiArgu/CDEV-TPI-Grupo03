@@ -1,15 +1,15 @@
 # Arquitectura prevista del MVP
 
-Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md), el [inicio en el museo](Revision_etapa_3.md), una [prueba aislada de la Polaroid](Revision_etapa_4.md) y las [diez salas WIP](Revision_etapa_5.md). El laboratorio temporal de fotografía ya fue retirado. El catálogo y `areaOrder` alimentan la ubicación física, la señalización y el panfleto; la integración de la fotografía en las salas, los mundos históricos y el progreso siguen previstos.
+Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md), el [inicio en el museo](Revision_etapa_3.md), una [prueba aislada de la Polaroid](Revision_etapa_4.md), las [diez salas del circuito en U](Revision_etapa_5.md) y el [ciclo romano](Revision_etapa_6.md). El laboratorio temporal de fotografía ya fue retirado. El catálogo y `areaOrder` alimentan la ubicación física, la señalización y el panfleto. Roma integra captura, viaje y progreso; Egipto y la persistencia siguen previstos para la etapa 7.
 
 ## Catálogo y orden de las áreas
 
-Cada época tiene un `id` estable, independiente de su número y de la ubicación de su sala. El catálogo guarda nombre, artefacto previsto, color y disponibilidad. En la etapa 5 todas tienen disponibilidad `wip`; el contenido jugable se añadirá cuando se implemente cada época. La lista `areaOrder` es la única fuente del orden.
+Cada época tiene un `id` estable, independiente de su número y de la ubicación de su sala. El catálogo guarda nombre, artefacto previsto, color y disponibilidad. Roma tiene disponibilidad `playable`; las otras nueve áreas, incluido Egipto, siguen `wip` en la etapa 6. La lista `areaOrder` es la única fuente del orden.
 
 | ID estable | Época | Artefacto | MVP |
 | --- | --- | --- | --- |
 | `roma` | Roma Antigua | Casco de gladiador | Jugable |
-| `egipto` | Egipto Antiguo | Escarabajo egipcio | Jugable |
+| `egipto` | Egipto Antiguo | Escarabajo egipcio | Previsto en etapa 7 |
 | `grecia` | Grecia Antigua | Corona de laurel | WIP |
 | `babilonia` | Mesopotamia — Babilonia | Tablilla cuneiforme | WIP |
 | `medieval` | Edad Media — Castillo medieval | Llave antigua | WIP |
@@ -26,8 +26,9 @@ Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotograf
 - En la etapa 3 solo existía el hall y un umbral cerrado hacia el futuro sector romano. La etapa 5 ubica diez módulos en una U: cinco de ida, un cruce al fondo y cinco de regreso. Cada módulo recibe el ID situado en esa posición de `areaOrder`; su grupo local permite incorporar una exhibición sin fijarla a coordenadas globales. La primera puerta se abre con E y enciende la sala con un breve parpadeo. Las posteriores requieren la finalización de la sala precedente.
 - Número de sala, señalización y posición en el panfleto se calculan a partir de `areaOrder`. El texto de disponibilidad de sala y panfleto se deriva del catálogo. Una prueba anterior movió `egipto` al octavo lugar y actualizó sala, letrero y panfleto, pero ese orden ya no es recorrible con las puertas WIP cerradas. Necesita un acceso alternativo antes de usarse en el juego.
 - **Disponibilidad** (`WIP` o jugable) y **progreso** (`locked`, `active`, `completed`) son conceptos distintos. Una sala WIP tiene posición física y señalización, pero permanece cerrada y nunca se vuelve `active`.
-- Solo una época jugable incompleta está activa a la vez: la primera de `areaOrder` que no esté completada. Con el orden inicial Roma → Egipto, ambas son contiguas. Si no queda ninguna jugable incompleta, no hay área activa y se muestra la conclusión correspondiente al contenido disponible.
+- Solo una época jugable incompleta está activa a la vez: la primera de `areaOrder` que no esté completada. En la etapa 6 esa época es Roma; al instalar Egipto en la etapa 7, ambas quedarán contiguas en el orden inicial. La conclusión del MVP cuando no quede ninguna jugable incompleta sigue prevista para la etapa 7.
 - Una foto válida inicia el viaje, pero el área solo se marca como completada al interactuar con el artefacto en el mundo histórico y regresar. La foto y la representación del artefacto se añaden juntas al panfleto en ese momento.
+- En la etapa 6 el progreso de Roma y su foto permanecen en memoria durante la sesión; el guardado local por ID se implementará en la etapa 7.
 
 ## Fotografía y escenas
 
@@ -40,6 +41,8 @@ Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotograf
 ## Estado de partida y controles
 
 La experiencia necesita estados explícitos para inicio, exploración del museo, revelado, transición, exploración histórica, regreso y cierre del MVP. Cámara equipada, panfleto abierto y pausa se gestionan como modos compatibles con esos estados. El panfleto actual se maneja solo con M y conserva Pointer Lock mientras bloquea movimiento y mirada; Escape abre la pausa y lo libera. Si el puntero fue liberado, volver a capturarlo requiere una acción del jugador. Durante el revelado y las transiciones se deshabilitan movimiento y disparo.
+
+Shift acelera el movimiento en exploración del museo y de Roma. La carrera se detiene al soltar la tecla y no queda retenida al abrir el panfleto, pausar o iniciar una transición.
 
 El guardado local tendrá versión y usará IDs estables: panfleto recibido, áreas completadas y fotos válidas asociadas a cada área. Las capturas guardadas se reducirán de tamaño para no saturar el almacenamiento del navegador. El orden **no** se guardará en la partida: al recargar se toma el `areaOrder` actual y se reubican las áreas completadas en el panfleto. Reiniciar elimina el progreso guardado y comienza en el exterior.
 

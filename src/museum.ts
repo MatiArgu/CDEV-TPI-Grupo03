@@ -1,5 +1,7 @@
 import * as THREE from 'three';
+import type { AreaId } from './catalog';
 import { createGallery, galleryLayout, type GalleryDoor, type GalleryRoom } from './gallery';
+import { installRomeExhibit } from './rome';
 import type { Collider } from './scene';
 import { box, inkStroke, irregularCrown, materials as mat, mesh, outline, palette, shadowBlob, silhouette } from './visual';
 
@@ -9,6 +11,7 @@ export type MuseumWorld = {
   guard: THREE.Vector3;
   rooms: GalleryRoom[];
   doors: GalleryDoor[];
+  exhibits: Map<AreaId, { artifact: THREE.Object3D; photoSolids: THREE.Object3D[] }>;
   roomAt: (position: THREE.Vector2) => GalleryRoom | null;
   openEntrance: () => void;
   openDoor: (door: GalleryDoor) => void;
@@ -234,6 +237,10 @@ export function createMuseumScene(): MuseumWorld {
     scene.add(light);
   }
   const gallery = createGallery(scene);
+  const romeExhibit = installRomeExhibit(gallery.rooms.find((room) => room.id === 'roma')!);
+  const exhibits = new Map<AreaId, { artifact: THREE.Object3D; photoSolids: THREE.Object3D[] }>([
+    ['roma', { artifact: romeExhibit.artifact, photoSolids: [...gallery.photoSolids, ...romeExhibit.photoSolids] }],
+  ]);
   sign(scene, 'REGRESO AL HALL', [galleryLayout.wingX, 3.45, -21.67], 2.5);
 
   const doorBlock: Collider = { minX: -1.48, maxX: 1.48, minZ: -4.25, maxZ: -3.3 };
@@ -249,6 +256,7 @@ export function createMuseumScene(): MuseumWorld {
     { minX: 3.25, maxX: 4.55, minZ: -16.13, maxZ: -15.07 },
   ];
   colliders.push(...gallery.colliders);
+  colliders.push(...romeExhibit.colliders);
   for (const [x, z] of [[-13, 2], [13, 2], [-13, 16], [13, 16]]) {
     colliders.push({ minX: x - 0.32, maxX: x + 0.32, minZ: z - 0.32, maxZ: z + 0.32 });
   }
@@ -272,6 +280,7 @@ export function createMuseumScene(): MuseumWorld {
     guard: new THREE.Vector3(2.5, 1.45, -0.8),
     rooms: gallery.rooms,
     doors: gallery.doors,
+    exhibits,
     roomAt: (position) => gallery.rooms.find((room) => (
       Math.abs(position.y - room.center.y) < galleryLayout.step / 2 - 0.1
       && Math.abs(position.x - room.center.x) < galleryLayout.wingX - galleryLayout.innerX - 0.1

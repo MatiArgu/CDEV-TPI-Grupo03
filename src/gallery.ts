@@ -74,11 +74,13 @@ export function createGallery(scene: THREE.Scene): {
   rooms: GalleryRoom[];
   doors: GalleryDoor[];
   colliders: Collider[];
+  photoSolids: THREE.Object3D[];
   update: (delta: number) => void;
 } {
   const rooms: GalleryRoom[] = [];
   const doors: GalleryDoor[] = [];
   const colliders: Collider[] = [];
+  const photoSolids: THREE.Object3D[] = [];
   const stone = toon(palette.stone);
   const cream = toon(palette.cream);
   const trim = toon(palette.sand);
@@ -88,6 +90,7 @@ export function createGallery(scene: THREE.Scene): {
   function wall(width: number, depth: number, x: number, z: number): void {
     const surface = box(width, 3.9, depth, cream, [x, 1.95, z], scene);
     surface.castShadow = surface.receiveShadow = false;
+    photoSolids.push(surface);
     colliders.push({ minX: x - width / 2, maxX: x + width / 2, minZ: z - depth / 2, maxZ: z + depth / 2 });
   }
 
@@ -118,6 +121,7 @@ export function createGallery(scene: THREE.Scene): {
         : box(0.15, 2.96, 1.145, doorMaterial, [x, 1.49, z + side * 0.575], scene);
       panel.castShadow = false;
       outline(panel, 0.45);
+      photoSolids.push(panel);
       return panel;
     }) as [THREE.Mesh, THREE.Mesh];
     const blocker: Collider = axis === 'z'
@@ -204,7 +208,7 @@ export function createGallery(scene: THREE.Scene): {
   }
 
   return {
-    rooms, doors, colliders,
+    rooms, doors, colliders, photoSolids,
     update: (delta) => {
       const stepDelta = Math.min(delta, 0.12);
       for (const door of doors) {

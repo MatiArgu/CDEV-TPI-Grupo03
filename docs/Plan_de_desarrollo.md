@@ -28,7 +28,7 @@ El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un
 
 **Objetivo:** recorrer el prototipo en primera persona.
 
-**Trabajo:** WASD, rotación con mouse y Pointer Lock, altura humana, movimiento de cabeza sutil, colisiones sencillas, interacción contextual con E y pausa/retorno con Escape. No agregar salto, carrera ni tercera persona.
+**Trabajo:** WASD, rotación con mouse y Pointer Lock, altura humana, movimiento de cabeza sutil, colisiones sencillas, interacción contextual con E y pausa/retorno con Escape. No agregar salto ni tercera persona. La carrera con Shift se incorporó por pedido posterior al comenzar la etapa 6.
 
 **Aceptación:** se puede recorrer la escena sin atravesar muros u objetos sólidos; el puntero se libera y recupera correctamente; abrir una interfaz o pausar no deja movimiento residual.
 

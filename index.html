@@ -31,7 +31,7 @@
       <div class="player-hud">
         <div class="crosshair" aria-hidden="true"></div>
         <div id="interaction-prompt" class="interaction-prompt" hidden><kbd>E</kbd><span id="interaction-label"></span></div>
-        <div id="player-help" class="player-help">WASD CAMINAR · MOUSE MIRAR · E INTERACTUAR · ESC PAUSAR</div>
+        <div id="player-help" class="player-help">WASD CAMINAR · SHIFT CORRER · MOUSE MIRAR · E INTERACTUAR · ESC PAUSAR</div>
       </div>
       <div id="photo-hud" class="photo-hud" aria-hidden="true">
         <div class="camera-frame">
@@ -55,7 +55,7 @@
           <h1 id="menu-title">La historia<br />te espera.</h1>
           <p id="menu-text">Atravesá el patio y hablá con el guardia junto a la entrada. Él tiene algo para vos.</p>
           <button id="menu-button" class="game-button" type="button">Comenzar visita <span aria-hidden="true">↗</span></button>
-          <small>WASD caminar · Mouse mirar · E interactuar · M panfleto · Escape pausar</small>
+          <small>WASD caminar · Shift correr · Mouse mirar · E interactuar · M panfleto · Escape pausar</small>
         </div>
       </section>
       <section id="pamphlet" class="pamphlet-layer" role="dialog" aria-label="Panfleto desplegado del museo" hidden>
@@ -67,12 +67,13 @@
             <div class="map-title"><span>PLANO GENERAL</span><span>10 ÁREAS</span></div>
             <div id="pamphlet-map" class="pamphlet-map" aria-label="Mapa numerado de las diez áreas"></div>
             <div class="map-entrance">↑ INICIO · HALL <span>REGRESO · HALL ↑</span></div>
+            <div id="pamphlet-collection" class="pamphlet-collection" hidden></div>
           </div>
           <div class="pamphlet-leaf pamphlet-index-leaf">
             <span class="pamphlet-eyebrow">ÍNDICE / UNA ÉPOCA EN CADA PUERTA</span>
             <h3>Diez momentos<br />por descubrir.</h3>
             <ol id="pamphlet-index" class="pamphlet-index"></ol>
-            <p id="pamphlet-note" class="pamphlet-note">Abrí la primera puerta con E. Las siguientes se desbloquean al completar la sala anterior. Por ahora las diez áreas están en preparación.</p>
+            <p id="pamphlet-note" class="pamphlet-note">Abrí la primera puerta con E. Las siguientes se desbloquean al completar la sala anterior.</p>
             <div class="pamphlet-stamp">PLANO DE VISITA · 10 SALAS</div>
           </div>
         </div>
