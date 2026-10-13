@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { createMuseumScene } from './museum';
+import { createPamphlet } from './pamphlet';
 import { createPlayerControls } from './player';
 import { createStudyScene } from './scene';
 import './style.css';
@@ -26,11 +28,14 @@ try {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.append(renderer.domElement);
 
-  const camera = new THREE.PerspectiveCamera(studyMode ? 45 : 68, 1, 0.1, 60);
-  const world = createStudyScene();
+  const camera = new THREE.PerspectiveCamera(studyMode ? 45 : 68, 1, 0.1, studyMode ? 60 : 100);
+  let scene: THREE.Scene;
   let updateControls: (delta: number) => void;
+  let updateScene: (delta: number) => void = () => {};
 
   if (studyMode) {
+    const world = createStudyScene();
+    scene = world.scene;
     const initialView = requestedView as View;
     app.dataset.view = initialView;
     camera.position.copy(views[initialView].position);
@@ -69,7 +74,65 @@ try {
       controls.update();
     };
   } else {
-    updateControls = createPlayerControls(camera, renderer.domElement, world.colliders, world.exhibit);
+    const world = createMuseumScene();
+    scene = world.scene;
+    updateScene = world.update;
+    createPamphlet();
+    const pamphlet = document.querySelector<HTMLElement>('#pamphlet')!;
+    const toast = document.querySelector<HTMLElement>('#game-toast')!;
+    const help = document.querySelector<HTMLElement>('#player-help')!;
+    let hasPamphlet = false;
+    let hasSeenMap = false;
+    let enteredHall = false;
+    let toastTimer = 0;
+    const toGuard = new THREE.Vector3();
+
+    function showToast(message: string): void {
+      toast.textContent = message;
+      toast.hidden = false;
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => { toast.hidden = true; }, 4200);
+    }
+
+    updateControls = createPlayerControls(camera, renderer.domElement, {
+      colliders: world.colliders,
+      start: new THREE.Vector2(1, 17),
+      findInteraction: (position, gaze) => {
+        if (hasPamphlet) return null;
+        toGuard.set(world.guard.x - position.x, world.guard.y - 1.7, world.guard.z - position.y);
+        if (Math.hypot(toGuard.x, toGuard.z) > 2.55 || gaze.dot(toGuard.normalize()) < 0.55) return null;
+        return {
+          label: 'Recibir panfleto del guardia',
+          activate: () => {
+            hasPamphlet = true;
+            app.dataset.storyState = 'pamphlet-received';
+            world.openEntrance();
+            help.textContent = 'WASD CAMINAR · M PANFLETO · ESC PAUSAR';
+            showToast('El guardia te entregó el panfleto. Pulsá M para desplegarlo.');
+          },
+        };
+      },
+      canOpenPamphlet: () => hasPamphlet,
+      onPamphletChange: (open) => {
+        pamphlet.hidden = !open;
+        if (open && !hasSeenMap) {
+          hasSeenMap = true;
+          app.dataset.storyState = 'map-seen';
+          world.revealRome();
+        }
+      },
+      onPositionChange: (position) => {
+        if (position.y < -4.8 && position.y > -21.1 && Math.abs(position.x) < 8.1) {
+          app.dataset.location = 'hall';
+          if (!enteredHall) {
+            enteredHall = true;
+            showToast(hasSeenMap ? 'La luz cálida señala el futuro sector de Roma.' : 'Entraste al hall. Abrí el panfleto con M.');
+          }
+        } else {
+          app.dataset.location = 'exterior';
+        }
+      },
+    });
   }
 
   function resize(): void {
@@ -87,7 +150,8 @@ try {
     const delta = (time - previousTime) / 1000;
     previousTime = time;
     updateControls(delta);
-    renderer.render(world.scene, camera);
+    updateScene(delta);
+    renderer.render(scene, camera);
   });
 } catch (cause) {
   error.hidden = false;
