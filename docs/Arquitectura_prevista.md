@@ -1,6 +1,6 @@
 # Arquitectura prevista del MVP
 
-Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Aquí se describe la estructura futura; **no existe todavía código del juego**.
+Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Por ahora solo existe el [estudio visual de la etapa 1](Revision_etapa_1.md); el catálogo, las salas, la fotografía y el progreso descritos aquí siguen previstos.
 
 ## Catálogo y orden de las áreas
 
