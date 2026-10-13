@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#e7ead8" />
+    <title>Museo de viajes en el tiempo · Estudio visual</title>
+  </head>
+  <body>
+    <main id="app">
+      <div id="scene" aria-label="Escena tridimensional de prueba del museo"></div>
+      <div class="paper-grain" aria-hidden="true"></div>
+      <header class="masthead">
+        <div class="eyebrow"><span class="eyebrow-mark"></span> MUSEO DE VIAJES EN EL TIEMPO <span class="separator">/</span> ESTUDIO 01</div>
+        <h1>Un museo fuera<br /><em>del tiempo.</em></h1>
+        <p>Arquitectura, naturaleza y una pieza de la historia en un pequeño estudio visual.</p>
+      </header>
+      <aside class="specimen-label" aria-label="Ficha de la pieza">
+        <span class="label-index">01 — PIEZA DE ESTUDIO</span>
+        <strong>Casco de gladiador</strong>
+        <span>Forma · luz · silueta</span>
+      </aside>
+      <nav class="view-controls" aria-label="Distancia de observación">
+        <span class="controls-title">OBSERVAR DESDE</span>
+        <button type="button" data-view="far" aria-pressed="true"><span>01</span> Lejos</button>
+        <button type="button" data-view="mid" aria-pressed="false"><span>02</span> Medio</button>
+        <button type="button" data-view="near" aria-pressed="false"><span>03</span> Cerca</button>
+      </nav>
+      <div class="hint">ARRASTRÁ PARA ORBITAR · RUEDA PARA ACERCAR</div>
+      <div id="error" class="error" hidden></div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
