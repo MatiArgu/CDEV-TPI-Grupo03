@@ -562,5 +562,15 @@
     "textures": [
       "assets/kenney/mini-arena/Textures/colormap.png"
     ]
+  },
+  {
+    "id": "nature-kit/crops_bambooStageB",
+    "file": "assets/kenney/nature-kit/crops_bambooStageB.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/crops_bambooStageB.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 40144,
+    "sha256": "238c4cbeedf747dea96d579cf63301d35bb8709310f0405596c8f988dcc366e6",
+    "textures": []
   }
 ]

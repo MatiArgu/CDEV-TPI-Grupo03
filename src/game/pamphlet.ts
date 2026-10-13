@@ -83,17 +83,24 @@ export function createPamphlet(camera: THREE.PerspectiveCamera) {
         const memories = areaOrder.filter((id) => completed.has(id));
         if (memories.length) {
           memories.forEach((id, index) => {
-            const y = 895 + index * 115;
-            c.save(); c.translate(143, y + 18); c.rotate(-0.05);
-            c.fillStyle = '#fff9e9'; c.fillRect(-63, -51, 144, 111);
-            c.drawImage(completed.get(id)!, -56, -44, 130, 97.5); c.restore();
-            text(areaCatalog[id].name.toUpperCase(), 270, y, 32);
-            text(`✓ ${areaCatalog[id].artifact}`, 270, y + 47, 29);
-            c.save(); c.translate(873, y + 10); c.scale(0.64, 0.64);
+            const x = 78 + (index % 2) * 452;
+            const y = 916 + Math.floor(index / 2) * 164;
+            c.save(); c.translate(x + 55, y + 18); c.rotate(-0.05);
+            c.fillStyle = '#fff9e9'; c.fillRect(-55, -45, 118, 96);
+            c.drawImage(completed.get(id)!, -49, -39, 106, 79.5); c.restore();
+            text(areaCatalog[id].name.replace(' · 1969', '').toUpperCase(), x + 132, y, 27);
+            text(`✓ ${areaCatalog[id].artifact}`, x + 132, y + 35, 23);
+            c.save(); c.translate(x + 185, y + 83); c.scale(0.4, 0.4);
             if (id === 'egipto') {
               c.fillStyle = '#8f7d50'; c.beginPath(); c.ellipse(0, 0, 60, 20, 0, 0, Math.PI * 2); c.fill();
               c.fillStyle = '#477f7c'; c.beginPath(); c.ellipse(0, 0, 25, 38, 0, 0, Math.PI * 2); c.fill();
               c.strokeStyle = '#d0b573'; c.lineWidth = 4; c.beginPath(); c.moveTo(0, -32); c.lineTo(0, 32); c.stroke();
+            } else if (id === 'japon') {
+              c.fillStyle = '#b83f39'; c.beginPath(); c.ellipse(0, 0, 35, 42, 0, 0, Math.PI * 2); c.fill();
+              c.fillStyle = '#e9d8b1';
+              for (const side of [-1, 1]) { c.beginPath(); c.moveTo(side * 15, -30); c.lineTo(side * 32, -65); c.lineTo(side * 30, -23); c.fill(); }
+              c.fillStyle = '#283c3a'; c.fillRect(-24, -10, 16, 8); c.fillRect(8, -10, 16, 8); c.fillRect(-18, 15, 36, 12);
+              c.fillStyle = '#e9d8b1'; c.fillRect(-15, 10, 6, 15); c.fillRect(9, 10, 6, 15);
             } else if (id === 'medieval') {
               c.strokeStyle = '#9c7c48'; c.lineWidth = 13; c.beginPath(); c.arc(-22, -15, 23, 0, Math.PI * 2); c.stroke();
               c.fillStyle = '#9c7c48'; c.fillRect(-5, -21, 70, 13); c.fillRect(38, -8, 12, 22); c.fillRect(57, -8, 12, 17);
@@ -105,7 +112,7 @@ export function createPamphlet(camera: THREE.PerspectiveCamera) {
           });
         } else {
           text('Explorá las cinco salas.', 80, 1070, 40, '#33493e', true);
-          text('Tres épocas te esperan al otro lado', 80, 1130, 33);
+          text('Cuatro épocas te esperan al otro lado', 80, 1130, 33);
           text('de la fotografía. Empezá por la sala 01.', 80, 1180, 33);
         }
         text(`${completed.size} / ${areaOrder.length} RECUERDOS${!active ? " · VISITA COMPLETADA" : ""}`, 80, 1260, 28);

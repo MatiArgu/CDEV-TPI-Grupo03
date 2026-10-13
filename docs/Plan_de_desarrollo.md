@@ -4,7 +4,7 @@
 
 Este documento convierte [Proyecto_general.md](Proyecto_general.md) en entregas pequeñas y verificables. Es un plan de trabajo: **no autoriza a implementar las siete etapas juntas**. Antes de comenzar la siguiente, se revisa el resultado de la anterior, especialmente la dirección visual y la fotografía.
 
-El MVP original terminó con Roma y Egipto jugables de principio a fin. Por pedido posterior, la ampliación medieval agrega un tercer viaje completo. El museo tiene cinco épocas; Japón Feudal y Luna se pueden recorrer como salas en preparación, con sus viajes pendientes. La calidad de la imagen ilustrada, la Polaroid y las transiciones tiene prioridad sobre el tamaño de los escenarios.
+El MVP original terminó con Roma y Egipto jugables de principio a fin. Por pedidos posteriores, Medieval y Japón agregan un tercer y cuarto viaje completo. El museo tiene cinco épocas; Luna sigue visitable con su viaje pendiente. La calidad de la imagen ilustrada, la Polaroid y las transiciones tiene prioridad sobre el tamaño de los escenarios.
 
 ### Decisiones acordadas
 
@@ -81,12 +81,20 @@ El MVP original terminó con Roma y Egipto jugables de principio a fin. Por pedi
 
 **Aceptación:** completar Egipto → Roma → Medieval, ver tres fotos y tres artefactos en el panfleto con 3/5; conservar partidas previas de Egipto/Roma al recargar; recorrer la galería de lado a lado sin obstáculos en el paso; mantener Japón y Luna visitables sin viajes. Revisar los tres escenarios, colisiones, fotografía y liberación de recursos compartidos.
 
+## Ampliación solicitada: Japón — implementada
+
+**Objetivo:** completar la cuarta época con una máscara Oni roja como artefacto y un jardín japonés como destino.
+
+**Trabajo:** exhibición de máscara, katana, wakizashi, linterna, torii en miniatura y juego de té; paneles shoji. Jardín con cerezos rosas, bambú, rocas, arroyo y puente con barandas; camino por el centro de cinco torii hasta un templo con techo cerrado y máscara central. Reutilizar ayuda, transición, recogida y guardado; adaptar el panfleto a cuatro recuerdos.
+
+**Aceptación:** una partida con Egipto, Roma y Medieval completados habilita Japón; la foto de la máscara lleva al jardín, el puente permite cruzar el agua y el camino alcanza el altar. Recoger la máscara devuelve al museo con 4/5, conserva los recuerdos anteriores y permite recargar. Luna continúa visitable sin viaje. Verificar encuadre, oclusión, colisiones, techo, ayuda y recursos compartidos.
+
 ## Verificación transversal
 
 - **Visual:** revisar cada escenario nuevo contra la etapa 1: colores pastel, lectura de siluetas, contornos selectivos y sensación de tiempo detenido. Limitar el tamaño del escenario si hace falta para preservar la calidad.
 - **Foto:** probar artefacto centrado, en el borde, fuera del cuadro, parcialmente visible y completamente tapado; comparar cada captura con lo que se veía en el encuadre.
 - **Estado:** probar panfleto, cámara, pausa y transiciones en distintos órdenes para impedir acciones incompatibles o controles bloqueados.
-- **Progreso:** completar Egipto, Roma y Medieval, comprobar los tres recuerdos y 3/5, recargar y reiniciar. Intercambiar Egipto y Luna debe mover la sala y su número y conservar los datos por ID.
+- **Progreso:** completar Egipto, Roma, Medieval y Japón, comprobar los cuatro recuerdos y 4/5, recargar y reiniciar. Intercambiar Egipto y Luna debe mover la sala y su número y conservar los datos por ID.
 - **Recorrido:** probar las siete entregas en el navegador, además de ejecutar las comprobaciones de compilación y tipos disponibles en cada etapa.
 
 Cada entrega se cierra con una demostración del recorrido correspondiente, una revisión de sus criterios y una lista breve de pendientes. Los problemas que rompan el flujo de esa entrega se corrigen antes de iniciar la siguiente.

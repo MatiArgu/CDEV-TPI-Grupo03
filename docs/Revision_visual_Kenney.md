@@ -297,3 +297,35 @@ Ampliación del 13 de octubre de 2026:
 | Progreso | [Tres recuerdos en el panfleto](capturas/egipto-roma-medieval-recuerdos.png) |
 
 - Compilado de producción: 50 modelos y siete texturas cargados sin fallos; inicio jugable verificado.
+
+
+## Japón: máscara Oni y jardín de los torii
+
+Ampliación del 13 de octubre de 2026:
+
+- **Sala 04:** máscara Oni roja con cuernos, cejas, colmillos y mejillas modelados; soporte con katana y wakizashi, linterna de piedra, torii en miniatura y juego de té. Los paneles shoji aportan madera y papel; la exhibición mira hacia la entrada desde Medieval.
+- **Jardín:** recorrido de roca por el centro de cinco torii, puente de madera con barandas rojas sobre un arroyo, cerezos rosas, bambú, árboles verdes, arbustos, rocas y linternas. El templo abierto al fondo tiene dos techos curvos cerrados por debajo y la máscara en el altar central. El tablero del puente es plano y sus barandas describen un arco; mantiene la altura de movimiento de los otros mundos.
+- **Tiempo detenido:** pétalos y ondas del agua estáticos, sin bucles de viento ni nueva interfaz superpuesta. La guía compartida aparece tras 20 segundos.
+- **Progreso:** Japón se activa después de Medieval. La Polaroid y la máscara se guardan con el ID `japon`; el panfleto usa una cuadrícula de cuatro recuerdos. Al volver se mira hacia la exhibición. Luna sigue visitable, con el viaje pendiente.
+- **Recursos:** bambú CC0 de Nature Kit y reutilización de vegetación/rocas Kenney. Máscara, armas, torii, linternas, cerezos y templo propios. El manifiesto contiene 51 GLB; se verificaron tamaños, hashes y texturas dependientes.
+- **Carga:** geometría estática agrupada, pétalos instanciados y mapa solar reutilizado. También se libera el almacenamiento de las mallas instanciadas al abandonar un mundo.
+
+### Verificación
+
+- `npm run typecheck` y `npm run build` correctos; continúa el aviso de Vite por el tamaño del bundle principal.
+- Recorrido en Chrome desde una partida de prueba con tres épocas completas: acceso a Japón, apertura/cierre del panfleto y cursor, fotografía inválida y reintento válido, pausa durante la transición, bloqueo de movimiento/panfleto durante ella, ayuda, cruce del puente y recorrido completo hasta el altar, recogida, regreso con 4/5 y recarga.
+- Máscara centrada, en el borde y parcialmente visible aceptada; fuera del encuadre y completamente oculta rechazada.
+- Camino central y puente transitables para el radio del jugador; orillas bloqueadas; techo del templo comprobado desde abajo. Ayuda ausente antes de 20 segundos y presente después.
+- Liberación y recreación del jardín sin liberar recursos compartidos. Cuatro fotos conservadas por ID al intercambiar el orden de Egipto y Luna.
+- Revisión visual de sala, katanas, máscara, jardín, puente y templo. Las pruebas usan Chrome/SwiftShader y avance controlado del tiempo; sigue pendiente medir FPS en una GPU real.
+
+### Capturas
+
+| Vista | Captura |
+| --- | --- |
+| Sala japonesa | [Máscara, katanas y linterna](capturas/japon-sala.png) |
+| Entrada del jardín | [Camino y torii](capturas/japon-jardin.png) |
+| Cruce del arroyo | [Puente entre cerezos](capturas/japon-puente.png) |
+| Destino del viaje | [Templo](capturas/japon-templo.png) y [máscara Oni](capturas/japon-mascara.png) |
+
+- Producción: 51 modelos y siete texturas cargados sin fallos; inicio jugable verificado.
