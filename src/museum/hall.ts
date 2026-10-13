@@ -68,7 +68,7 @@ function artwork(parent: THREE.Group, variant: number, title: string): void {
   mesh(new THREE.PlaneGeometry(1.5, 0.235), new THREE.MeshBasicMaterial({ map: texture }), [0, 1.28, 0.14], parent).castShadow = false;
 }
 
-function displayCase(scene: THREE.Scene, colliders: Collider[], x: number, z: number, id: ModelId): void {
+function displayCase(scene: THREE.Object3D, colliders: Collider[], x: number, z: number, id: ModelId): void {
   const base = box(1.3, 0.85, 1.05, toon(exhibition.plinth), [x, 0.56, z], scene);
   base.name = 'vitrina-hall';
   const foot = box(1.43, 0.1, 1.18, mat.sand, [x, 0.17, z], scene);
@@ -100,7 +100,7 @@ function hallColumn(parent: THREE.Object3D, x: number, z: number): THREE.Group {
   return column;
 }
 
-export function createHall(scene: THREE.Scene, colliders: Collider[]): void {
+export function createHall(scene: THREE.Object3D, colliders: Collider[]): void {
   const { halfWidth, frontZ, hallBackZ, wallHeight, wallThickness, floorY } = museumLayout;
   const depth = frontZ - hallBackZ;
   const centerZ = (frontZ + hallBackZ) / 2;

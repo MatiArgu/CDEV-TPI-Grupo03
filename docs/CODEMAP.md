@@ -77,3 +77,10 @@ sin cargar escenas de demostración ni crear ciclos de ejecución.
 Ejecutar `npm run typecheck`, `npm run build` y `git diff --check`.
 Las pruebas de recorrido son manuales/en navegador; todavía no hay una suite automatizada
 versionada. Para cambios en mecánicas, seguir las [pruebas de arquitectura](Arquitectura_prevista.md#pruebas-de-arquitectura-obligatorias).
+
+## Verificación del recorrido
+
+- [scripts/qa/e2e.mjs](../scripts/qa/e2e.mjs): partida nueva, caminata por las cinco épocas, fotos, pausas, regreso, recarga y reinicio.
+- [scripts/qa/scenes.js](../scripts/qa/scenes.js): encuadre y oclusión, límites transitables, techos, recursos y reordenamiento por ID.
+- [scripts/qa/performance.mjs](../scripts/qa/performance.mjs): comparación de vistas fijas con contadores de render.
+- [Revisión de extremo a extremo](Revision_end_to_end.md): resultados y comandos para repetir las pruebas en un perfil aislado.

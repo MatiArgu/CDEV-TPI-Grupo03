@@ -28,6 +28,7 @@ La Polaroid expulsa y revela una fotografía real como objeto 3D, y el panfleto 
 [Revisión de las diez salas de la etapa 5](docs/Revision_etapa_5.md).
 [Revisión del ciclo romano de la etapa 6](docs/Revision_etapa_6.md).
 [Renovación visual con modelos Kenney y capturas](docs/Revision_visual_Kenney.md).
+[Barrido de extremo a extremo y pruebas reproducibles](docs/Revision_end_to_end.md).
 [Inventario completo, selección y recomendaciones de assets](docs/Seleccion_Kenney.md).
 
 La renovación incorpora 57 modelos de diez paquetes Kenney, con sus texturas y licencias CC0 en `public/assets/kenney/`. El juego carga esa selección local antes de habilitar la visita; no necesita acceder a la carpeta original de Windows. Los materiales mantienen el sombreado toon y la paleta del museo.

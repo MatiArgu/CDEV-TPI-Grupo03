@@ -291,9 +291,12 @@ export function createMuseumScene(): MuseumWorld {
   // The entrance is a gradual lighting transition into the curated interior.
   // Apply before rendering so photographs and paused frames use the same lighting.
   const eye = new THREE.Vector3();
+  const interiorLights: THREE.Light[] = [];
   scene.onBeforeRender = (_renderer, _scene, camera) => {
     camera.getWorldPosition(eye);
     const indoors = THREE.MathUtils.smoothstep(-eye.z, 3.5, 8);
+    // Keep the indoor variant stable; the courtyard needs only daylight.
+    interiorLights.forEach(light => { light.visible = eye.z < -2.6; });
     daylight.intensity = THREE.MathUtils.lerp(1.5, 0.34, indoors);
     sun.intensity = THREE.MathUtils.lerp(1.4, 0.1, indoors);
   };
@@ -332,7 +335,9 @@ export function createMuseumScene(): MuseumWorld {
   const entranceGate = turnstiles(scene);
   const attendant = createGuard(scene);
 
-  createHall(scene, decorationColliders);
+  const hall = new THREE.Group(); scene.add(hall);
+  createHall(hall, decorationColliders);
+  batchStaticMeshes(hall);
   sign(scene, 'GALERÍA DEL TIEMPO', [0, 4.7, -21.08], 4.4, true);
   const gallery = createGallery(scene);
   museumEnvelope(scene);
@@ -351,6 +356,9 @@ export function createMuseumScene(): MuseumWorld {
   sign(scene, 'FIN DEL RECORRIDO', [galleryLayout.wingX, 3.45, galleryLayout.frontZ + 0.19], 2.55, true);
   sign(scene, 'REGRESO AL HALL', [galleryLayout.wingX, 3.45, galleryLayout.frontZ - 0.22], 2.5, true).rotation.y = Math.PI;
 
+  scene.traverse(object => {
+    if (object instanceof THREE.PointLight || object instanceof THREE.SpotLight) interiorLights.push(object);
+  });
   const doorBlock = entranceGate.blocker;
   const colliders: Collider[] = [
     ...decorationColliders,

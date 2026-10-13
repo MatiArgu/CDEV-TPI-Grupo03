@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { batchStaticMeshes } from '../rendering/staticMeshes';
 import { box, mesh, toon } from '../rendering/visual';
 
 // Shared museum finishes; the outdoor scenes keep their daylight palette.
@@ -102,7 +103,8 @@ export function museumWallMaterial(color: number = exhibition.wall): THREE.MeshT
   return material;
 }
 
-export function wallPanels(parent: THREE.Object3D, width: number, depth: number): void {
+export function wallPanels(container: THREE.Object3D, width: number, depth: number): void {
+  const parent = new THREE.Group(); container.add(parent);
   const panel = museumWallMaterial(0x778073);
   const base = toon(0x39443b); const molding = toon(0x9c987e);
   const count = Math.max(2, Math.round(depth / 3.5));
@@ -117,6 +119,7 @@ export function wallPanels(parent: THREE.Object3D, width: number, depth: number)
     }
     for (const y of [0.22, 1.08, 4.75]) box(0.12, 0.065, depth - 0.5, molding, [x - side * 0.05, y, 0], parent).castShadow = false;
   }
+  batchStaticMeshes(parent);
 }
 
 export function exhibitLabel(parent: THREE.Object3D, title: string, subtitle: string, position: [number, number, number], width: number): THREE.Mesh {

@@ -118,7 +118,6 @@ export function createPlayerControls(
   });
   document.addEventListener('keydown', (event) => {
     if (event.code === 'Escape') {
-      if (mode === 'revealing' || mode === 'transition') return;
       if (mode !== 'intro' && mode !== 'paused') pause();
       return;
     }
