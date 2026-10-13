@@ -21,6 +21,7 @@ export function disposeHistoricalScene(scene: THREE.Scene): void {
   scene.traverse((object) => {
     if (object instanceof THREE.Light && 'shadow' in object) (object as THREE.DirectionalLight).shadow?.dispose();
     if (!(object instanceof THREE.Mesh || object instanceof THREE.Line || object instanceof THREE.Points)) return;
+    if (object instanceof THREE.InstancedMesh) object.dispose();
     if (object instanceof THREE.SkinnedMesh) object.skeleton.dispose();
     if (!object.userData.sharedAsset) geometries.add(object.geometry);
     const list = Array.isArray(object.material) ? object.material : [object.material];

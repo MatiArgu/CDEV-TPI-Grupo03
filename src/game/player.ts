@@ -22,7 +22,7 @@ export type PlayerControls = {
   setCinematic: (mode: 'revealing' | 'transition') => void;
   finishCinematic: (cameraEquipped: boolean) => void;
   openPamphlet: () => void;
-  teleport: (start: THREE.Vector2) => void;
+  teleport: (start: THREE.Vector2, facing?: number) => void;
 };
 
 const eyeHeight = 1.7;
@@ -217,14 +217,14 @@ export function createPlayerControls(
       if (mode === 'revealing' || mode === 'transition') setMode(equipped ? 'camera' : 'playing');
     },
     openPamphlet,
-    teleport: (start) => {
+    teleport: (start, facing = 0) => {
       position.copy(start);
-      yaw = 0;
+      yaw = facing;
       pitch = 0;
       heldLook = 0;
       bobOffset = 0;
       camera.position.set(position.x, eyeHeight, position.y);
-      camera.rotation.set(0, 0, 0);
+      camera.rotation.set(0, facing, 0);
       pressed.clear();
       options.onPositionChange(position);
     },

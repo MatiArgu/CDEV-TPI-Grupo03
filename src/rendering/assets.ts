@@ -5,6 +5,7 @@ import type { Collider } from '../game/collision';
 import { materials as mat, outline, toon } from './visual';
 
 const sources = {
+  bamboo: 'nature-kit/crops_bambooStageB',
   key: 'mini-dungeon/key',
   chest: 'mini-dungeon/chest',
   shield: 'mini-dungeon/shield-rectangle',

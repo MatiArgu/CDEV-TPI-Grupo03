@@ -8,7 +8,7 @@ Tu objetivo es **desarrollar un videojuego 3D funcional y jugable en el navegado
 
 El museo tendrá cinco salas: Antiguo Egipto → Antigua Roma → Época Medieval → Japón Feudal → Llegada a la Luna. Las dos primeras ocupan el ala izquierda; Medieval es el salón largo transversal del fondo; Japón y Luna regresan por el ala derecha.
 
-**Estado actual:** Egipto, Roma y Medieval tienen exhibición y viaje histórico completos, con ayuda, recogida, regreso, fotos y guardado local. Las cinco salas se pueden recorrer; Japón y Luna siguen sin viaje histórico. El [plan de desarrollo](Plan_de_desarrollo.md) distingue las entregas.
+**Estado actual:** Egipto, Roma, Medieval y Japón tienen exhibición y viaje histórico completos, con ayuda, recogida, regreso, fotos y guardado local. Las cinco salas se pueden recorrer; Luna sigue sin viaje histórico. El [plan de desarrollo](Plan_de_desarrollo.md) distingue las entregas.
 
 ---
 
@@ -249,7 +249,7 @@ Inicialmente, todas las áreas están oscuras.
 
 El jugador abre el panfleto y observa las cinco áreas.
 
-Abrir cada puerta con E enciende su sala. Egipto ocupa la puerta 01; Roma está en la 02. Los viajes se completan en el orden Egipto → Roma → Medieval.
+Abrir cada puerta con E enciende su sala. Egipto ocupa la puerta 01; Roma está en la 02. Los viajes se completan en el orden Egipto → Roma → Medieval → Japón.
 
 La iluminación debe dirigir naturalmente la atención del jugador.
 
@@ -263,7 +263,7 @@ El jugador puede caminar hacia el área iluminada.
 
 El museo contiene cinco áreas.
 
-Las cinco salas se pueden recorrer sin completar épocas. Egipto, Roma y Medieval disponen de exhibición y viaje histórico; Japón y Luna permanecen en preparación. Las salas WIP no activan viajes.
+Las cinco salas se pueden recorrer sin completar épocas. Egipto, Roma, Medieval y Japón disponen de exhibición y viaje histórico; Luna permanece en preparación. Las salas WIP no activan viajes.
 
 ## Estados de un área
 
@@ -498,27 +498,29 @@ Al interactuar con el escarabajo, regresa al museo.
 
 ---
 
-# 12. FINALIZACIÓN Y AMPLIACIÓN MEDIEVAL
+# 12. FINALIZACIÓN Y AMPLIACIONES
 
 El MVP original incluía dos viajes. La ampliación solicitada añade Medieval: una llave fotografiable en el salón transversal, cofre, escudos y maqueta; el viaje conduce a un patio de castillo detenido en el tiempo, con ayuda tras 20 segundos y recogida de la llave para regresar.
 
-Cuando el jugador completa Egipto, Roma y Medieval:
+Japón añade la máscara Oni roja como artefacto, katanas, linterna, miniatura de torii y juego de té en la sala. El viaje recorre un jardín de cerezos y bambú: camino de roca, cinco torii y un puente sobre el arroyo, hasta un templo abierto con la máscara en el centro. Reutiliza ayuda, recogida, regreso y guardado.
 
-- El panfleto registra las tres Polaroid y las ilustraciones de sus artefactos.
-- Las tres épocas aparecen completadas y sus luces se apagan.
-- El mapa muestra tres de las cinco áreas completadas.
+Cuando el jugador completa Egipto, Roma, Medieval y Japón:
 
-Japón y Luna permanecen visitables sin viajes.
+- El panfleto registra las cuatro Polaroid y las ilustraciones de sus artefactos.
+- Las cuatro épocas aparecen completadas y sus luces se apagan.
+- El mapa muestra cuatro de las cinco áreas completadas.
+
+Luna permanece visitable sin viaje.
 
 Mostrar una conclusión breve y discreta, por ejemplo:
 
-"3 de 5 épocas descubiertas."
+"4 de 5 épocas descubiertas."
 
 "Tu viaje por la historia apenas comienza."
 
 Permitir que el jugador continúe explorando las zonas accesibles del museo o reinicie la experiencia.
 
-Los viajes de Japón y Luna requieren entregas posteriores.
+El viaje lunar requiere una entrega posterior.
 
 ---
 
@@ -591,7 +593,7 @@ Por ejemplo, cada época debería tener:
 - Ruta de ayuda.
 - Información de progreso.
 
-No duplicar innecesariamente las mecánicas de Egipto, Roma y Medieval.
+No duplicar innecesariamente las mecánicas de Egipto, Roma, Medieval y Japón.
 
 Crear componentes y sistemas reutilizables.
 

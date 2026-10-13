@@ -6,26 +6,26 @@ Antes de trabajar, leer [CLAUDE.md](CLAUDE.md): sus principios de razonamiento, 
 
 ## Estado del repositorio y fuentes de verdad
 
-- El repositorio contiene documentación y un prototipo Three.js + TypeScript + Vite de las etapas 1 a 7 y la ampliación medieval. Egipto, Roma y Medieval integran exhibición, fotografía, mundo histórico, recogida y regreso. El panfleto y las fotos se guardan localmente por ID; hay reinicio y efecto de disparo con opción de silencio. La [renovación visual con Kenney](docs/Revision_visual_Kenney.md) incorpora modelos locales con licencias; las fábricas de escenas requieren cargar previamente los modelos mediante `loadModels()`. Los comandos disponibles están en [package.json](package.json).
+- El repositorio contiene documentación y un prototipo Three.js + TypeScript + Vite de las etapas 1 a 7 y las ampliaciones de Medieval y Japón. Egipto, Roma, Medieval y Japón integran exhibición, fotografía, mundo histórico, recogida y regreso. El panfleto y las fotos se guardan localmente por ID; hay reinicio y efecto de disparo con opción de silencio. La [renovación visual con Kenney](docs/Revision_visual_Kenney.md) incorpora modelos locales con licencias; las fábricas de escenas requieren cargar previamente los modelos mediante `loadModels()`. Los comandos disponibles están en [package.json](package.json).
 - [docs/CODEMAP.md](docs/CODEMAP.md) ubica los módulos actuales y sus responsabilidades.
 - [README.md](README.md) resume el proyecto. [docs/Proyecto_general.md](docs/Proyecto_general.md) define la experiencia, la jugabilidad y la dirección artística.
-- [docs/Plan_de_desarrollo.md](docs/Plan_de_desarrollo.md) divide el trabajo en siete entregas originales y una ampliación medieval con criterios de aceptación. Sus decisiones aclaradas prevalecen sobre los puntos correspondientes de la especificación maestra. No implementar las siete entregas de una vez ni avanzar a la siguiente sin revisar la anterior.
-- [docs/Arquitectura_prevista.md](docs/Arquitectura_prevista.md) fija decisiones transversales. El catálogo, las cinco salas, los tres ciclos históricos y la persistencia están implementados.
+- [docs/Plan_de_desarrollo.md](docs/Plan_de_desarrollo.md) divide el trabajo en siete entregas originales y ampliaciones de Medieval y Japón con criterios de aceptación. Sus decisiones aclaradas prevalecen sobre los puntos correspondientes de la especificación maestra. No implementar las siete entregas de una vez ni avanzar a la siguiente sin revisar la anterior.
+- [docs/Arquitectura_prevista.md](docs/Arquitectura_prevista.md) fija decisiones transversales. El catálogo, las cinco salas, los cuatro ciclos históricos y la persistencia están implementados.
 - Ante una contradicción nueva o un requisito decisivo que falte, explicitarla antes de implementar. No presentar características planificadas como si ya funcionaran.
 
 ## Alcance del MVP
 
 - Crear un videojuego 3D **jugable en navegador de escritorio**, en primera persona, basado en exploración, fotografía y viajes a momentos históricos congelados. No sustituir la interacción por un video o una maqueta.
-- El museo es ficticio, con exterior inspirado en el Louvre. Tiene cinco salas en U: Egipto y Roma a la izquierda; Medieval en el salón transversal; Japón Feudal y Luna de regreso por la derecha. Todas se pueden recorrer. Egipto, Roma y Medieval son jugables, en ese orden; las otras dos épocas se identifican como viajes en preparación.
+- El museo es ficticio, con exterior inspirado en el Louvre. Tiene cinco salas en U: Egipto y Roma a la izquierda; Medieval en el salón transversal; Japón Feudal y Luna de regreso por la derecha. Todas se pueden recorrer. Egipto, Roma, Medieval y Japón son jugables, en ese orden; Luna se identifica como viaje en preparación.
 - Mantener el orden Egipto → Roma → Medieval → Japón → Luna. Las puertas se abren con E sin exigir completar una época; la disponibilidad WIP impide viajar, pero no caminar por la sala. La foto válida inicia el viaje; el área se completa al interactuar con el artefacto histórico y volver al museo.
 - Preservar la mecánica central: la Polaroid captura lo que muestra el render, se revela y solo activa el viaje si el artefacto está visible dentro del encuadre, aunque esté en un borde. Una foto inválida también se revela y permite reintentar.
 - Mantener la estética ilustrada *Stylized Hand-Drawn Anime 3D*: geometría low-poly, colores pastel, materiales toon, contornos selectivos y efectos livianos. Priorizar la calidad de la escena y del revelado sobre el tamaño de los mundos.
-- Evitar combate, tercera persona, supervivencia, inventarios complejos y las dos épocas históricas pendientes salvo que se soliciten expresamente.
+- Evitar combate, tercera persona, supervivencia, inventarios complejos y la época histórica pendiente salvo que se soliciten expresamente.
 
 ## Implementación cuando corresponda a la etapa
 
 - Usar Three.js, TypeScript y Vite; HTML/CSS para interfaces superpuestas cuando ayuden. No introducir otro motor, backend o dependencias grandes sin una necesidad acordada.
-- Separar escena y render, controles y colisiones, interacción, fotografía, panfleto, progreso, transiciones, ayuda y audio. Compartir las mecánicas entre Egipto, Roma y Medieval sin crear abstracciones especulativas.
+- Separar escena y render, controles y colisiones, interacción, fotografía, panfleto, progreso, transiciones, ayuda y audio. Compartir las mecánicas entre Egipto, Roma, Medieval y Japón sin crear abstracciones especulativas.
 - Dar a cada época un ID estable. `areaOrder` es la única fuente del orden: de él dependen sala física, número, señalización, panfleto y secuencia de activación. Separar disponibilidad WIP/jugable del progreso `locked`/`active`/`completed`; las WIP nunca se activan.
 - Coordinar los estados de juego, cámara, panfleto, pausa y Pointer Lock para evitar acciones incompatibles. El guardado local debe seguir asociando progreso y fotos a IDs estables y permitir reiniciar.
 - Liberar escenas y recursos que dejen de usarse. Preferir colisiones, luces y geometrías sencillas que funcionen con fluidez en navegadores modernos de escritorio.

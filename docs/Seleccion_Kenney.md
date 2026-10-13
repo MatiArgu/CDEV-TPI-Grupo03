@@ -16,7 +16,7 @@ Hay **5.314 archivos GLB/glTF** sueltos; esta cifra incluye variantes y no repre
 
 | Paquete | Modelos | Uso |
 | --- | ---: | --- |
-| Nature Kit | 14 | Árboles con raíces y ramas, jardineras, arbustos, flores, piedras y vegetación del estudio. |
+| Nature Kit | 15 | Árboles con raíces y ramas, jardineras, arbustos, flores, piedras y vegetación del estudio. |
 | Furniture Kit | 4 | Bancos de patio, bancos tapizados y plantas del hall. |
 | Mini Arena | 9 | Esculturas, columnas acanaladas, fragmentos, estandartes, soldados y lanzas decorativas de Roma. |
 | Pirate Kit | 5 | Casco de bote de remos, remos, tablones, barriles y cajas para las embarcaciones de la naumaquia. |
@@ -26,7 +26,7 @@ Hay **5.314 archivos GLB/glTF** sueltos; esta cifra incluye variantes y no repre
 | Mini Dungeon | 6 | Llave, cofre, escudo, espada, mesa y personaje medieval. |
 | Graveyard Kit | 1 | Urna sin símbolos funerarios, adaptada a Egipto. |
 
-La selección actual contiene **50 modelos de nueve paquetes**: 31 anteriores y 19 añadidos para Medieval y las mejoras de Egipto/Roma. Los GLB suman **1.384.892 bytes**, con siete texturas de paleta externas. Las nueve licencias originales son CC0 y se conservan junto a los modelos; el manifiesto registra tamaño, origen y SHA-256 de cada archivo. Los originales de Windows no se modificaron.
+La selección actual contiene **51 modelos de nueve paquetes**: 31 anteriores, 19 añadidos para Medieval y las mejoras de Egipto/Roma, y un bambú para Japón. Los GLB suman **1.425.036 bytes**, con siete texturas de paleta externas. Las nueve licencias originales son CC0 y se conservan junto a los modelos; el manifiesto registra tamaño, origen y SHA-256 de cada archivo. Los originales de Windows no se modificaron.
 
 ### Ampliación medieval y mejoras de Egipto/Roma
 
@@ -128,4 +128,9 @@ Los conteos corresponden a archivos por formato, incluyendo variantes.
 
 ## Implementación y verificación
 
-El estado actual incluye Egipto, Roma y Medieval jugables, con persistencia local por ID. Japón y Luna permanecen visitables sin viajes. [Revisión visual, capturas y pruebas](Revision_visual_Kenney.md).
+El estado actual incluye Egipto, Roma, Medieval y Japón jugables, con persistencia local por ID. Luna permanece visitable sin viaje. [Revisión visual, capturas y pruebas](Revision_visual_Kenney.md).
+
+
+### Selección para Japón
+
+Se buscaron modelos japoneses, torii, katanas, cerezos y bambú en el catálogo local. Se añadió `Nature Kit/crops_bambooStageB.glb`, con la licencia CC0 ya incluida. Se reutilizan arbustos, rocas y árboles verdes importados. La máscara Oni roja, las katanas, cerezos, linternas, torii y arquitectura del templo son geometrías propias en `rendering/japanese.ts`; no se presentan como modelos originales de Kenney. Las piezas mantienen materiales toon y se agrupan cuando son estáticas.

@@ -8,6 +8,7 @@ import { createPamphlet } from './game/pamphlet';
 import { createPlayerControls } from './game/player';
 import { artifactVisible, captureFrame, createCameraModel, getFrameBounds, playShutter } from './game/photo';
 import { createRomeWorld } from './worlds/rome';
+import { createJapanWorld } from './worlds/japan';
 import { createMedievalWorld } from './worlds/medieval';
 import { createEgyptWorld } from './worlds/egypt';
 import type { HistoricalWorld } from './worlds/history';
@@ -174,7 +175,7 @@ try {
         cameraModel.hidePrint();
         scene.remove(camera);
         museumColliders = [...world.colliders];
-        history = active === 'egipto' ? createEgyptWorld() : active === 'medieval' ? createMedievalWorld() : createRomeWorld();
+        history = active === 'japon' ? createJapanWorld() : active === 'egipto' ? createEgyptWorld() : active === 'medieval' ? createMedievalWorld() : createRomeWorld();
         scene = history.scene;
         scene.add(camera);
         world.colliders.splice(0, world.colliders.length, ...history.colliders);
@@ -183,12 +184,12 @@ try {
           if (app.dataset.playState !== 'playing' || !history) return;
           const hadHelp = history.helpActive();
           history.update(delta);
-          if (!hadHelp && history.helpActive()) showToast(history.id === 'egipto' ? 'Un rastro de luz recorre el templo hacia el altar.' : history.id === 'medieval' ? 'Un rastro dorado cruza el patio hacia la llave.' : 'Un rastro tenue recorre la pasarela hacia el casco.');
+          if (!hadHelp && history.helpActive()) showToast(history.id === 'japon' ? 'Los pétalos señalan el camino entre los torii hacia el templo.' : history.id === 'egipto' ? 'Un rastro de luz recorre el templo hacia el altar.' : history.id === 'medieval' ? 'Un rastro dorado cruza el patio hacia la llave.' : 'Un rastro tenue recorre la pasarela hacia el casco.');
         };
       });
       controls.finishCinematic(false);
       help.textContent = 'WASD CAMINAR · SHIFT CORRER · E RECOGER · M PANFLETO · ESC PAUSAR';
-      showToast(active === 'egipto' ? 'El tiempo se detuvo en el templo. Buscá el escarabajo del sol.' : active === 'medieval' ? 'El tiempo se detuvo en la fortaleza. Recuperá la llave junto al portón.' : 'El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
+      showToast(active === 'japon' ? 'El jardín quedó detenido en el tiempo. Cruzá el puente y buscá la máscara bajo el techo del templo.' : active === 'egipto' ? 'El tiempo se detuvo en el templo. Buscá el escarabajo del sol.' : active === 'medieval' ? 'El tiempo se detuvo en la fortaleza. Recuperá la llave junto al portón.' : 'El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
     }
 
     async function finishHistory(): Promise<void> {
@@ -209,7 +210,8 @@ try {
         pamphletView.complete(completedId, acceptedPhoto!);
         const room = world.rooms.find((item) => item.id === completedId)!;
         (room.root.userData.setLight as (strength: number) => void)(0);
-        controls.teleport(new THREE.Vector2(room.center.x, room.center.y + 4.15));
+        const facesSouth = completedId === 'japon' && room.center.x > 0;
+        controls.teleport(new THREE.Vector2(room.center.x, room.center.y + (facesSouth ? -4.15 : 4.15)), facesSouth ? Math.PI : 0);
         updateScene = updateMuseum;
       });
       controls.finishCinematic(false);
