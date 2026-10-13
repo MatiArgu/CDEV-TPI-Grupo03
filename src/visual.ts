@@ -69,6 +69,29 @@ export function box(
   return mesh(new THREE.BoxGeometry(width, height, depth), material, position, parent);
 }
 
+// Rectangular roof with four pitched faces, a level ridge and flat face normals.
+export function hippedRoof(
+  width: number, height: number, depth: number, material: THREE.Material,
+  position: [number, number, number], parent: THREE.Object3D,
+): THREE.Mesh {
+  const w = width / 2;
+  const d = depth / 2;
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute([
+    -w, 0, d, w, 0, d, w, 0, -d, -w, 0, -d,
+    -w * 0.82, height, d * 0.38, w * 0.82, height, d * 0.38,
+    w * 0.82, height, -d * 0.38, -w * 0.82, height, -d * 0.38,
+  ], 3));
+  geometry.setIndex([0, 1, 5, 0, 5, 4, 1, 2, 6, 1, 6, 5,
+    2, 3, 7, 2, 7, 6, 3, 0, 4, 3, 4, 7, 4, 5, 6, 4, 6, 7]);
+  const flat = geometry.toNonIndexed();
+  flat.computeVertexNormals();
+  geometry.dispose();
+  const roof = mesh(flat, material, position, parent);
+  outline(roof, 0.23);
+  return roof;
+}
+
 // A back-facing shell gives a drawn outer contour without a screen-space effect.
 export function silhouette(object: THREE.Mesh, scale = 1.026): void {
   const shell = new THREE.Mesh(object.geometry, silhouetteMaterial);

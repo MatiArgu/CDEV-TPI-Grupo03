@@ -33,6 +33,9 @@ const sources = {
   planks: 'pirate-kit/platform-planks',
   archedWindow: 'modular-buildings/window-white-round-top',
   tallWindow: 'modular-buildings/window-white-tall',
+  locomotive: 'train-kit/train-locomotive-a',
+  passengerCar: 'train-kit/train-locomotive-passenger-a',
+  railroad: 'train-kit/railroad-straight',
 } as const;
 
 export type ModelId = keyof typeof sources;
@@ -61,6 +64,12 @@ export async function loadModels(): Promise<void> {
         material = toon(color);
         material.name = source.name;
         material.map = source.map;
+        if (path.startsWith('train-kit/') && material.map) {
+          // This palette includes gradients; nearest sampling stripes the large car sides.
+          material.map.magFilter = THREE.LinearFilter;
+          material.map.minFilter = THREE.LinearMipmapLinearFilter;
+          material.map.needsUpdate = true;
+        }
         material.side = source.side;
         material.transparent = source.transparent;
         material.opacity = source.opacity;
@@ -72,7 +81,7 @@ export async function loadModels(): Promise<void> {
         ? object.material.map((material) => convert(material as THREE.MeshStandardMaterial))
         : convert(object.material as THREE.MeshStandardMaterial);
       object.castShadow = true;
-      object.receiveShadow = !['oak', 'tree', 'slenderTree', 'cypress', 'bush', 'smallBush', 'flowers', 'yellowFlowers', 'leaves'].includes(id);
+      object.receiveShadow = !['oak', 'tree', 'slenderTree', 'cypress', 'bush', 'smallBush', 'flowers', 'yellowFlowers', 'leaves', 'locomotive', 'passengerCar'].includes(id);
       object.userData.sharedAsset = true;
       if (['statue', 'column', 'brokenColumn', 'rowboat'].includes(id)) {
         outline(object, 0.22);

@@ -21,8 +21,9 @@ Hay **5.314 archivos GLB/glTF** sueltos; esta cifra incluye variantes y no repre
 | Mini Arena | 6 | Esculturas, columnas acanaladas, fragmentos, estandartes, soldados y lanzas decorativas de Roma. |
 | Pirate Kit | 5 | Casco de bote de remos, remos, tablones, barriles y cajas para las embarcaciones de la naumaquia. |
 | Modular Buildings | 2 | Marcos de ventanas altas y arqueadas para fachada y hall. |
+| Train Kit | 3 | Locomotora clásica, vagón de pasajeros y vías rectas del andén. |
 
-Los modelos GLB suman **505.640 bytes**. Se incluyen las tres texturas de paleta externas que necesitan Mini Arena, Pirate Kit y Modular Buildings; GLB no garantiza que las imágenes estén embebidas. El conjunto en el repositorio ocupa aproximadamente 652 KiB en disco, contando licencias y manifiesto. Las cinco licencias originales son CC0; Mini Arena acredita además a Tony Schär.
+La selección actual contiene **31 modelos**: los 28 de la revisión general y tres incorporados para el patio con estación. Los modelos GLB suman **814.848 bytes**. Se incluyen las cuatro texturas de paleta externas que necesitan Mini Arena, Pirate Kit, Modular Buildings y Train Kit; GLB no garantiza que las imágenes estén embebidas. El conjunto en el repositorio ocupa aproximadamente 988 KiB en disco, contando licencias y manifiesto. Las seis licencias originales son CC0; Mini Arena acredita además a Tony Schär y Train Kit a Guus Vermeulen y Tony Schaer.
 
 Los colores se adaptan en ejecución y los materiales se convierten a `MeshToonMaterial`. Las esculturas y columnas reciben tonos de piedra y contornos discretos. Las figuras usan esqueletos independientes. Los archivos originales del catálogo permanecen intactos.
 
@@ -106,7 +107,7 @@ Los conteos corresponden a archivos por formato, incluyendo variantes.
 | Tower Defense (Classic) | 119 | 119 | 119 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
 | Tower Defense Kit | 160 | 160 | 160 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
 | Toy Car Kit | 157 | 157 | 157 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
-| Train Kit | 103 | 103 | 103 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
+| Train Kit | 103 | 103 | 103 | Integrado en la llegada al museo: locomotora, vagón y vías. |
 | Watercraft Pack | 46 | 46 | 46 | Embarcaciones para futuras épocas; varios modelos modernos o piratas. |
 | Weapon Pack | 37 | 37 | 37 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
 | Medieval Weapons (Early access) | 17 | 17 | 17 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |

@@ -1,14 +1,16 @@
 import * as THREE from 'three';
 import { modelCollider, placeModel } from './assets';
 import type { AreaId } from './catalog';
+import { createCourtyardArrival } from './courtyard';
 import { createGallery, galleryLayout, type GalleryDoor, type GalleryRoom } from './gallery';
 import { createGuard } from './guard';
 import { installRomeExhibit } from './rome';
 import type { Collider } from './scene';
-import { box, materials as mat, mesh, outline, palette, shadowBlob, silhouette, toon } from './visual';
+import { box, hippedRoof, materials as mat, mesh, outline, palette, shadowBlob, silhouette, toon } from './visual';
 
 export type MuseumWorld = {
   scene: THREE.Scene;
+  spawn: THREE.Vector2;
   colliders: Collider[];
   guard: THREE.Vector3;
   rooms: GalleryRoom[];
@@ -17,7 +19,7 @@ export type MuseumWorld = {
   roomAt: (position: THREE.Vector2) => GalleryRoom | null;
   openEntrance: () => void;
   openDoor: (door: GalleryDoor) => void;
-  update: (delta: number) => void;
+  update: (delta: number, visitor?: THREE.Camera) => void;
 };
 
 function sign(parent: THREE.Object3D, label: string, position: [number, number, number], width: number): THREE.Mesh {
@@ -98,19 +100,50 @@ function courtyardDetails(scene: THREE.Scene, colliders: Collider[]): void {
 function upperFacade(scene: THREE.Scene): void {
   const roof = toon(0x607b80);
   for (const side of [-1, 1]) {
-    box(9.4, 2.55, 3.3, mat.cream, [side * 7.7, 6.72, -5], scene);
-    box(9.7, 0.18, 3.5, mat.sand, [side * 7.7, 8.04, -5], scene);
-    const mansard = mesh(new THREE.CylinderGeometry(0.7, 1, 1.4, 4), roof, [side * 7.7, 8.8, -5], scene);
-    mansard.rotation.y = Math.PI / 4;
-    mansard.scale.set(6.95, 1, 2.65);
-    outline(mansard, 0.25);
+    box(9.5, 2.55, 4.4, mat.cream, [side * 7.75, 6.72, -5.6], scene);
+    box(9.65, 0.15, 4.55, mat.stone, [side * 7.75, 7.94, -5.6], scene);
+    box(9.85, 0.18, 4.75, mat.sand, [side * 7.75, 8.12, -5.6], scene);
+    hippedRoof(10.1, 1.55, 5.05, roof, [side * 7.75, 8.21, -5.6], scene);
     for (const x of [side * 4.45, side * 7.7, side * 10.9]) {
       box(0.93, 1.68, 0.04, mat.door, [x, 6.64, -3.33], scene);
       placeModel('archedWindow', scene, [x, 5.8, -3.28], { height: 1.8, width: 1.08 });
       box(1.37, 0.1, 0.32, mat.sand, [x, 5.75, -3.18], scene);
       box(0.16, 2.3, 0.16, mat.sand, [x - 0.85, 6.8, -3.29], scene);
     }
+    // Dormers sit on the front roof slope, below its ridge.
+    for (const x of [side * 5.1, side * 10.3]) {
+      box(0.9, 0.92, 0.6, mat.stone, [x, 8.71, -3.65], scene);
+      box(0.54, 0.62, 0.035, mat.door, [x, 8.72, -3.33], scene);
+      box(0.055, 0.62, 0.04, mat.sand, [x, 8.72, -3.3], scene);
+      hippedRoof(1.15, 0.32, 0.85, roof, [x, 9.17, -3.62], scene);
+    }
+    box(0.55, 1.15, 0.65, mat.sand, [side * 11.5, 9.6, -6.1], scene);
+    box(0.73, 0.14, 0.84, mat.stone, [side * 11.5, 10.19, -6.1], scene);
   }
+  box(6.15, 3.15, 4.5, mat.cream, [0, 7.04, -5.3], scene);
+  for (const x of [-2.85, 2.85]) {
+    box(0.27, 2.95, 0.28, mat.stone, [x, 7.05, -2.98], scene);
+  }
+  box(6.6, 0.21, 4.85, mat.sand, [0, 8.63, -5.3], scene);
+  hippedRoof(6.95, 1.65, 5.15, roof, [0, 8.75, -5.3], scene);
+  const pediment = new THREE.Shape();
+  pediment.moveTo(-3.45, 8.62);
+  pediment.lineTo(3.45, 8.62);
+  pediment.lineTo(0, 9.91);
+  pediment.closePath();
+  outline(mesh(new THREE.ExtrudeGeometry(pediment, { depth: 0.32, bevelEnabled: false }), mat.stone, [0, 0, -3.13], scene), 0.45);
+  box(7.05, 0.17, 0.5, mat.sand, [0, 8.57, -2.99], scene);
+  mesh(new THREE.CircleGeometry(0.87, 48), mat.gold, [0, 7.04, -3.01], scene);
+  mesh(new THREE.CircleGeometry(0.76, 48), mat.stone, [0, 7.04, -2.99], scene);
+  for (let i = 0; i < 12; i++) {
+    const angle = i * Math.PI / 6;
+    const mark = box(0.035, i % 3 ? 0.09 : 0.15, 0.025, mat.darkGold, [Math.sin(angle) * 0.65, 7.04 + Math.cos(angle) * 0.65, -2.96], scene);
+    mark.rotation.z = -angle;
+  }
+  const minuteHand = box(0.035, 0.53, 0.03, mat.ink, [0.13, 7.27, -2.92], scene);
+  minuteHand.rotation.z = -Math.PI / 6;
+  const hourHand = box(0.055, 0.35, 0.035, mat.ink, [-0.16, 7.12, -2.9], scene);
+  hourHand.rotation.z = Math.PI / 3;
 }
 
 function column(parent: THREE.Object3D, x: number, z: number, height: number): void {
@@ -289,6 +322,7 @@ export function createMuseumScene(): MuseumWorld {
     tree(scene, x, z, seed);
   }
   courtyardDetails(scene, decorationColliders);
+  const arrival = createCourtyardArrival(scene, decorationColliders);
   upperFacade(scene);
 
   // The open portal shows the hall from the courtyard; the central turnstile controls entry.
@@ -307,12 +341,6 @@ export function createMuseumScene(): MuseumWorld {
   box(5.5, 0.13, 0.9, mat.sand, [0, 4.26, -3.9], scene);
   outline(box(25, 0.34, 1.25, mat.stone, [0, 5.25, -3.9], scene), 0.55);
   outline(box(26, 0.17, 1.45, mat.sand, [0, 5.54, -3.9], scene), 0.55);
-  const pediment = new THREE.Shape();
-  pediment.moveTo(-10.7, 5.65);
-  pediment.lineTo(10.7, 5.65);
-  pediment.lineTo(0, 7.3);
-  pediment.closePath();
-  outline(mesh(new THREE.ExtrudeGeometry(pediment, { depth: 0.35, bevelEnabled: false }), mat.cream, [0, 0, -4.3], scene), 0.6);
   sign(scene, 'MUSEO DEL TIEMPO', [0, 4.77, -3.44], 3.35);
   const entranceGate = turnstiles(scene);
   const attendant = createGuard(scene);
@@ -404,6 +432,7 @@ export function createMuseumScene(): MuseumWorld {
   let entranceProgress = 0;
   return {
     scene,
+    spawn: arrival.spawn,
     colliders,
     guard: attendant.interaction,
     rooms: gallery.rooms,
@@ -420,7 +449,8 @@ export function createMuseumScene(): MuseumWorld {
     openDoor: (door) => {
       if (!door.opening && door.progress === 0) door.opening = true;
     },
-    update: (delta) => {
+    update: (delta, visitor) => {
+      if (visitor) arrival.update(delta, visitor);
       attendant.update(delta);
       if (entranceOpening && entranceProgress < 1) {
         entranceProgress = Math.min(1, entranceProgress + delta * 1.3);

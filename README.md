@@ -1,6 +1,6 @@
 # Museo de viajes en el tiempo
 
-Proyecto de videojuego 3D en primera persona para navegador. El recorrido actual permite explorar el patio de un museo ficticio inspirado en el Louvre, recibir un panfleto, entrar al hall y completar Roma en la primera sala de un circuito en U. Las diez salas tienen lugar físico; Egipto y las otras ocho permanecen cerradas hasta instalar sus exhibiciones.
+Proyecto de videojuego 3D en primera persona para navegador. El recorrido comienza en el andén de una plaza: el tren parte al mirar atrás y el museo ficticio inspirado en el Louvre queda enfrente. Casas de uno y dos pisos y una baranda delimitan el patio. Se puede recibir un panfleto, entrar al hall y completar Roma en la primera sala de un circuito en U. Las diez salas tienen lugar físico; Egipto y las otras ocho permanecen cerradas hasta instalar sus exhibiciones.
 
 ## Ejecutar el prototipo
 
@@ -26,7 +26,7 @@ El laboratorio temporal de la etapa 4 fue retirado de la experiencia pública. R
 [Renovación visual con modelos Kenney y capturas](docs/Revision_visual_Kenney.md).
 [Inventario completo, selección y recomendaciones de assets](docs/Seleccion_Kenney.md).
 
-La renovación incorpora 28 modelos de cinco paquetes Kenney, con sus texturas y licencias CC0 en `public/assets/kenney/`. El juego carga esa selección local antes de habilitar la visita; no necesita acceder a la carpeta original de Windows. Los materiales mantienen el sombreado toon y la paleta del museo.
+La renovación incorpora 31 modelos de seis paquetes Kenney, con sus texturas y licencias CC0 en `public/assets/kenney/`. El juego carga esa selección local antes de habilitar la visita; no necesita acceder a la carpeta original de Windows. Los materiales mantienen el sombreado toon y la paleta del museo.
 
 ## Documentación
 

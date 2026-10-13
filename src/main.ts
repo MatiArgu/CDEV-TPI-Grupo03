@@ -86,7 +86,8 @@ try {
     const world = createMuseumScene();
     scene = world.scene;
     scene.add(camera);
-    updateScene = world.update;
+    const updateMuseum = (delta: number) => world.update(delta, app.dataset.playState === 'playing' ? camera : undefined);
+    updateScene = updateMuseum;
     const pamphletView = createPamphlet();
     const cameraModel = createCameraModel(camera);
     const pamphlet = document.querySelector<HTMLElement>('#pamphlet')!;
@@ -183,7 +184,7 @@ try {
         const room = world.rooms.find((item) => item.id === completedId)!;
         (room.root.userData.setLight as (strength: number) => void)(0);
         controls.teleport(new THREE.Vector2(room.center.x, room.center.y + 4.15));
-        updateScene = world.update;
+        updateScene = updateMuseum;
       });
       controls.finishCinematic(false);
       controls.openPamphlet();
@@ -193,7 +194,7 @@ try {
 
     const controls = createPlayerControls(camera, renderer.domElement, {
       colliders: world.colliders,
-      start: new THREE.Vector2(1, 17),
+      start: world.spawn,
       findInteraction: (position, gaze) => {
         if (history) {
           const toArtifact = history.artifact.clone().sub(new THREE.Vector3(position.x, 1.7, position.y));

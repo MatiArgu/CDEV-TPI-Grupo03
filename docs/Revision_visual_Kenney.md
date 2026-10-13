@@ -2,6 +2,28 @@
 
 Esta revisión mejora los escenarios y las herramientas existentes de las etapas 1 a 6. Se mantiene el recorrido jugable del [plan](Plan_de_desarrollo.md): inicio, guardia, panfleto, primera puerta, exhibición, fotografía, naumaquia y regreso con Roma completada. Egipto y las otras ocho épocas permanecen WIP.
 
+## Actualización: patio con estación
+
+El jugador comienza en `(1, 26.3)`, a altura humana, del lado seguro del andén y mirando al museo. La locomotora y sus tres vagones quedan detrás. La primera mirada hacia las vías desde el patio inicia una partida con aceleración suave; continúa al mirar al frente y no se repite. Se detiene durante la pausa y al consultar el panfleto. El tren se oculta únicamente después de salir del alcance de la niebla desde toda la plaza.
+
+Ocho casas adosadas, de uno o dos pisos, cierran los laterales. Muros cortos las conectan con la fachada; una baranda continua separa el andén de los rieles. Todos esos límites tienen colisiones, incluidas sus uniones. Las puertas de las casas son decorativas y permanecen cerradas. El único acceso que continúa el recorrido es la entrada del museo.
+
+La fachada ahora tiene cubiertas rectangulares a cuatro aguas, buhardillas, cornisas y un pabellón central con reloj y frontón. Los marcos Kenney, las contraventanas, la piedra clara y los tonos salvia unifican museo y casas. Se añaden tres modelos de Train Kit con su textura y licencia CC0. `src/courtyard.ts` construye el perímetro y la llegada; el museo expone su posición inicial y recibe la cámara solamente durante el juego activo para actualizar el tren.
+
+| Vista actual | Captura |
+| --- | --- |
+| Llegada al museo | [Desde el andén](capturas/patio-llegada.png) |
+| Plaza cerrada | [Vista de conjunto](capturas/patio-plaza.png) |
+| Fachada y techo | [Pabellón central](capturas/patio-fachada.png) |
+| Casas bajas | [Lateral de la plaza](capturas/patio-casas.png) |
+| Tren y vías | [Andén](capturas/patio-anden.png) |
+
+Verificado en Chrome con el controlador del juego: inicio sin partida automática; activación al girar; continuidad al volver a mirar al frente; pausa con Escape y panfleto; partida única sin reaparecer. Pasaron 14 pruebas de colisión corriendo contra paredes, juntas entre casas, esquinas delanteras y traseras, baranda y fachada. También se recorrió desde el nuevo inicio hasta el guardia, hall, foto inválida, foto válida, Roma, recogida del casco y regreso con 1/10. Se comprobó recuperar Pointer Lock después de una transición en pausa.
+
+`npm run typecheck`, `npm run build` y `git diff --check` correctos. En la compilación final se cargaron 31 GLB y cuatro texturas externas sin errores; también se abrió el estudio visual. El manifiesto coincide con los tamaños y hashes de los archivos, y están presentes las seis licencias. Vite conserva el aviso por tamaño del bundle principal, ahora de aproximadamente 703 kB antes de gzip.
+
+La vista de llegada registra unas 28.600 caras triangulares y 1.136 llamadas de dibujo; la vista elevada de la plaza, unas 30.200 y 1.213. Las varillas de la baranda usan una sola malla instanciada. Son cifras de complejidad de la escena; la fluidez con GPU física sigue pendiente de medición. Las capturas y cifras de la revisión inicial que siguen corresponden al patio anterior.
+
 ## Cambios
 
 - **Patio y fachada:** árboles con raíces y ramas, jardineras con flores, bancos, faroles, plantas junto a la entrada, ventanas arqueadas, segundo nivel y cubiertas. La pirámide incorpora una trama de juntas. El cielo y la luz exterior pasan a tonos más suaves.
