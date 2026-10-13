@@ -1,6 +1,6 @@
 # Revisión de la etapa 5 — diez salas WIP
 
-> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](../CODEMAP.md).
 
 La disposición abierta documentada a continuación fue la primera versión de la etapa 5. El [replanteo del recorrido en U](#replanteo-del-recorrido-en-u) al final de este archivo describe el estado actual.
 

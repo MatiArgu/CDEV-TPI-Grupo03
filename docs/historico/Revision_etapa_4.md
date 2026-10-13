@@ -1,6 +1,6 @@
 # Revisión de la etapa 4 — Polaroid
 
-> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](../CODEMAP.md).
 
 Esta revisión documenta la prueba de la etapa 4, realizada en un laboratorio temporal separado del recorrido principal. Al completar la etapa 5 se retiró la ruta `?photo-test` y su escena: los pasos siguientes son un registro histórico de esa verificación, no instrucciones para la versión actual. El cristal de ensayo y el eco temporal no eran áreas del catálogo ni contenido histórico definitivo.
 

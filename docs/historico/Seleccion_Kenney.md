@@ -10,7 +10,7 @@ Hay **5.314 archivos GLB/glTF** sueltos; esta cifra incluye variantes y no repre
 
 - [Inventario completo por carpeta y formato](Inventario_Kenney.csv).
 - [Inventario de archivos comprimidos](Inventario_Kenney_zip.csv).
-- [Manifiesto de modelos incorporados](../public/assets/kenney/manifest.json): origen exacto, tamaño, SHA-256, licencia y texturas dependientes.
+- [Manifiesto de modelos incorporados](../../public/assets/kenney/manifest.json): origen exacto, tamaño, SHA-256, licencia y texturas dependientes.
 
 ## Selección implementada
 

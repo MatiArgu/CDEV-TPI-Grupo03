@@ -76,9 +76,9 @@ Los hooks de inspección se inyectan por DevTools en la respuesta de desarrollo;
 
 | Vista | Evidencia |
 | --- | --- |
-| Exterior e interior | [Patio](capturas/e2e-patio.png), [hall](capturas/e2e-hall.png), [Roma](capturas/e2e-roma.png) |
-| Sombras egipcias | [Patio ceremonial sin rayas de autosombra](capturas/e2e-egipto.png) |
-| Recorrido japonés | [Puente y torii](capturas/e2e-japon-llegada.png) |
-| Regreso lunar | [Cabina](capturas/e2e-luna-cabina.png) |
-| Cinco viajes realizados | [Panfleto con las cinco fotos](capturas/e2e-cinco-recuerdos.png) |
-| Persistencia | [Cinco recuerdos después de recargar](capturas/e2e-recarga-cinco.png) |
+| Exterior e interior | [Patio](../capturas/e2e-patio.png), [hall](../capturas/e2e-hall.png), [Roma](../capturas/e2e-roma.png) |
+| Sombras egipcias | [Patio ceremonial sin rayas de autosombra](../capturas/e2e-egipto.png) |
+| Recorrido japonés | [Puente y torii](../capturas/e2e-japon-llegada.png) |
+| Regreso lunar | [Cabina](../capturas/e2e-luna-cabina.png) |
+| Cinco viajes realizados | [Panfleto con las cinco fotos](../capturas/e2e-cinco-recuerdos.png) |
+| Persistencia | [Cinco recuerdos después de recargar](../capturas/e2e-recarga-cinco.png) |
