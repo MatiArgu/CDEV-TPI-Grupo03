@@ -3,7 +3,7 @@ import type { AreaId } from './catalog';
 import { createGallery, galleryLayout, type GalleryDoor, type GalleryRoom } from './gallery';
 import { installRomeExhibit } from './rome';
 import type { Collider } from './scene';
-import { box, inkStroke, irregularCrown, materials as mat, mesh, outline, palette, shadowBlob, silhouette } from './visual';
+import { box, inkStroke, irregularCrown, materials as mat, mesh, outline, palette, shadowBlob, silhouette, toon } from './visual';
 
 export type MuseumWorld = {
   scene: THREE.Scene;
@@ -64,12 +64,12 @@ function tree(parent: THREE.Object3D, x: number, z: number, seed: number): void 
   }
 }
 
-function column(parent: THREE.Object3D, x: number, z: number, height = 4.1): void {
-  outline(box(0.86, 0.26, 0.86, mat.sand, [x, 0.42, z], parent), 0.5);
-  const shaft = mesh(new THREE.CylinderGeometry(0.29, 0.35, height - 0.7, 9), mat.stone, [x, height / 2 + 0.09, z], parent);
+function column(parent: THREE.Object3D, x: number, z: number, height: number): void {
+  outline(box(0.86, 0.3, 0.86, mat.sand, [x, 0.15, z], parent), 0.5);
+  const shaft = mesh(new THREE.CylinderGeometry(0.29, 0.35, height - 0.51, 9), mat.stone, [x, height / 2 + 0.025, z], parent);
   silhouette(shaft, 1.015);
   outline(shaft, 0.35);
-  outline(box(0.82, 0.25, 0.82, mat.sand, [x, height - 0.06, z], parent), 0.5);
+  outline(box(0.82, 0.27, 0.82, mat.sand, [x, height - 0.135, z], parent), 0.5);
 }
 
 function pyramid(parent: THREE.Object3D, x: number, z: number): void {
@@ -104,39 +104,60 @@ function pyramid(parent: THREE.Object3D, x: number, z: number): void {
 
 function guard(parent: THREE.Object3D): { arm: THREE.Group; paper: THREE.Mesh } {
   const figure = new THREE.Group();
-  figure.position.set(2.5, 0, -0.8);
+  figure.position.set(3.7, 0, -0.65);
   parent.add(figure);
-  shadowBlob(2.65, -0.65, 0.55, 0.3, parent);
+  shadowBlob(3.83, -0.48, 0.6, 0.34, parent);
+  const jacket = toon(0x486e82);
+  const jacketShade = toon(0x355569);
+  const trousers = toon(0x394e5d);
+  const skin = toon(0xe6c9a8);
   for (const side of [-1, 1]) {
-    box(0.22, 0.7, 0.24, mat.ink, [side * 0.17, 0.39, 0], figure);
-    box(0.28, 0.13, 0.36, mat.darkGold, [side * 0.17, 0.07, 0.07], figure);
+    const leg = mesh(new THREE.CylinderGeometry(0.13, 0.17, 0.75, 6), trousers, [side * 0.19, 0.44, 0], figure);
+    leg.rotation.z = side * 0.035;
+    box(0.31, 0.15, 0.43, mat.ink, [side * 0.19, 0.075, 0.08], figure);
   }
-  const coat = box(0.74, 0.86, 0.34, mat.door, [0, 1.16, 0], figure);
-  silhouette(coat, 1.025);
-  box(0.12, 0.82, 0.36, mat.sand, [0, 1.17, 0.02], figure);
-  box(0.22, 0.11, 0.04, mat.coral, [0.22, 1.38, 0.2], figure);
-  const head = mesh(new THREE.IcosahedronGeometry(0.28, 1), mat.sand, [0, 1.82, 0.03], figure);
-  silhouette(head, 1.035);
+  const coat = mesh(new THREE.CylinderGeometry(0.43, 0.34, 0.9, 6), jacket, [0, 1.25, 0], figure);
+  coat.rotation.y = Math.PI / 6;
+  silhouette(coat, 1.023);
+  box(0.16, 0.69, 0.035, jacketShade, [0, 1.21, 0.37], figure);
+  box(0.54, 0.12, 0.46, trousers, [0, 0.8, 0], figure);
+  box(0.53, 0.11, 0.38, jacketShade, [0, 1.08, 0.02], figure);
+  box(0.13, 0.07, 0.04, mat.gold, [0, 1.08, 0.25], figure);
+  box(0.22, 0.1, 0.045, mat.sand, [0.24, 1.48, 0.29], figure);
+  box(0.085, 0.14, 0.05, mat.gold, [-0.25, 1.43, 0.29], figure);
+  for (const y of [1.35, 1.18, 1.02]) {
+    mesh(new THREE.SphereGeometry(0.018, 6, 4), mat.gold, [0.075, y, 0.39], figure).castShadow = false;
+  }
+  const neck = mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.17, 6), skin, [0, 1.75, 0], figure);
+  neck.castShadow = false;
+  const head = mesh(new THREE.IcosahedronGeometry(0.27, 1), skin, [0, 1.99, 0.035], figure);
+  head.scale.set(0.9, 1.08, 0.86);
+  silhouette(head, 1.025);
   for (const side of [-1, 1]) {
-    const eye = mesh(new THREE.SphereGeometry(0.019, 6, 4), mat.ink, [side * 0.1, 1.86, 0.298], figure);
+    mesh(new THREE.SphereGeometry(0.055, 6, 4), skin, [side * 0.235, 2.0, 0.01], figure);
+    const eye = mesh(new THREE.SphereGeometry(0.014, 6, 4), mat.ink, [side * 0.095, 2.015, 0.264], figure);
     eye.castShadow = false;
-    inkStroke([[side * 0.15, 1.96, 0.267], [side * 0.08, 1.975, 0.287]], figure, 0.9);
+    inkStroke([[side * 0.15, 2.08, 0.24], [side * 0.075, 2.095, 0.26]], figure, 0.72);
   }
-  const nose = mesh(new THREE.TetrahedronGeometry(0.035), mat.sand, [0, 1.79, 0.322], figure);
+  const nose = mesh(new THREE.TetrahedronGeometry(0.035), skin, [0, 1.95, 0.287], figure);
   nose.castShadow = false;
-  inkStroke([[-0.07, 1.735, 0.281], [0, 1.725, 0.299], [0.07, 1.735, 0.281]], figure, 0.82);
-  box(0.62, 0.19, 0.56, mat.ink, [0, 2.12, 0.02], figure);
-  box(0.75, 0.045, 0.4, mat.ink, [0, 2.02, 0.2], figure);
+  inkStroke([[-0.06, 1.88, 0.255], [0, 1.87, 0.275], [0.06, 1.88, 0.255]], figure, 0.7);
+  const cap = mesh(new THREE.CylinderGeometry(0.29, 0.31, 0.19, 9), jacketShade, [0, 2.28, 0], figure);
+  cap.scale.z = 0.85;
+  box(0.6, 0.04, 0.34, jacketShade, [0, 2.19, 0.2], figure);
+  box(0.13, 0.045, 0.025, mat.gold, [0, 2.3, 0.276], figure);
   let givingArm: THREE.Group | null = null;
   let paper: THREE.Mesh | null = null;
   for (const side of [-1, 1]) {
     const arm = new THREE.Group();
-    arm.position.set(side * 0.49, 1.48, 0);
+    arm.position.set(side * 0.42, 1.59, 0);
     figure.add(arm);
-    box(0.2, 0.7, 0.23, mat.door, [0, -0.36, 0], arm);
-    mesh(new THREE.IcosahedronGeometry(0.11, 0), mat.sand, [0, -0.74, 0], arm);
+    const sleeve = mesh(new THREE.CylinderGeometry(0.125, 0.1, 0.68, 6), jacket, [side * 0.05, -0.32, 0], arm);
+    sleeve.rotation.z = side * 0.13;
+    box(0.23, 0.07, 0.23, jacketShade, [side * 0.09, -0.63, 0], arm);
+    mesh(new THREE.IcosahedronGeometry(0.105, 0), skin, [side * 0.09, -0.75, 0.015], arm);
     if (side === -1) {
-      paper = box(0.34, 0.42, 0.026, mat.cream, [0, -0.81, 0.16], arm);
+      paper = box(0.34, 0.42, 0.026, mat.cream, [-0.09, -0.81, 0.16], arm);
       paper.visible = false;
       givingArm = arm;
     }
@@ -144,12 +165,108 @@ function guard(parent: THREE.Object3D): { arm: THREE.Group; paper: THREE.Mesh } 
   return { arm: givingArm!, paper: paper! };
 }
 
+function marbleMaterial(): THREE.MeshToonMaterial {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 512;
+  const context = canvas.getContext('2d')!;
+  context.fillStyle = '#f5eedf';
+  context.fillRect(0, 0, 512, 512);
+  for (let vein = 0; vein < 19; vein++) {
+    const start = (vein * 137) % 640 - 64;
+    const slope = 0.25 + (vein % 5) * 0.12;
+    context.beginPath();
+    for (let step = 0; step <= 12; step++) {
+      const y = step * 48 - 32;
+      const x = start + y * slope + Math.sin(step * 1.8 + vein * 2.7) * (6 + vein % 4);
+      if (step === 0) context.moveTo(x, y);
+      else context.lineTo(x, y);
+    }
+    context.strokeStyle = vein % 4 === 0 ? '#c5bdad' : '#d8d0c0';
+    context.lineWidth = vein % 4 === 0 ? 2.3 : 1.1;
+    context.globalAlpha = vein % 4 === 0 ? 0.5 : 0.38;
+    context.stroke();
+  }
+  context.globalAlpha = 1;
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(2, 3);
+  const material = toon(0xffffff);
+  material.map = texture;
+  material.needsUpdate = true;
+  return material;
+}
+
+function skylight(parent: THREE.Object3D): void {
+  const glassMaterial = new THREE.MeshPhongMaterial({
+    color: 0xd8e9e4, transparent: true, opacity: 0.62, side: THREE.DoubleSide, depthWrite: false,
+  });
+  const roofY = (x: number): number => 5.46 + 0.78 * (1 - (x / 4.5) ** 2);
+  for (let segment = 0; segment < 8; segment++) {
+    const x0 = -4.5 + segment * 1.125;
+    const x1 = x0 + 1.125;
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute([
+      x0, roofY(x0), -5.0, x1, roofY(x1), -5.0,
+      x0, roofY(x0), -21.3, x1, roofY(x1), -21.3,
+    ], 3));
+    geometry.setIndex([0, 2, 1, 1, 2, 3]);
+    geometry.computeVertexNormals();
+    const pane = mesh(geometry, glassMaterial, [0, 0, 0], parent);
+    pane.castShadow = false;
+    pane.receiveShadow = false;
+  }
+  for (let segment = 0; segment <= 8; segment++) {
+    const x = -4.5 + segment * 1.125;
+    const rib = box(0.065, 0.095, 16.3, mat.darkGold, [x, roofY(x) + 0.01, -13.15], parent);
+    rib.castShadow = segment % 2 === 0;
+  }
+  for (const z of [-5.1, -7.4, -9.7, -12, -14.3, -16.6, -18.9, -21.1]) {
+    const points = Array.from({ length: 17 }, (_, index) => {
+      const x = -4.5 + index * 0.5625;
+      return new THREE.Vector3(x, roofY(x) - 0.025, z);
+    });
+    mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 24, 0.055, 5, false), mat.darkGold, [0, 0, 0], parent);
+  }
+}
+
+function turnstiles(parent: THREE.Object3D): { wings: THREE.Group[]; colliders: Collider[]; blocker: Collider } {
+  const metal = toon(0x879d9a);
+  const metalTop = toon(0x526b70);
+  const glass = new THREE.MeshPhongMaterial({ color: 0xb6ddd5, transparent: true, opacity: 0.66, depthWrite: false, side: THREE.DoubleSide });
+  const colliders: Collider[] = [];
+  for (const x of [-2.4, -0.8, 0.8, 2.4]) {
+    const body = box(0.42, 0.83, 1.08, metal, [x, 0.48, -3.02], parent);
+    outline(body, 0.36);
+    box(0.48, 0.11, 1.13, metalTop, [x, 0.95, -3.02], parent);
+    box(0.33, 0.045, 0.3, mat.mint, [x, 1.03, -2.73], parent);
+    colliders.push({ minX: x - 0.24, maxX: x + 0.24, minZ: -3.59, maxZ: -2.45 });
+  }
+  for (const x of [-1.6, 1.6]) {
+    const fixedWing = box(1.1, 0.55, 0.045, glass, [x, 0.76, -3.02], parent);
+    fixedWing.castShadow = false;
+    outline(fixedWing, 0.55);
+    colliders.push({ minX: x - 0.6, maxX: x + 0.6, minZ: -3.16, maxZ: -2.88 });
+  }
+  const wings: THREE.Group[] = [];
+  for (const side of [-1, 1]) {
+    const wing = new THREE.Group();
+    wing.position.set(side * 0.8, 0, -3.02);
+    parent.add(wing);
+    const pane = box(0.72, 0.55, 0.045, glass, [-side * 0.39, 0.76, 0], wing);
+    pane.castShadow = false;
+    outline(pane, 0.6);
+    wings.push(wing);
+  }
+  return { wings, colliders, blocker: { minX: -0.59, maxX: 0.59, minZ: -3.17, maxZ: -2.87 } };
+}
+
 export function createMuseumScene(): MuseumWorld {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x89d9cd);
   scene.fog = new THREE.Fog(0x89d9cd, 40, 78);
-  scene.add(new THREE.AmbientLight(0xffffff, 1.0));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.55);
+  scene.add(new THREE.AmbientLight(0xfff8ee, 0.88));
+  const sun = new THREE.DirectionalLight(0xffe7c8, 1.6);
   sun.position.set(-9, 16, 12);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
@@ -170,23 +287,26 @@ export function createMuseumScene(): MuseumWorld {
     box(32, 0.015, 0.055, mat.sand, [0, 0.07, z], scene).castShadow = false;
   }
   box(5.3, 0.018, 24, mat.stone, [2.2, 0.07, 9], scene).castShadow = false;
+  const marble = marbleMaterial();
+  box(8.2, 0.02, 8.3, marble, [0, 0.085, 0.45], scene).castShadow = false;
   pyramid(scene, -3, 8);
   for (const [x, z, seed] of [[-13, 2, 1], [13, 2, 2], [-13, 16, 3], [13, 16, 4]] as const) {
     tree(scene, x, z, seed);
   }
 
-  // The facade has a real opening; its panels slide away after the guard's handoff.
+  // The open portal shows the hall from the courtyard; the central turnstile controls entry.
   for (const side of [-1, 1]) {
-    const wall = box(11, 4.7, 0.75, mat.cream, [side * 7, 2.75, -3.9], scene);
+    const wall = box(9.7, 5.1, 0.75, mat.cream, [side * 7.65, 2.55, -3.9], scene);
     silhouette(wall, 1.006);
-    outline(wall, 0.4);
+    outline(wall, 0.28);
     for (const x of [side * 6.5, side * 9.7]) {
       outline(box(1.2, 2.2, 0.07, mat.door, [x, 2.15, -3.48], scene), 0.65);
       box(0.08, 2.1, 0.09, mat.sand, [x, 2.15, -3.42], scene);
     }
-    for (const x of [side * 2.25, side * 5.1]) column(scene, x, -3.1);
+    for (const x of [side * 3.3, side * 5.55]) column(scene, x, -3.1, 5.1);
   }
-  outline(box(4, 1.06, 0.82, mat.cream, [0, 4.56, -3.9], scene), 0.55);
+  outline(box(5.6, 0.88, 0.82, mat.cream, [0, 4.77, -3.9], scene), 0.4);
+  box(5.5, 0.13, 0.9, mat.sand, [0, 4.26, -3.9], scene);
   outline(box(25, 0.34, 1.25, mat.stone, [0, 5.25, -3.9], scene), 0.55);
   outline(box(26, 0.17, 1.45, mat.sand, [0, 5.54, -3.9], scene), 0.55);
   const pediment = new THREE.Shape();
@@ -195,25 +315,18 @@ export function createMuseumScene(): MuseumWorld {
   pediment.lineTo(0, 7.3);
   pediment.closePath();
   outline(mesh(new THREE.ExtrudeGeometry(pediment, { depth: 0.35, bevelEnabled: false }), mat.cream, [0, 0, -4.3], scene), 0.6);
-  sign(scene, 'MUSEO DEL TIEMPO', [0, 4.48, -3.45], 3.45);
-  const leftDoor = box(1.45, 3.36, 0.16, mat.door, [-0.73, 2.15, -3.5], scene);
-  const rightDoor = box(1.45, 3.36, 0.16, mat.door, [0.73, 2.15, -3.5], scene);
-  outline(leftDoor, 0.7);
-  outline(rightDoor, 0.7);
-  for (const side of [-1, 1]) {
-    mesh(new THREE.SphereGeometry(0.07, 8, 6), mat.gold, [-side * 0.51, -0.15, 0.14], side === -1 ? leftDoor : rightDoor);
-  }
-
+  sign(scene, 'MUSEO DEL TIEMPO', [0, 4.77, -3.44], 3.35);
+  const entranceGate = turnstiles(scene);
   const attendant = guard(scene);
 
   // The original hall leads to the first room and later receives the returning route.
-  box(17, 0.14, 18, mat.stone, [0, 0.02, -12.4], scene).castShadow = false;
-  box(2.7, 0.018, 16, mat.sage, [0, 0.11, -12.2], scene).castShadow = false;
+  box(17, 0.14, 18, marble, [0, 0.02, -12.4], scene).castShadow = false;
+  box(2.7, 0.012, 16, mat.sage, [0, 0.1, -12.2], scene).castShadow = false;
   for (const side of [-1, 1]) {
     outline(box(0.56, 5.5, 18, mat.cream, [side * 8.55, 2.75, -12.4], scene), 0.38);
     box(0.06, 1.1, 17.8, mat.sage, [side * 8.24, 0.67, -12.4], scene);
     for (const z of [-8, -13.2, -18.4]) {
-      column(scene, side * (z === -18.4 ? 7 : 6.4), z, 4.65);
+      column(scene, side * (z === -18.4 ? 7 : 6.4), z, 5.42);
       if (z !== -18.4) {
         outline(box(1.35, 0.73, 1.2, mat.sand, [side * 5.3, 0.46, z - 0.5], scene), 0.5);
         mesh(new THREE.CylinderGeometry(0.2, 0.34, 0.38, 7), mat.stone, [side * 5.3, 1.02, z - 0.5], scene);
@@ -223,17 +336,25 @@ export function createMuseumScene(): MuseumWorld {
       outline(box(0.05, 2.2, 2.1, mat.door, [side * 8.19, 2.45, z], scene), 0.38);
     }
   }
+  for (const z of [-8, -13.2, -18.4]) {
+    const points = Array.from({ length: 15 }, (_, index) => {
+      const x = -6.4 + index * 12.8 / 14;
+      return new THREE.Vector3(x, 3.72 + 1.55 * (1 - (x / 6.4) ** 2), z);
+    });
+    mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 30, 0.11, 6, false), mat.sand, [0, 0, 0], scene);
+  }
   displayCase(scene, -3.9, -10.4);
   displayCase(scene, 3.9, -15.6);
   outline(box(17, 1.6, 0.52, mat.cream, [0, 4.7, -21.45], scene), 0.4);
   sign(scene, 'RECORRIDO EN U · 01—10', [0, 4.6, -21.08], 3.65);
-  box(17, 0.3, 18, mat.sand, [0, 5.5, -12.4], scene).receiveShadow = false;
+  for (const side of [-1, 1]) box(4, 0.25, 18, mat.sand, [side * 6.5, 5.5, -12.4], scene).receiveShadow = false;
+  box(9, 0.23, 1.55, mat.sand, [0, 5.55, -4.25], scene);
+  skylight(scene);
   for (const z of [-7, -12, -17]) {
-    box(8.7, 0.12, 0.55, mat.stone, [0, 5.25, z], scene);
-    const bulb = mesh(new THREE.IcosahedronGeometry(0.13, 0), mat.cream, [0, 4.97, z], scene);
+    const bulb = mesh(new THREE.IcosahedronGeometry(0.12, 0), mat.cream, [0, 5.03, z], scene);
     bulb.castShadow = false;
-    const light = new THREE.PointLight(0xffecd1, 0.72, 10);
-    light.position.set(0, 4.7, z);
+    const light = new THREE.PointLight(0xffecd1, 0.38, 9);
+    light.position.set(0, 4.9, z);
     scene.add(light);
   }
   const gallery = createGallery(scene);
@@ -243,25 +364,26 @@ export function createMuseumScene(): MuseumWorld {
   ]);
   sign(scene, 'REGRESO AL HALL', [galleryLayout.wingX, 3.45, -21.67], 2.5);
 
-  const doorBlock: Collider = { minX: -1.48, maxX: 1.48, minZ: -4.25, maxZ: -3.3 };
+  const doorBlock = entranceGate.blocker;
   const colliders: Collider[] = [
-    { minX: -12.5, maxX: -1.48, minZ: -4.4, maxZ: -3.48 },
-    { minX: 1.48, maxX: 12.5, minZ: -4.4, maxZ: -3.48 },
+    { minX: -12.5, maxX: -2.8, minZ: -4.4, maxZ: -3.48 },
+    { minX: 2.8, maxX: 12.5, minZ: -4.4, maxZ: -3.48 },
     doorBlock,
     { minX: -6.4, maxX: 0.4, minZ: 4.6, maxZ: 11.4 },
-    { minX: 2.07, maxX: 2.93, minZ: -1.15, maxZ: -0.45 },
+    { minX: 3.3, maxX: 4.1, minZ: -1.1, maxZ: -0.25 },
     { minX: -8.9, maxX: -8.2, minZ: -21.5, maxZ: -3.5 },
     { minX: 8.2, maxX: 8.9, minZ: -21.5, maxZ: -3.5 },
     { minX: -4.55, maxX: -3.25, minZ: -10.93, maxZ: -9.87 },
     { minX: 3.25, maxX: 4.55, minZ: -16.13, maxZ: -15.07 },
   ];
+  colliders.push(...entranceGate.colliders);
   colliders.push(...gallery.colliders);
   colliders.push(...romeExhibit.colliders);
   for (const [x, z] of [[-13, 2], [13, 2], [-13, 16], [13, 16]]) {
     colliders.push({ minX: x - 0.32, maxX: x + 0.32, minZ: z - 0.32, maxZ: z + 0.32 });
   }
   for (const side of [-1, 1]) {
-    for (const x of [side * 2.25, side * 5.1]) {
+    for (const x of [side * 3.3, side * 5.55]) {
       colliders.push({ minX: x - 0.45, maxX: x + 0.45, minZ: -3.56, maxZ: -2.67 });
     }
     for (const z of [-8, -13.2, -18.4]) {
@@ -277,7 +399,7 @@ export function createMuseumScene(): MuseumWorld {
   return {
     scene,
     colliders,
-    guard: new THREE.Vector3(2.5, 1.45, -0.8),
+    guard: new THREE.Vector3(3.7, 1.45, -0.65),
     rooms: gallery.rooms,
     doors: gallery.doors,
     exhibits,
@@ -296,8 +418,8 @@ export function createMuseumScene(): MuseumWorld {
     update: (delta) => {
       if (entranceOpening && entranceProgress < 1) {
         entranceProgress = Math.min(1, entranceProgress + delta * 1.3);
-        leftDoor.position.x = -0.73 - entranceProgress * 1.45;
-        rightDoor.position.x = 0.73 + entranceProgress * 1.45;
+        entranceGate.wings[0].rotation.y = entranceProgress * 1.35;
+        entranceGate.wings[1].rotation.y = -entranceProgress * 1.35;
         if (entranceProgress === 1) colliders.splice(colliders.indexOf(doorBlock), 1);
       }
       if (handoffTime > 0) {
