@@ -94,7 +94,10 @@ try {
     const world = createMuseumScene();
     scene = world.scene;
     scene.add(camera);
-    const updateMuseum = (delta: number) => world.update(delta, app.dataset.playState === 'playing' ? camera : undefined);
+    const updateMuseum = (delta: number) => {
+      if (app.dataset.playState === 'paused' || app.dataset.playState === 'intro') return;
+      world.update(Math.min(delta, 0.05), app.dataset.playState === 'playing' ? camera : undefined);
+    };
     updateScene = updateMuseum;
     const pamphletView = createPamphlet(camera);
     const cameraModel = createCameraModel(camera);
@@ -179,7 +182,7 @@ try {
       }
       acceptedPhoto = await photoForSave(photo);
       controls.setCinematic('transition');
-      await playTimeTransition(transition, () => {
+      await playTimeTransition(transition, async () => {
         cameraModel.hidePrint();
         scene.remove(camera);
         museumColliders = [...world.colliders];
@@ -208,7 +211,8 @@ try {
           history.update(delta);
           if (!hadHelp && history.helpActive()) showToast(history.id === 'luna' ? 'Las huellas iluminadas llevan a la escalerilla de la nave.' : history.id === 'japon' ? 'Los pétalos señalan el camino entre los torii hacia el templo.' : history.id === 'egipto' ? 'Un rastro de luz recorre el templo hacia el altar.' : history.id === 'medieval' ? 'Un rastro dorado cruza el patio hacia la llave.' : 'Un rastro tenue recorre la pasarela hacia el casco.');
         };
-      });
+        await renderer.compileAsync(scene, camera);
+      }, () => app.dataset.playState === 'paused');
       controls.finishCinematic(false);
       help.textContent = active === 'luna' ? 'WASD CAMINAR · E SUBIR A LA NAVE · M PANFLETO · ESC PAUSAR' : 'WASD CAMINAR · SHIFT CORRER · E RECOGER · M PANFLETO · ESC PAUSAR';
       showToast(active === 'luna' ? 'El primer paso quedó detenido en el tiempo. Explorá el alunizaje y subí a la nave para iniciar el regreso.' : active === 'japon' ? 'El jardín quedó detenido en el tiempo. Cruzá el puente y buscá la máscara bajo el techo del templo.' : active === 'egipto' ? 'El tiempo se detuvo en el templo. Buscá el escarabajo del sol.' : active === 'medieval' ? 'El tiempo se detuvo en la fortaleza. Recuperá la llave junto al portón.' : 'El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
@@ -236,7 +240,7 @@ try {
         const facesSouth = (completedId === 'japon' || completedId === 'luna') && room.center.x > 0;
         controls.teleport(new THREE.Vector2(room.center.x, room.center.y + (facesSouth ? -4.15 : 4.15)), facesSouth ? Math.PI : 0);
         updateScene = updateMuseum;
-      });
+      }, () => app.dataset.playState === 'paused');
       controls.finishCinematic(false);
       controls.openPamphlet();
       help.textContent = 'WASD CAMINAR · SHIFT CORRER · M PANFLETO · E PUERTAS · ESC PAUSAR';

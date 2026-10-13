@@ -43,7 +43,7 @@ El visor vive en `game/spaceHelmet.ts`, sujeto a la cámara y dibujado en la pas
 
 ## Estado de partida y controles
 
-La experiencia necesita estados explícitos para inicio, exploración del museo, revelado, transición, exploración histórica, regreso y cierre del MVP. Cámara equipada, panfleto abierto y pausa se gestionan como modos compatibles con esos estados. El panfleto es papel 3D con dos hojas articuladas, manos y mirada inclinada; M lo abre y libera Pointer Lock sin pausar. M o un clic solicitan nuevamente el bloqueo y lo guardan. Escape abre la pausa. La cámara tiene animación de equipar, retroceso, expulsión de papel y revelado en la mano; el revelado se detiene durante la pausa. Los objetos sostenidos se dibujan en una segunda pasada de profundidad para evitar que vidrios o paredes los atraviesen, y se excluyen de la captura. El resultado usa la misma región del render que la validación. Durante revelado y transición se bloquean movimiento, nuevos disparos y panfleto.
+La experiencia necesita estados explícitos para inicio, exploración del museo, revelado, transición, exploración histórica, regreso y cierre del MVP. Cámara equipada, panfleto abierto y pausa se gestionan como modos compatibles con esos estados. El panfleto es papel 3D con dos hojas articuladas, manos y mirada inclinada; M lo abre y libera Pointer Lock sin pausar. M o un clic solicitan nuevamente el bloqueo y lo guardan. Escape abre la pausa. La cámara tiene animación de equipar, retroceso, expulsión de papel y revelado en la mano; el revelado se detiene durante la pausa. Los objetos sostenidos se dibujan en una segunda pasada de profundidad para evitar que vidrios o paredes los atraviesen, y se excluyen de la captura. El resultado usa la misma región del render que la validación. Durante revelado y transición se bloquean movimiento, nuevos disparos y panfleto. Escape sigue disponible: pausa el revelado, las puertas y el fundido temporal. El menú se dibuja por encima del efecto de viaje; la transición no cambia de escena mientras está pausada. Los programas de la escena histórica se preparan antes de terminar el fundido.
 
 
 Shift acelera el movimiento en exploración del museo y los cinco mundos históricos. La carrera se detiene al soltar la tecla y no queda retenida al abrir el panfleto, pausar o iniciar una transición.
@@ -55,6 +55,8 @@ Se retiró el viento ambiental sintetizado a pedido del usuario. Se conserva el 
 ## Render y decoración estática
 
 El cielo es un fondo equirectangular con gradiente continuo; las nubes mantienen su geometría low-poly. No hay cúpula facetada. Se precargan los programas de materiales antes de habilitar el inicio y la lista de luces permanece estable al abrir salas: se cambia su intensidad sin recompilar por cada puerta.
+
+El patio usa solo iluminación diurna; los focos y luces puntuales del interior vuelven a participar al acercarse al acceso. Se preparan las variantes de materiales al cargar. Los materiales de la paleta global sobreviven a la liberación de los mundos históricos. Hall y paneles de las salas agrupan piezas estáticas por material, conservando luces y elementos interactivos.
 
 La pasada de objetos sostenidos solo se ejecuta cuando se muestran; no vuelve a calcular sombras ni matrices del entorno. Los soles de Egipto, Medieval, Japón y Luna y los focos de exhibición conservan sus mapas de sombras estáticos. En el museo, el mapa solar se actualiza durante el movimiento del tren, del portón y del acceso. El guardia usa su sombra de contacto. El límite de densidad de píxeles es 1,5.
 

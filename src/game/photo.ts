@@ -42,6 +42,13 @@ export function artifactVisible(
   solids: THREE.Object3D[],
   frame: FrameBounds,
 ): boolean {
+  const visibleInScene = (object: THREE.Object3D): boolean => {
+    for (let parent: THREE.Object3D | null = object; parent; parent = parent.parent) {
+      if (!parent.visible) return false;
+    }
+    return true;
+  };
+  if (!visibleInScene(artifact)) return false;
   camera.updateMatrixWorld();
   artifact.updateWorldMatrix(true, true);
   const box = new THREE.Box3().setFromObject(artifact);
@@ -73,7 +80,8 @@ export function artifactVisible(
   const sample = new THREE.Vector2();
   const surfaces: THREE.Mesh[] = [];
   for (const object of [...solids, artifact]) {
-    object.traverse((part) => { if (part instanceof THREE.Mesh) surfaces.push(part); });
+    if (!visibleInScene(object)) continue;
+    object.traverseVisible((part) => { if (part instanceof THREE.Mesh) surfaces.push(part); });
   }
   for (let y = 0; y < 29; y++) {
     sample.y = bottom + (y + 0.5) / 29 * (top - bottom);

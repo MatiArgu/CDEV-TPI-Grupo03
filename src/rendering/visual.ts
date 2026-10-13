@@ -42,7 +42,11 @@ export const materials = {
   door: toon(0x477f80),
 };
 
+// These palette materials survive historical scenes and remain in the museum.
+Object.values(materials).forEach(material => { material.userData.sharedMaterial = true; });
+
 const silhouetteMaterial = new THREE.MeshBasicMaterial({ color: palette.ink, side: THREE.BackSide });
+silhouetteMaterial.userData.sharedMaterial = true;
 
 export function mesh(
   geometry: THREE.BufferGeometry,

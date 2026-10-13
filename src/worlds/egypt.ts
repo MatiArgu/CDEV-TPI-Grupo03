@@ -73,6 +73,8 @@ function pharaoh(parent: THREE.Object3D, x: number, z: number, height: number): 
   const face = mesh(new THREE.IcosahedronGeometry(0.31, 1), stone, [0, 2.2, 0.16], group); face.scale.set(0.88, 1.2, 0.68);
   box(0.08, 0.25, 0.08, dark, [0, 1.93, 0.36], group);
   for (const side of [-1, 1]) box(0.085, 0.022, 0.025, dark, [side * 0.11, 2.22, 0.368], group);
+  // Flat stone facets keep their toon shading without striped self-shadows.
+  group.traverse(object => { if (object instanceof THREE.Mesh) object.receiveShadow = false; });
   return group;
 }
 
@@ -133,7 +135,9 @@ export function createEgyptWorld(): HistoricalWorld {
   const sand = toon(0xdcc59c); const stone = toon(0xcdb88b); const dark = toon(0xa58a65); const teal = toon(0x5b8d85);
   const colliders: Collider[] = [];
   const solid = (w: number, h: number, d: number, x: number, z: number, y = h / 2 + 0.15) => {
-    const object = box(w, h, d, stone, [x, y, z], scene); colliders.push(modelCollider(object)); return object;
+    const object = box(w, h, d, stone, [x, y, z], scene);
+    object.receiveShadow = w < 4 && d < 4; // Avoid acne on the broad stone walls.
+    colliders.push(modelCollider(object)); return object;
   };
   const ground = mesh(new THREE.PlaneGeometry(160, 160), sand, [0, -0.02, -15], scene); ground.rotation.x = -Math.PI / 2; ground.castShadow = false;
   stoneFloor(scene, 22, 44, 0, -7, 0.14);

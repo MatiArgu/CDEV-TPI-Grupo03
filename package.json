@@ -7,7 +7,9 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "qa:e2e": "node scripts/qa/e2e.mjs",
+    "qa:scenes": "node scripts/qa/scenes.mjs"
   },
   "dependencies": {
     "three": "^0.180.0"

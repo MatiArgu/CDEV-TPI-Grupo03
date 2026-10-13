@@ -24,7 +24,7 @@ export function installMoonExhibit(room:GalleryRoom) {
     exhibitLabel(root,side<0?'TRAJE EXTRAVEHICULAR':'COMUNICACIÓN CON LA TIERRA',side<0?'CASCO · MOCHILA · GUANTES':'ANTENA DIRECCIONAL',[x,.62,-1.98],1.45);
     solid(plinth(root,x,3.2,1.55,.65));
     solid(placeModel(side<0?'lunarBoulder':'rocketEngine',root,[x,.8,3.2],{width:1.15,height:side<0?.7:1.05,color:side<0?0x999b9d:undefined}));
-    exhibitLabel(root,side<0?'MUESTRA DE REGOLITO':'MOTOR DE ASCENSO',side<0?'LA HUELLA DE UN VIAJE':'EL CAMINO DE REGRESO',[x,.62,4],1.4);
+    exhibitLabel(root,side<0?'ROCA LUNAR':'MOTOR DE ASCENSO',side<0?'LA HUELLA DE UN VIAJE':'EL CAMINO DE REGRESO',[x,.62,4],1.4);
     lights.push(exhibitSpot(root,x,-2.8,5.17,12,2),exhibitSpot(root,x,3.2,5.17,10,1.8));
   }
   const setLight=room.root.userData.setLight as (value:number)=>void;

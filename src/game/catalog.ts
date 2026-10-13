@@ -16,7 +16,7 @@ export function availabilityOf(id: AreaId): AreaAvailability {
 export function availabilityCopy(availability: AreaAvailability): { badge: string; sign: string; description: string } {
   return availability === 'wip'
     ? { badge: 'PRÓXIMAMENTE', sign: 'VIAJE EN PREPARACIÓN', description: 'visitable · viaje en preparación' }
-    : { badge: 'LISTA', sign: 'EXHIBICIÓN INSTALADA', description: 'exhibición instalada' };
+    : { badge: 'POR DESCUBRIR', sign: 'COLECCIÓN DEL MUSEO', description: 'colección del museo' };
 }
 
 // The index determines the physical slot, room number and map position.

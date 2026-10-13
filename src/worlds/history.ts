@@ -34,6 +34,7 @@ export function disposeHistoricalScene(scene: THREE.Scene): void {
     if (!object.userData.sharedAsset) geometries.add(object.geometry);
     const list = Array.isArray(object.material) ? object.material : [object.material];
     if (!object.userData.sharedMaterial && (!object.userData.sharedAsset || object.userData.ownedMaterial)) list.forEach((material) => {
+      if (material.userData.sharedMaterial) return;
       materials.add(material);
       // Recolored Kenney materials may still reference template-owned texture maps.
       if (!object.userData.sharedAsset && !object.userData.sharedTexture && 'map' in material && material.map instanceof THREE.Texture) textures.add(material.map);
