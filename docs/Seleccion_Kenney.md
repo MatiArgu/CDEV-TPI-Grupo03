@@ -25,8 +25,9 @@ Hay **5.314 archivos GLB/glTF** sueltos; esta cifra incluye variantes y no repre
 | Castle Kit | 6 | Murallas, torres, cubiertas, portón, estandartes y catapulta medieval. |
 | Mini Dungeon | 6 | Llave, cofre, escudo, espada, mesa y personaje medieval. |
 | Graveyard Kit | 1 | Urna sin símbolos funerarios, adaptada a Egipto. |
+| Space Kit | 6 | Dos astronautas, base de motor, antena y dos modelos de rocas lunares. |
 
-La selección actual contiene **51 modelos de nueve paquetes**: 31 anteriores, 19 añadidos para Medieval y las mejoras de Egipto/Roma, y un bambú para Japón. Los GLB suman **1.425.036 bytes**, con siete texturas de paleta externas. Las nueve licencias originales son CC0 y se conservan junto a los modelos; el manifiesto registra tamaño, origen y SHA-256 de cada archivo. Los originales de Windows no se modificaron.
+La selección actual contiene **57 modelos de diez paquetes**: 31 anteriores, 19 añadidos para Medieval y las mejoras de Egipto/Roma, un bambú para Japón y seis modelos para Luna. Los GLB suman **1.540.560 bytes**, con siete texturas de paleta externas. Las diez licencias originales son CC0 y se conservan junto a los modelos; el manifiesto registra tamaño, origen y SHA-256 de cada archivo. Los originales de Windows no se modificaron.
 
 ### Ampliación medieval y mejoras de Egipto/Roma
 
@@ -59,7 +60,7 @@ Los colores se adaptan en ejecución y los materiales se convierten a `MeshToonM
 | Indicaciones de teclado | Input Prompts | Seleccionar únicamente teclado/mouse de escritorio; conservar el HUD discreto. |
 | Sonido en etapa 7 | Foley Sounds, RPG Audio, Interface Sounds | Escuchar y seleccionar; esta revisión visual no incorpora ni valida audio. |
 | Mobiliario adicional | Furniture Kit; urnas y bancos de Graveyard Kit sin motivos funerarios | Selección contextual y ajuste de paleta, escala y colisiones. |
-| Épocas posteriores al MVP | Castle Kit, Fantasy Town Kit, Space Kit, Watercraft Pack | Solo referencias para entregas futuras; no habilitan las salas WIP. |
+| Ampliaciones de las colecciones | Fantasy Town Kit y Watercraft Pack | Evaluar piezas puntuales si una escena necesita más detalle. Medieval y Luna ya usan Castle Kit y Space Kit. |
 
 Los paquetes pixel art, isométricos prerenderizados, plataformas, carreras, armas modernas, ciencia ficción y UI de combate no encajan directamente con la dirección de este recorrido. No conviene incorporarlos solo para aumentar la cantidad de objetos.
 
@@ -78,7 +79,7 @@ Los conteos corresponden a archivos por formato, incluyendo variantes.
 | Brick Kit | 296 | 296 | 296 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
 | Building Kit | 79 | 79 | 79 | Arquitectura modular alternativa; mantener recorridos y escala propios. |
 | Car Kit | 50 | 50 | 50 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
-| Castle Kit | 76 | 76 | 76 | Arquitectura para la época medieval futura. |
+| Castle Kit | 76 | 76 | 76 | Integrado en la sala y el castillo medieval. |
 | City Kit - Commercial | 41 | 41 | 41 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
 | City Kit - Industrial | 25 | 25 | 25 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
 | City Kit - Roads | 95 | 95 | 95 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
@@ -96,7 +97,7 @@ Los conteos corresponden a archivos por formato, incluyendo variantes.
 | Mini Arcade | 20 | 20 | 20 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
 | Mini Arena | 22 | 22 | 22 | Integrado; ver selección y manifiesto. |
 | Mini Characters | 26 | 26 | 26 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
-| Mini Dungeon | 30 | 30 | 30 | Columnas y escudos candidatos; ambientación de mazmorra. |
+| Mini Dungeon | 30 | 30 | 30 | Integrado: llave, cofre, escudos, espada, mesa y figura medieval. |
 | Mini Forest | 22 | 22 | 22 | Alternativa más caricaturesca de vegetación y muelles. |
 | Mini Market | 20 | 20 | 20 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
 | Mini Skate | 20 | 20 | 20 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
@@ -114,7 +115,7 @@ Los conteos corresponden a archivos por formato, incluyendo variantes.
 | Retro Fantasy Kit | 160 | 105 | 105 | Texturas retro que requieren rediseño para esta estética. |
 | Retro Urban Kit | 124 | 124 | 124 | Texturas retro y contexto urbano moderno. |
 | Road Pack | 294 | 294 | 294 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
-| Space Kit | 153 | 153 | 153 | Referencia para sala lunar futura, fuera del MVP. |
+| Space Kit | 153 | 153 | 153 | Integrado: astronautas, motor, antena y rocas lunares. |
 | Space Station Kit | 177 | 97 | 97 | Interiores espaciales, fuera del MVP. |
 | Survival Kit | 80 | 80 | 80 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
 | Tower Defense (Classic) | 119 | 119 | 119 | Sin uso en los escenarios actuales; temática o estilo ajenos al recorrido. |
@@ -128,9 +129,14 @@ Los conteos corresponden a archivos por formato, incluyendo variantes.
 
 ## Implementación y verificación
 
-El estado actual incluye Egipto, Roma, Medieval y Japón jugables, con persistencia local por ID. Luna permanece visitable sin viaje. [Revisión visual, capturas y pruebas](Revision_visual_Kenney.md).
+Las cinco épocas son jugables, con persistencia local por ID. [Revisión visual, capturas y pruebas](Revision_visual_Kenney.md).
 
 
 ### Selección para Japón
 
 Se buscaron modelos japoneses, torii, katanas, cerezos y bambú en el catálogo local. Se añadió `Nature Kit/crops_bambooStageB.glb`, con la licencia CC0 ya incluida. Se reutilizan arbustos, rocas y árboles verdes importados. La máscara Oni roja, las katanas, cerezos, linternas, torii y arquitectura del templo son geometrías propias en `rendering/japanese.ts`; no se presentan como modelos originales de Kenney. Las piezas mantienen materiales toon y se agrupan cuando son estáticas.
+
+
+### Selección para Luna
+
+Se revisaron la vista previa, componentes y licencia de Space Kit. Se incorporaron `astronautA`, `astronautB`, `rocket_baseA`, `satelliteDish`, `rock_largeB` y `rocks_smallA`: seis GLB CC0 sin texturas externas adicionales. Los trajes se adaptan con cascos y visores propios y brazos colocados sobre el mástil y la bandera. La nave se construye con geometría propia, más motor y antena Kenney, para compartir diseño entre maqueta y vehículo abordable. La Tierra y la bandera usan texturas generadas por código; no se descargaron imágenes externas. La escena es una recreación estilizada, no una reproducción técnica exacta del módulo Apollo.

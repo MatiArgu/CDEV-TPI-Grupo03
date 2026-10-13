@@ -8,7 +8,7 @@ Tu objetivo es **desarrollar un videojuego 3D funcional y jugable en el navegado
 
 El museo tendrá cinco salas: Antiguo Egipto → Antigua Roma → Época Medieval → Japón Feudal → Llegada a la Luna. Las dos primeras ocupan el ala izquierda; Medieval es el salón largo transversal del fondo; Japón y Luna regresan por el ala derecha.
 
-**Estado actual:** Egipto, Roma, Medieval y Japón tienen exhibición y viaje histórico completos, con ayuda, recogida, regreso, fotos y guardado local. Las cinco salas se pueden recorrer; Luna sigue sin viaje histórico. El [plan de desarrollo](Plan_de_desarrollo.md) distingue las entregas.
+**Estado actual:** Egipto, Roma, Medieval, Japón y Luna tienen exhibición y viaje histórico completos, con ayuda, interacción final, regreso, fotos y guardado local. En la Luna se sube a la nave y se inicia el ascenso desde su cabina. El [plan de desarrollo](Plan_de_desarrollo.md) distingue las entregas.
 
 ---
 
@@ -249,7 +249,7 @@ Inicialmente, todas las áreas están oscuras.
 
 El jugador abre el panfleto y observa las cinco áreas.
 
-Abrir cada puerta con E enciende su sala. Egipto ocupa la puerta 01; Roma está en la 02. Los viajes se completan en el orden Egipto → Roma → Medieval → Japón.
+Abrir cada puerta con E enciende su sala. Egipto ocupa la puerta 01; Roma está en la 02. Los viajes se completan en el orden Egipto → Roma → Medieval → Japón → Luna.
 
 La iluminación debe dirigir naturalmente la atención del jugador.
 
@@ -263,7 +263,7 @@ El jugador puede caminar hacia el área iluminada.
 
 El museo contiene cinco áreas.
 
-Las cinco salas se pueden recorrer sin completar épocas. Egipto, Roma, Medieval y Japón disponen de exhibición y viaje histórico; Luna permanece en preparación. Las salas WIP no activan viajes.
+Las cinco salas se pueden recorrer sin completar épocas. Egipto, Roma, Medieval, Japón y Luna disponen de exhibición y viaje histórico. Las salas WIP no activan viajes.
 
 ## Estados de un área
 
@@ -504,23 +504,25 @@ El MVP original incluía dos viajes. La ampliación solicitada añade Medieval: 
 
 Japón añade la máscara Oni roja como artefacto, katanas, linterna, miniatura de torii y juego de té en la sala. El viaje recorre un jardín de cerezos y bambú: camino de roca, cinco torii y un puente sobre el arroyo, hasta un templo abierto con la máscara en el centro. Reutiliza ayuda, recogida, regreso y guardado.
 
-Cuando el jugador completa Egipto, Roma, Medieval y Japón:
+La Luna utiliza una nave en miniatura como artefacto. La misma nave a escala completa permite regresar: primero se sube por la escalerilla y luego se inicia el ascenso desde la cabina. El alunizaje es una recreación estilizada, con astronautas colocando una bandera inmóvil, estrellas, Tierra a la izquierda y Sol al lado opuesto. El casco y los guantes espaciales aparecen durante este viaje. No simula una misión orbital completa: el ascenso desemboca en la transición de regreso al museo.
 
-- El panfleto registra las cuatro Polaroid y las ilustraciones de sus artefactos.
-- Las cuatro épocas aparecen completadas y sus luces se apagan.
-- El mapa muestra cuatro de las cinco áreas completadas.
+Cuando el jugador completa Egipto, Roma, Medieval, Japón y Luna:
 
-Luna permanece visitable sin viaje.
+- El panfleto registra las cinco Polaroid y las ilustraciones de sus artefactos.
+- Las cinco épocas aparecen completadas y sus luces se apagan.
+- El mapa muestra las cinco áreas completadas.
+
+La visita permite seguir recorriendo el museo tras completar las cinco épocas.
 
 Mostrar una conclusión breve y discreta, por ejemplo:
 
-"4 de 5 épocas descubiertas."
+"5 de 5 épocas descubiertas."
 
 "Tu viaje por la historia apenas comienza."
 
 Permitir que el jugador continúe explorando las zonas accesibles del museo o reinicie la experiencia.
 
-El viaje lunar requiere una entrega posterior.
+El circuito de cinco viajes está implementado.
 
 ---
 
@@ -593,7 +595,7 @@ Por ejemplo, cada época debería tener:
 - Ruta de ayuda.
 - Información de progreso.
 
-No duplicar innecesariamente las mecánicas de Egipto, Roma, Medieval y Japón.
+No duplicar innecesariamente las mecánicas de Egipto, Roma, Medieval, Japón y Luna.
 
 Crear componentes y sistemas reutilizables.
 

@@ -3,7 +3,7 @@ export const areaCatalog = {
   egipto: { name: 'Antiguo Egipto', artifact: 'Escarabajo egipcio', accent: '#e4c989', availability: 'playable' },
   medieval: { name: 'Época Medieval', artifact: 'Llave antigua', accent: '#b7c7ab', availability: 'playable' },
   japon: { name: 'Japón Feudal', artifact: 'Máscara Oni roja', accent: '#dcb9be', availability: 'playable' },
-  luna: { name: 'Llegada a la Luna · 1969', artifact: 'Insignia Apollo 11', accent: '#cbc7e0', availability: 'wip' },
+  luna: { name: 'Llegada a la Luna · 1969', artifact: 'Nave lunar en miniatura', accent: '#cbc7e0', availability: 'playable' },
 } as const;
 
 export type AreaId = keyof typeof areaCatalog;

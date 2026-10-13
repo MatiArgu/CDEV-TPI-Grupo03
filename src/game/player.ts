@@ -22,7 +22,7 @@ export type PlayerControls = {
   setCinematic: (mode: 'revealing' | 'transition') => void;
   finishCinematic: (cameraEquipped: boolean) => void;
   openPamphlet: () => void;
-  teleport: (start: THREE.Vector2, facing?: number) => void;
+  teleport: (start: THREE.Vector2, facing?: number, floorHeight?: number) => void;
 };
 
 const eyeHeight = 1.7;
@@ -49,6 +49,7 @@ export function createPlayerControls(
   let interaction: Interaction | null = null;
   let mode: Mode = 'intro';
   let yaw = 0;
+  let floorHeight = 0;
   let pitch = 0;
   let heldLook = 0;
   let cameraReadyAt = 0;
@@ -70,7 +71,7 @@ export function createPlayerControls(
       interaction = null;
       prompt.hidden = true;
       bobOffset = 0;
-      camera.position.y = eyeHeight;
+      camera.position.y = eyeHeight + floorHeight;
     }
     if (wasPamphlet !== (mode === 'pamphlet')) options.onPamphletChange(mode === 'pamphlet');
     menu.hidden = mode !== 'intro' && mode !== 'paused';
@@ -198,7 +199,7 @@ export function createPlayerControls(
     if (moving) bobPhase += step * 10;
     const targetBob = moving ? Math.sin(bobPhase) * 0.025 : 0;
     bobOffset = THREE.MathUtils.lerp(bobOffset, targetBob, Math.min(step * 14, 1));
-    camera.position.set(position.x, eyeHeight + bobOffset, position.y);
+    camera.position.set(position.x, eyeHeight + floorHeight + bobOffset, position.y);
     options.onPositionChange(position);
   }
 
@@ -217,13 +218,14 @@ export function createPlayerControls(
       if (mode === 'revealing' || mode === 'transition') setMode(equipped ? 'camera' : 'playing');
     },
     openPamphlet,
-    teleport: (start, facing = 0) => {
+    teleport: (start, facing = 0, floor = 0) => {
+      floorHeight = floor;
       position.copy(start);
       yaw = facing;
       pitch = 0;
       heldLook = 0;
       bobOffset = 0;
-      camera.position.set(position.x, eyeHeight, position.y);
+      camera.position.set(position.x, eyeHeight + floorHeight, position.y);
       camera.rotation.set(0, facing, 0);
       pressed.clear();
       options.onPositionChange(position);

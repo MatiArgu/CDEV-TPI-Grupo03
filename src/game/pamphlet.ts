@@ -84,7 +84,7 @@ export function createPamphlet(camera: THREE.PerspectiveCamera) {
         if (memories.length) {
           memories.forEach((id, index) => {
             const x = 78 + (index % 2) * 452;
-            const y = 916 + Math.floor(index / 2) * 164;
+            const y = 875 + Math.floor(index / 2) * 120;
             c.save(); c.translate(x + 55, y + 18); c.rotate(-0.05);
             c.fillStyle = '#fff9e9'; c.fillRect(-55, -45, 118, 96);
             c.drawImage(completed.get(id)!, -49, -39, 106, 79.5); c.restore();
@@ -101,6 +101,11 @@ export function createPamphlet(camera: THREE.PerspectiveCamera) {
               for (const side of [-1, 1]) { c.beginPath(); c.moveTo(side * 15, -30); c.lineTo(side * 32, -65); c.lineTo(side * 30, -23); c.fill(); }
               c.fillStyle = '#283c3a'; c.fillRect(-24, -10, 16, 8); c.fillRect(8, -10, 16, 8); c.fillRect(-18, 15, 36, 12);
               c.fillStyle = '#e9d8b1'; c.fillRect(-15, 10, 6, 15); c.fillRect(9, 10, 6, 15);
+            } else if (id === 'luna') {
+              c.fillStyle = '#b19a63'; c.fillRect(-35, 0, 70, 27);
+              c.fillStyle = '#bdc8cb'; c.beginPath(); c.moveTo(-27, 0); c.lineTo(-27, -32); c.lineTo(0, -50); c.lineTo(27, -32); c.lineTo(27, 0); c.closePath(); c.fill();
+              c.fillStyle = '#3e5366'; c.fillRect(-17, -26, 13, 14); c.fillRect(4, -26, 13, 14);
+              c.strokeStyle = '#65727b'; c.lineWidth = 7; c.beginPath(); c.moveTo(-28, 15); c.lineTo(-49, 43); c.lineTo(-59, 43); c.moveTo(28, 15); c.lineTo(49, 43); c.lineTo(59, 43); c.stroke();
             } else if (id === 'medieval') {
               c.strokeStyle = '#9c7c48'; c.lineWidth = 13; c.beginPath(); c.arc(-22, -15, 23, 0, Math.PI * 2); c.stroke();
               c.fillStyle = '#9c7c48'; c.fillRect(-5, -21, 70, 13); c.fillRect(38, -8, 12, 22); c.fillRect(57, -8, 12, 17);
@@ -112,7 +117,7 @@ export function createPamphlet(camera: THREE.PerspectiveCamera) {
           });
         } else {
           text('Explorá las cinco salas.', 80, 1070, 40, '#33493e', true);
-          text('Cuatro épocas te esperan al otro lado', 80, 1130, 33);
+          text('Cinco épocas te esperan al otro lado', 80, 1130, 33);
           text('de la fotografía. Empezá por la sala 01.', 80, 1180, 33);
         }
         text(`${completed.size} / ${areaOrder.length} RECUERDOS${!active ? " · VISITA COMPLETADA" : ""}`, 80, 1260, 28);

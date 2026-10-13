@@ -17,6 +17,11 @@ export function holdingHand(side: -1 | 1): THREE.Group {
   part(0.10, 0.16, 0.065, skin, 0, -0.02, 0);
   for (let i = 0; i < 4; i++) part(0.038, 0.075, 0.055, finger, -side * 0.03, 0.043 - i * 0.031, -0.025);
   part(0.055, 0.095, 0.045, finger, -side * 0.055, 0.015, 0.043).rotation.z = -side * 0.55;
+  hand.userData.setSpacesuit = (enabled: boolean) => {
+    skin.color.set(enabled ? 0xd9dfdc : 0xc99776);
+    finger.color.set(enabled ? 0xe7ebe3 : 0xd9ad8b);
+    sleeve.color.set(enabled ? 0x899397 : 0x344e4b);
+  };
   return hand;
 }
 

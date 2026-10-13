@@ -329,3 +329,35 @@ Ampliación del 13 de octubre de 2026:
 | Destino del viaje | [Templo](capturas/japon-templo.png) y [máscara Oni](capturas/japon-mascara.png) |
 
 - Producción: 51 modelos y siete texturas cargados sin fallos; inicio jugable verificado.
+
+
+## Luna: maqueta, alunizaje y regreso a bordo
+
+Ampliación del 13 de octubre de 2026:
+
+- **Sala 05:** módulo lunar en miniatura fotografiable, traje extravehicular, antena, muestra de roca y motor. Se conserva la iluminación cálida y el espacio para recorrer la colección por ambos lados.
+- **Superficie lunar:** cráteres, rocas Kenney, huellas, montañas bajas y dos astronautas inmóviles colocando una bandera con soporte horizontal. Cielo negro con estrellas; Tierra al fondo a la izquierda y Sol a la derecha desde la llegada. La composición es estilizada, sin pretender una reproducción técnica exacta del alunizaje.
+- **Nave:** misma geometría que la maqueta, a escala completa. Patas, etapa de descenso dorada, motor, escalerilla, escotilla, ventanillas y cabina con consola. E inicia una subida de 3,2 segundos; dentro se puede mirar y abrir el panfleto. Otra interacción con E inicia un ascenso de 2,6 segundos: la cabina se separa y el efecto temporal devuelve al museo. No se simula un vuelo orbital hasta la Tierra.
+- **Traje del jugador:** visor 3D con centro despejado y guantes en el panfleto. Se restauran manos, altura y distancia de cámara al regresar. La subida y el ascenso bloquean movimiento y panfleto; Escape congela ambas animaciones.
+- **Progreso:** quinto recuerdo por ID `luna`, foto de la nave e icono en el panfleto. Subir a la cabina no completa el viaje; el guardado ocurre al volver al museo. La hoja derecha admite cinco recuerdos sin cortar la última fila.
+- **Assets y carga:** seis GLB de Space Kit; total de 57 modelos, diez paquetes CC0 y siete texturas externas. Licencias, tamaños, hashes y dependencias comprobados. Geometría estática agrupada, huellas instanciadas y sombras solares reutilizadas salvo al mover la escotilla o despegar. Sin viento ambiental nuevo.
+
+### Verificación
+
+- `npm run typecheck`, `npm run build` y `git diff --check`: correctos. Vite mantiene el aviso del bundle principal mayor a 500 kB (765,79 kB minificado). El inicio de producción cargó los 57 modelos y siete texturas sin errores.
+- Los enlaces nuevos son válidos; la revisión histórica conserva 16 enlaces a capturas anteriores que ya faltaban antes de esta ampliación.
+- Recorrido en Chrome desde una partida de prueba con las cuatro épocas anteriores completas: acceso, foto inválida, reintento válido, revelado, llegada, visor, guantes, ayuda, caminata, subida, cabina, ascenso, regreso 5/5 y recarga. Las cuatro fotos iniciales son imágenes de prueba; no se repitieron los cuatro viajes anteriores en esta verificación.
+- Movimiento y panfleto bloqueados durante transiciones; pausa y reanudación comprobadas durante subida y ascenso. La altura se mantiene al abrir/cerrar el panfleto en la cabina; sus colisiones impiden salir del vehículo.
+- Foto centrada, en el borde y parcialmente visible aceptada; fuera del encuadre y totalmente oculta rechazada. Ruta central libre para el radio del jugador, ayuda tras 20 segundos, escala compartida y posición de Tierra/Sol comprobadas.
+- Liberación y recreación del mundo sin liberar recursos compartidos. Los cinco recuerdos se conservan por ID al intercambiar el orden de Egipto y Luna.
+- Revisión visual de exhibición, panorama, bandera, nave, cabina, visor, guantes y panfleto. Chrome usa SwiftShader; queda pendiente medir FPS con una GPU de escritorio real.
+
+### Capturas
+
+| Vista | Captura |
+| --- | --- |
+| Sala lunar | [Maqueta y colección](capturas/luna-sala.png) |
+| Llegada | [Panorama desde el visor](capturas/luna-panorama.png) |
+| Momento congelado | [Astronautas colocando la bandera](capturas/luna-bandera.png) |
+| Nave a escala completa | [Escalerilla y módulo lunar](capturas/luna-nave.png) |
+| Regreso | [Cabina y controles](capturas/luna-cabina-jugable.png) |

@@ -4,7 +4,7 @@
 
 Este documento convierte [Proyecto_general.md](Proyecto_general.md) en entregas pequeñas y verificables. Es un plan de trabajo: **no autoriza a implementar las siete etapas juntas**. Antes de comenzar la siguiente, se revisa el resultado de la anterior, especialmente la dirección visual y la fotografía.
 
-El MVP original terminó con Roma y Egipto jugables de principio a fin. Por pedidos posteriores, Medieval y Japón agregan un tercer y cuarto viaje completo. El museo tiene cinco épocas; Luna sigue visitable con su viaje pendiente. La calidad de la imagen ilustrada, la Polaroid y las transiciones tiene prioridad sobre el tamaño de los escenarios.
+El MVP original terminó con Roma y Egipto jugables de principio a fin. Por pedidos posteriores, Medieval, Japón y Luna completan los cinco viajes del museo. La calidad de la imagen ilustrada, la Polaroid y las transiciones tiene prioridad sobre el tamaño de los escenarios.
 
 ### Decisiones acordadas
 
@@ -16,6 +16,8 @@ El MVP original terminó con Roma y Egipto jugables de principio a fin. Por pedi
 - La plataforma objetivo del MVP es escritorio, con teclado, mouse y navegador moderno. No se planifica una versión móvil en estas etapas.
 
 ## Las siete entregas
+
+Los criterios de cada hito describen su alcance al entregarse; las ampliaciones posteriores actualizan la cantidad de épocas jugables hasta llegar a cinco.
 
 ### 1. Motor visual
 
@@ -89,12 +91,20 @@ El MVP original terminó con Roma y Egipto jugables de principio a fin. Por pedi
 
 **Aceptación:** una partida con Egipto, Roma y Medieval completados habilita Japón; la foto de la máscara lleva al jardín, el puente permite cruzar el agua y el camino alcanza el altar. Recoger la máscara devuelve al museo con 4/5, conserva los recuerdos anteriores y permite recargar. Luna continúa visitable sin viaje. Verificar encuadre, oclusión, colisiones, techo, ayuda y recursos compartidos.
 
+## Ampliación solicitada: Luna — implementada
+
+**Objetivo:** cerrar el circuito con una nave en miniatura y un regreso temático a bordo de su versión a escala completa.
+
+**Trabajo:** sala con maqueta, traje, antena, roca y motor; paisaje lunar con astronautas colocando la bandera, estrellas, Tierra a la izquierda y Sol a la derecha. Visor y guantes espaciales. Subida en primera persona por la escalerilla, cabina con límites y altura propia, segunda interacción para iniciar el ascenso, regreso al museo y quinto recuerdo.
+
+**Aceptación:** una partida con cuatro recuerdos habilita Luna. Fotografiar la maqueta lleva al paisaje; subir a la nave no completa todavía el viaje. El ascenso desde la cabina regresa al museo con 5/5. Pausar la subida o el despegue congela la animación; no permite caminar ni abrir el panfleto durante ellas. Al volver se restauran altura, controles y aspecto normal; las cinco fotos persisten al recargar.
+
 ## Verificación transversal
 
 - **Visual:** revisar cada escenario nuevo contra la etapa 1: colores pastel, lectura de siluetas, contornos selectivos y sensación de tiempo detenido. Limitar el tamaño del escenario si hace falta para preservar la calidad.
 - **Foto:** probar artefacto centrado, en el borde, fuera del cuadro, parcialmente visible y completamente tapado; comparar cada captura con lo que se veía en el encuadre.
 - **Estado:** probar panfleto, cámara, pausa y transiciones en distintos órdenes para impedir acciones incompatibles o controles bloqueados.
-- **Progreso:** completar Egipto, Roma, Medieval y Japón, comprobar los cuatro recuerdos y 4/5, recargar y reiniciar. Intercambiar Egipto y Luna debe mover la sala y su número y conservar los datos por ID.
+- **Progreso:** completar las cinco épocas, comprobar los cinco recuerdos y 5/5, recargar y reiniciar. Intercambiar Egipto y Luna debe mover la sala y su número y conservar los datos por ID.
 - **Recorrido:** probar las siete entregas en el navegador, además de ejecutar las comprobaciones de compilación y tipos disponibles en cada etapa.
 
 Cada entrega se cierra con una demostración del recorrido correspondiente, una revisión de sus criterios y una lista breve de pendientes. Los problemas que rompan el flujo de esa entrega se corrigen antes de iniciar la siguiente.
