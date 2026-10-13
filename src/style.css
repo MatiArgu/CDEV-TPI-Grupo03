@@ -96,11 +96,13 @@ h1 em { color: #4eaa76; font-style: normal; }
 .pamphlet-leaf h3 { margin-bottom: 14px; }
 .pamphlet-intro { max-width: 330px; margin: 0 0 14px; color: #536c67; font-size: 12px; line-height: 1.45; }
 .map-title { display: flex; justify-content: space-between; border-top: 1px solid #a9bbb2; padding: 10px 1px 7px; color: #536c67; }
-.pamphlet-map { display: grid; flex: 1; min-height: 0; grid-template-columns: 1fr 34px 1fr; grid-template-rows: repeat(5, 1fr); gap: 5px 0; padding: 4px 18px 0; background: linear-gradient(90deg, transparent 47%, #79b8a678 47%, #79b8a678 53%, transparent 53%); }
+.pamphlet-map { position: relative; display: grid; flex: 1; min-height: 0; grid-template-columns: 1fr 44px 1fr; grid-template-rows: repeat(5, 1fr); gap: 5px 0; padding: 4px 18px 14px; }
+.pamphlet-map::after { content: ''; position: absolute; z-index: 0; left: 21%; right: 21%; bottom: 5px; border-bottom: 4px solid #79b8a6; }
 .map-room { position: relative; display: flex; align-items: center; justify-content: center; max-height: 49px; border: 1.5px solid #77958a; background: var(--area-accent, #f7f2e4); color: #354044; font-size: 15px; font-weight: 700; box-shadow: 2px 2px 0 #a9bbb2; }
+.map-room-left { grid-column: 1; }
+.map-room-right { grid-column: 3; }
 .map-room::after { content: attr(data-status); position: absolute; right: 4px; bottom: 3px; font-size: 6px; letter-spacing: .08em; }
-.map-corridor { position: relative; align-self: stretch; }
-.map-corridor::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; border-top: 1px solid #77958a; }
+.map-courtyard { grid-column: 2; grid-row: 1 / 6; display: flex; align-items: center; justify-content: center; margin: 0 7px; border: 1px solid #a3c9b7; background: #dcebd8; color: #638e7d; font-size: 8px; font-weight: 700; letter-spacing: .15em; writing-mode: vertical-rl; }
 .map-entrance { display: flex; justify-content: space-between; margin-top: 9px; padding-top: 8px; border-top: 1px solid #a9bbb2; color: #536c67; }
 .map-entrance span { color: #688077; }
 .pamphlet-index { display: grid; flex: 1; grid-template-rows: repeat(10, 1fr); min-height: 0; margin: 0; padding: 0; list-style: none; }

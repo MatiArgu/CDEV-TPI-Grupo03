@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { areaCatalog, areaOrder, availabilityCopy, availabilityOf } from './catalog';
+import { areaCatalog, availabilityCopy, availabilityOf, type AreaId } from './catalog';
+import { galleryLayout } from './gallery';
 import { createMuseumScene } from './museum';
 import { createPamphlet } from './pamphlet';
 import { createPlayerControls } from './player';
@@ -85,10 +86,11 @@ try {
     let hasPamphlet = false;
     let hasSeenMap = false;
     let enteredHall = false;
-    let enteredGallery = false;
+    const completedAreas = new Set<AreaId>();
     const visitedRooms = new Set<string>();
     let toastTimer = 0;
     const toGuard = new THREE.Vector3();
+    const toDoor = new THREE.Vector3();
 
     function showToast(message: string): void {
       toast.textContent = message;
@@ -101,17 +103,45 @@ try {
       colliders: world.colliders,
       start: new THREE.Vector2(1, 17),
       findInteraction: (position, gaze) => {
-        if (hasPamphlet) return null;
-        toGuard.set(world.guard.x - position.x, world.guard.y - 1.7, world.guard.z - position.y);
-        if (Math.hypot(toGuard.x, toGuard.z) > 2.55 || gaze.dot(toGuard.normalize()) < 0.55) return null;
+        if (!hasPamphlet) {
+          toGuard.set(world.guard.x - position.x, world.guard.y - 1.7, world.guard.z - position.y);
+          if (Math.hypot(toGuard.x, toGuard.z) > 2.55 || gaze.dot(toGuard.normalize()) < 0.55) return null;
+          return {
+            label: 'Recibir panfleto del guardia',
+            activate: () => {
+              hasPamphlet = true;
+              app.dataset.storyState = 'pamphlet-received';
+              world.openEntrance();
+              help.textContent = 'WASD CAMINAR · M PANFLETO · E PUERTAS · ESC PAUSAR';
+              showToast('El guardia te entregó el panfleto. Pulsá M para desplegarlo.');
+            },
+          };
+        }
+        const door = world.doors.find((item) => {
+          if (item.progress > 0 || item.opening) return false;
+          toDoor.set(item.position.x - position.x, 0, item.position.y - position.y);
+          return toDoor.length() < 2.55 && gaze.dot(toDoor.normalize()) > 0.58;
+        });
+        if (!door) return null;
+        const required = door.required;
+        const target = door.target;
+        const targetReady = !target || !required || availabilityOf(target) === 'playable';
+        const unlocked = (!required || completedAreas.has(required)) && targetReady;
         return {
-          label: 'Recibir panfleto del guardia',
+          label: unlocked
+            ? `Abrir ${target ? areaCatalog[target].name : 'regreso al hall'}`
+            : `Puerta cerrada · ${required && !completedAreas.has(required) ? `completá ${areaCatalog[required].name}` : 'sala en preparación'}`,
           activate: () => {
-            hasPamphlet = true;
-            app.dataset.storyState = 'pamphlet-received';
-            world.openEntrance();
-            help.textContent = 'WASD CAMINAR · M PANFLETO · ESC PAUSAR';
-            showToast('El guardia te entregó el panfleto. Pulsá M para desplegarlo.');
+            if (unlocked) {
+              world.openDoor(door);
+              showToast(target
+                ? `${areaCatalog[target].name}: las luces vuelven a encenderse.`
+                : 'El recorrido vuelve al hall.');
+            } else {
+              showToast(required && !completedAreas.has(required)
+                ? `Primero tenés que completar ${areaCatalog[required].name}.`
+                : 'Esa sala todavía está en preparación.');
+            }
           },
         };
       },
@@ -121,7 +151,6 @@ try {
         if (open && !hasSeenMap) {
           hasSeenMap = true;
           app.dataset.storyState = 'map-seen';
-          world.revealRome();
         }
       },
       onPositionChange: (position) => {
@@ -133,22 +162,19 @@ try {
             visitedRooms.add(room.id);
             showToast(`${String(room.number).padStart(2, '0')} · ${areaCatalog[room.id].name} — ${availabilityCopy(areaCatalog[room.id].availability).description}.`);
           }
-        } else if (position.y < -21.1 && position.y > -43.6 && Math.abs(position.x) < 8.3) {
+        } else if (
+          position.y < galleryLayout.frontZ - galleryLayout.step * 4
+          && position.y > galleryLayout.frontZ - galleryLayout.step * 5
+          && Math.abs(position.x) < galleryLayout.innerX
+        ) {
           app.dataset.location = 'gallery';
           delete app.dataset.room;
-          if (!enteredGallery) {
-            enteredGallery = true;
-            const installed = areaOrder.filter((id) => availabilityOf(id) === 'playable').length;
-            showToast(installed > 0
-              ? `Galerías 01—10. ${installed} exhibición${installed === 1 ? '' : 'es'} instalada${installed === 1 ? '' : 's'}.`
-              : 'Galerías 01—10. Todas las salas están abiertas y en preparación.');
-          }
         } else if (position.y < -4.8 && position.y > -21.1 && Math.abs(position.x) < 8.1) {
           app.dataset.location = 'hall';
           delete app.dataset.room;
           if (!enteredHall) {
             enteredHall = true;
-            showToast(hasSeenMap ? 'La luz cálida señala la sala de Roma.' : 'Entraste al hall. Abrí el panfleto con M.');
+            showToast(hasSeenMap ? 'Acercate a la puerta 01 y pulsá E para entrar.' : 'Entraste al hall. Abrí el panfleto con M.');
           }
         } else {
           app.dataset.location = 'exterior';

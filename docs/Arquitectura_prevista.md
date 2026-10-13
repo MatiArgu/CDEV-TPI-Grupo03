@@ -23,10 +23,10 @@ Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotograf
 
 ## Salas, estados y progresión
 
-- En la etapa 3 solo existía el hall y un umbral cerrado hacia el futuro sector romano. La etapa 5 agrega un corredor con cinco pares de salas abiertas. Cada módulo recibe el ID situado en esa posición de `areaOrder`; su grupo local permite incorporar una exhibición sin fijarla a coordenadas globales.
-- Número de sala, señalización, posición en el panfleto y ubicación de la luz romana se calculan a partir de `areaOrder`. El texto de disponibilidad de sala y panfleto se deriva del catálogo. Mover `egipto` al octavo lugar actualizó su sala, letrero y panfleto en la prueba de la etapa 5. La luz de Egipto corresponde a su futura exhibición.
-- **Disponibilidad** (`WIP` o jugable) y **progreso** (`locked`, `active`, `completed`) son conceptos distintos. Una sala WIP se puede visitar, pero no contiene viaje temporal y nunca se vuelve `active`.
-- Solo una época jugable incompleta está activa a la vez: la primera de `areaOrder` que no esté completada. Las WIP se saltan. Si no queda ninguna jugable incompleta, no hay área activa y se muestra la conclusión correspondiente al contenido disponible.
+- En la etapa 3 solo existía el hall y un umbral cerrado hacia el futuro sector romano. La etapa 5 ubica diez módulos en una U: cinco de ida, un cruce al fondo y cinco de regreso. Cada módulo recibe el ID situado en esa posición de `areaOrder`; su grupo local permite incorporar una exhibición sin fijarla a coordenadas globales. La primera puerta se abre con E y enciende la sala con un breve parpadeo. Las posteriores requieren la finalización de la sala precedente.
+- Número de sala, señalización y posición en el panfleto se calculan a partir de `areaOrder`. El texto de disponibilidad de sala y panfleto se deriva del catálogo. Una prueba anterior movió `egipto` al octavo lugar y actualizó sala, letrero y panfleto, pero ese orden ya no es recorrible con las puertas WIP cerradas. Necesita un acceso alternativo antes de usarse en el juego.
+- **Disponibilidad** (`WIP` o jugable) y **progreso** (`locked`, `active`, `completed`) son conceptos distintos. Una sala WIP tiene posición física y señalización, pero permanece cerrada y nunca se vuelve `active`.
+- Solo una época jugable incompleta está activa a la vez: la primera de `areaOrder` que no esté completada. Con el orden inicial Roma → Egipto, ambas son contiguas. Si no queda ninguna jugable incompleta, no hay área activa y se muestra la conclusión correspondiente al contenido disponible.
 - Una foto válida inicia el viaje, pero el área solo se marca como completada al interactuar con el artefacto en el mundo histórico y regresar. La foto y la representación del artefacto se añaden juntas al panfleto en ese momento.
 
 ## Fotografía y escenas
@@ -45,7 +45,7 @@ El guardado local tendrá versión y usará IDs estables: panfleto recibido, ár
 
 ## Pruebas de arquitectura obligatorias
 
-1. Reordenar `egipto` del puesto 2 al 8 cambiando solo `areaOrder`: sala, letrero y panfleto se actualizan; tras completar Roma, Egipto sigue siendo la siguiente área activa.
+1. Reordenar `egipto` del puesto 2 al 8 cambiando solo `areaOrder`: sala, letrero y panfleto se actualizan. El acceso jugable queda pendiente de una ruta que evite las salas WIP cerradas; no ofrecer ese orden hasta resolverlo.
 2. Guardar Roma completada, cambiar el orden y recargar: la foto y el artefacto siguen asociados a `roma`.
 3. Fotografiar un artefacto visible en un extremo del encuadre; repetir con el artefacto detrás de una pared: solo el primer disparo permite viajar.
 4. Completar el artefacto histórico antes y después de los 20 segundos: la guía aparece únicamente en el segundo caso y nunca atraviesa paredes.

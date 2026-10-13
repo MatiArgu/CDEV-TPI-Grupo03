@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { createGallery, type GalleryRoom } from './gallery';
+import { createGallery, galleryLayout, type GalleryDoor, type GalleryRoom } from './gallery';
 import type { Collider } from './scene';
 import { box, inkStroke, irregularCrown, materials as mat, mesh, outline, palette, shadowBlob, silhouette } from './visual';
 
@@ -8,9 +8,10 @@ export type MuseumWorld = {
   colliders: Collider[];
   guard: THREE.Vector3;
   rooms: GalleryRoom[];
+  doors: GalleryDoor[];
   roomAt: (position: THREE.Vector2) => GalleryRoom | null;
   openEntrance: () => void;
-  revealRome: () => void;
+  openDoor: (door: GalleryDoor) => void;
   update: (delta: number) => void;
 };
 
@@ -31,7 +32,7 @@ function sign(parent: THREE.Object3D, label: string, position: [number, number, 
   context.fillText(label, 384, 84);
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
-  const panel = mesh(new THREE.PlaneGeometry(width, width * 164 / 768), new THREE.MeshBasicMaterial({ map: texture }), position, parent);
+  const panel = mesh(new THREE.PlaneGeometry(width, width * 164 / 768), new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide }), position, parent);
   panel.castShadow = false;
   return panel;
 }
@@ -156,7 +157,9 @@ export function createMuseumScene(): MuseumWorld {
   sun.shadow.normalBias = 0.035;
   scene.add(sun);
 
-  const ground = mesh(new THREE.PlaneGeometry(110, 110), mat.sage, [0, -0.02, 0], scene);
+  const galleryBack = galleryLayout.frontZ - galleryLayout.step * 5;
+  const groundSize = Math.max(110, 2 * (Math.abs(galleryBack) + 10));
+  const ground = mesh(new THREE.PlaneGeometry(groundSize, groundSize), mat.sage, [0, -0.02, 0], scene);
   ground.rotation.x = -Math.PI / 2;
   ground.castShadow = false;
   box(34, 0.08, 34, mat.cream, [0, 0.02, 12], scene).castShadow = false;
@@ -200,29 +203,27 @@ export function createMuseumScene(): MuseumWorld {
 
   const attendant = guard(scene);
 
-  // The hall leads into a two-sided gallery of ten visitable rooms.
+  // The original hall leads to the first room and later receives the returning route.
   box(17, 0.14, 18, mat.stone, [0, 0.02, -12.4], scene).castShadow = false;
   box(2.7, 0.018, 16, mat.sage, [0, 0.11, -12.2], scene).castShadow = false;
   for (const side of [-1, 1]) {
     outline(box(0.56, 5.5, 18, mat.cream, [side * 8.55, 2.75, -12.4], scene), 0.38);
     box(0.06, 1.1, 17.8, mat.sage, [side * 8.24, 0.67, -12.4], scene);
     for (const z of [-8, -13.2, -18.4]) {
-      column(scene, side * 6.4, z, 4.65);
-      outline(box(1.35, 0.73, 1.2, mat.sand, [side * 5.3, 0.46, z - 0.5], scene), 0.5);
-      mesh(new THREE.CylinderGeometry(0.2, 0.34, 0.38, 7), mat.stone, [side * 5.3, 1.02, z - 0.5], scene);
-      const bust = mesh(new THREE.IcosahedronGeometry(0.32, 1), mat.stone, [side * 5.3, 1.49, z - 0.5], scene);
-      silhouette(bust, 1.025);
+      column(scene, side * (z === -18.4 ? 7 : 6.4), z, 4.65);
+      if (z !== -18.4) {
+        outline(box(1.35, 0.73, 1.2, mat.sand, [side * 5.3, 0.46, z - 0.5], scene), 0.5);
+        mesh(new THREE.CylinderGeometry(0.2, 0.34, 0.38, 7), mat.stone, [side * 5.3, 1.02, z - 0.5], scene);
+        const bust = mesh(new THREE.IcosahedronGeometry(0.32, 1), mat.stone, [side * 5.3, 1.49, z - 0.5], scene);
+        silhouette(bust, 1.025);
+      }
       outline(box(0.05, 2.2, 2.1, mat.door, [side * 8.19, 2.45, z], scene), 0.38);
     }
   }
   displayCase(scene, -3.9, -10.4);
   displayCase(scene, 3.9, -15.6);
-  for (const side of [-1, 1]) {
-    outline(box(6.35, 5.5, 0.65, mat.cream, [side * 5.325, 2.75, -21.45], scene), 0.4);
-    outline(box(0.27, 3.75, 0.8, mat.sand, [side * 2.15, 1.88, -21.36], scene), 0.5);
-  }
-  outline(box(4.3, 1.75, 0.65, mat.cream, [0, 4.63, -21.45], scene), 0.4);
-  sign(scene, 'GALERÍAS 01—10', [0, 4.58, -21.08], 3.15);
+  outline(box(17, 1.6, 0.52, mat.cream, [0, 4.7, -21.45], scene), 0.4);
+  sign(scene, 'RECORRIDO EN U · 01—10', [0, 4.6, -21.08], 3.65);
   box(17, 0.3, 18, mat.sand, [0, 5.5, -12.4], scene).receiveShadow = false;
   for (const z of [-7, -12, -17]) {
     box(8.7, 0.12, 0.55, mat.stone, [0, 5.25, z], scene);
@@ -233,15 +234,7 @@ export function createMuseumScene(): MuseumWorld {
     scene.add(light);
   }
   const gallery = createGallery(scene);
-  const romeRoom = gallery.rooms.find((room) => room.id === 'roma')!;
-  const romeLight = new THREE.PointLight(0xffad69, 0, 11);
-  romeLight.position.set(romeRoom.center.x, 3.3, romeRoom.center.y);
-  scene.add(romeLight);
-  const romeGlow = new THREE.Mesh(new THREE.CircleGeometry(1.4, 24), new THREE.MeshBasicMaterial({ color: 0xffc28b, transparent: true, opacity: 0, depthWrite: false }));
-  romeGlow.rotation.x = -Math.PI / 2;
-  romeGlow.scale.set(1.25, 1.1, 1);
-  romeGlow.position.set(romeRoom.side * 2.9, 0.14, romeRoom.center.y);
-  scene.add(romeGlow);
+  sign(scene, 'REGRESO AL HALL', [galleryLayout.wingX, 3.45, -21.67], 2.5);
 
   const doorBlock: Collider = { minX: -1.48, maxX: 1.48, minZ: -4.25, maxZ: -3.3 };
   const colliders: Collider[] = [
@@ -252,8 +245,6 @@ export function createMuseumScene(): MuseumWorld {
     { minX: 2.07, maxX: 2.93, minZ: -1.15, maxZ: -0.45 },
     { minX: -8.9, maxX: -8.2, minZ: -21.5, maxZ: -3.5 },
     { minX: 8.2, maxX: 8.9, minZ: -21.5, maxZ: -3.5 },
-    { minX: -8.5, maxX: -2.02, minZ: -21.9, maxZ: -21.1 },
-    { minX: 2.02, maxX: 8.5, minZ: -21.9, maxZ: -21.1 },
     { minX: -4.55, maxX: -3.25, minZ: -10.93, maxZ: -9.87 },
     { minX: 3.25, maxX: 4.55, minZ: -16.13, maxZ: -15.07 },
   ];
@@ -266,32 +257,32 @@ export function createMuseumScene(): MuseumWorld {
       colliders.push({ minX: x - 0.45, maxX: x + 0.45, minZ: -3.56, maxZ: -2.67 });
     }
     for (const z of [-8, -13.2, -18.4]) {
-      colliders.push({ minX: side * 6.4 - 0.45, maxX: side * 6.4 + 0.45, minZ: z - 0.45, maxZ: z + 0.45 });
-      colliders.push({ minX: side * 5.3 - 0.68, maxX: side * 5.3 + 0.68, minZ: z - 1.1, maxZ: z + 0.1 });
+      const columnX = side * (z === -18.4 ? 7 : 6.4);
+      colliders.push({ minX: columnX - 0.45, maxX: columnX + 0.45, minZ: z - 0.45, maxZ: z + 0.45 });
+      if (z !== -18.4) colliders.push({ minX: side * 5.3 - 0.68, maxX: side * 5.3 + 0.68, minZ: z - 1.1, maxZ: z + 0.1 });
     }
   }
   let entranceOpening = false;
   let entranceProgress = 0;
   let handoffTime = 0;
-  let romeVisible = false;
-  let romeProgress = 0;
 
   return {
     scene,
     colliders,
     guard: new THREE.Vector3(2.5, 1.45, -0.8),
     rooms: gallery.rooms,
+    doors: gallery.doors,
     roomAt: (position) => gallery.rooms.find((room) => (
-      Math.abs(position.y - room.center.y) < 2.02
-      && (room.side < 0 ? position.x < -2.42 && position.x > -8.34 : position.x > 2.42 && position.x < 8.34)
+      Math.abs(position.y - room.center.y) < galleryLayout.step / 2 - 0.1
+      && Math.abs(position.x - room.center.x) < galleryLayout.wingX - galleryLayout.innerX - 0.1
     )) ?? null,
     openEntrance: () => {
       entranceOpening = true;
       handoffTime = 0.001;
       attendant.paper.visible = true;
     },
-    revealRome: () => {
-      romeVisible = true;
+    openDoor: (door) => {
+      if (!door.opening && door.progress === 0) door.opening = true;
     },
     update: (delta) => {
       if (entranceOpening && entranceProgress < 1) {
@@ -313,10 +304,12 @@ export function createMuseumScene(): MuseumWorld {
           handoffTime = 0;
         }
       }
-      if (romeVisible && romeProgress < 1) {
-        romeProgress = Math.min(1, romeProgress + delta * 0.8);
-        romeLight.intensity = romeProgress * 4.2;
-        (romeGlow.material as THREE.MeshBasicMaterial).opacity = romeProgress * 0.27;
+      gallery.update(delta);
+      for (const door of gallery.doors) {
+        if (door.progress === 1) {
+          const index = colliders.indexOf(door.blocker);
+          if (index !== -1) colliders.splice(index, 1);
+        }
       }
     },
   };
