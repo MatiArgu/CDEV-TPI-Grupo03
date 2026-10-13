@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#89d9cd" />
+    <title>Museo de viajes en el tiempo · La llegada</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main id="app" data-mode="player">
+      <div id="scene" aria-label="Escena tridimensional del museo"></div>
+      <div class="paper-grain" aria-hidden="true"></div>
+      <header class="masthead">
+        <div class="eyebrow"><span class="eyebrow-mark"></span> MUSEO DE VIAJES EN EL TIEMPO <span class="separator">/</span> ESTUDIO 01</div>
+        <h1>Un museo fuera<br /><em>del tiempo.</em></h1>
+        <p>Arquitectura, naturaleza y una pieza de la historia en un pequeño estudio visual.</p>
+      </header>
+      <aside class="specimen-label" aria-label="Ficha de la pieza">
+        <span class="label-index">01 — PIEZA DE ESTUDIO</span>
+        <strong>Casco de gladiador</strong>
+        <span>Forma · luz · silueta</span>
+      </aside>
+      <nav class="view-controls" aria-label="Distancia de observación">
+        <span class="controls-title">OBSERVAR DESDE</span>
+        <button type="button" data-view="far" aria-pressed="true"><span>01</span> Lejos</button>
+        <button type="button" data-view="mid" aria-pressed="false"><span>02</span> Medio</button>
+        <button type="button" data-view="near" aria-pressed="false"><span>03</span> Cerca</button>
+      </nav>
+      <div class="hint">ARRASTRÁ PARA ORBITAR · RUEDA PARA ACERCAR</div>
+      <div class="player-hud">
+        <div class="crosshair" aria-hidden="true"></div>
+        <div id="interaction-prompt" class="interaction-prompt" hidden><kbd>E</kbd><span id="interaction-label"></span></div>
+        <div id="player-help" class="player-help">WASD CAMINAR · SHIFT CORRER · MOUSE MIRAR · E INTERACTUAR · ESC PAUSAR</div>
+      </div>
+      <div id="photo-hud" class="photo-hud" aria-hidden="true">
+        <div class="camera-frame">
+          <div id="photo-viewfinder" class="photo-viewfinder"></div>
+        </div>
+      </div>
+      <div id="held-description" class="sr-only" role="status" hidden></div>
+      <div id="time-transition" class="time-transition" aria-hidden="true" hidden><span>UN INSTANTE FUERA DEL TIEMPO</span></div>
+      <div id="game-toast" class="game-toast" role="status" hidden></div>
+      <section id="game-menu" class="game-overlay" role="dialog" aria-labelledby="menu-title">
+        <div class="game-card">
+          <span class="game-eyebrow">MUSEO DE VIAJES EN EL TIEMPO / LA LLEGADA</span>
+          <h1 id="menu-title">La historia<br />te espera.</h1>
+          <p id="menu-text">Acabás de bajar del tren. El museo te espera al otro lado de la plaza. Acercate al guardia: él tiene algo para vos.</p>
+          <button id="menu-button" class="game-button" type="button">Comenzar visita <span aria-hidden="true">↗</span></button>
+          <div class="pause-options"><button id="sound-button" type="button" aria-pressed="true">Sonido: activado</button><button id="restart-button" type="button">Reiniciar visita</button></div>
+          <small>WASD caminar · Shift correr · Mouse mirar · E interactuar · M panfleto · C Polaroid · Clic fotografiar · Escape pausar</small>
+        </div>
+      </section>
+      <div id="error" class="error" hidden></div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
