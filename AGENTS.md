@@ -6,10 +6,10 @@ Antes de trabajar, leer [CLAUDE.md](CLAUDE.md): sus principios de razonamiento, 
 
 ## Estado del repositorio y fuentes de verdad
 
-- Por ahora el repositorio contiene documentación y planificación. El juego, sus dependencias y sus comandos de ejecución todavía no existen.
+- El repositorio contiene documentación y un prototipo Three.js + TypeScript + Vite de las etapas 1 a 5. El recorrido actual llega a diez salas WIP; todavía no hay mundos históricos, progreso ni guardado. Los comandos disponibles están en [package.json](package.json).
 - [README.md](README.md) resume el proyecto. [docs/Proyecto_general.md](docs/Proyecto_general.md) define la experiencia, la jugabilidad y la dirección artística.
 - [docs/Plan_de_desarrollo.md](docs/Plan_de_desarrollo.md) divide el trabajo en siete entregas con criterios de aceptación. Sus decisiones aclaradas prevalecen sobre los puntos correspondientes de la especificación maestra. No implementar las siete entregas de una vez ni avanzar a la siguiente sin revisar la anterior.
-- [docs/Arquitectura_prevista.md](docs/Arquitectura_prevista.md) fija decisiones transversales para catálogo, salas, fotografía, estados y guardado. Es una arquitectura prevista, no código existente.
+- [docs/Arquitectura_prevista.md](docs/Arquitectura_prevista.md) fija decisiones transversales. El catálogo y los módulos de sala ya existen; la integración histórica, el progreso y el guardado siguen previstos.
 - Ante una contradicción nueva o un requisito decisivo que falte, explicitarla antes de implementar. No presentar características planificadas como si ya funcionaran.
 
 ## Alcance del MVP

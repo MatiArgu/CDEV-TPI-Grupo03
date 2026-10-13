@@ -1,6 +1,6 @@
 # Revisión de la etapa 2 — movimiento
 
-La vista normal abre el patio de prueba en primera persona. El modo de inspección visual de la etapa 1 sigue disponible con `?view=far`, `?view=mid` y `?view=near`.
+Esta revisión registra el patio de prueba tal como estaba en la etapa 2. El recorrido principal actual usa el museo de las etapas 3 y 5; el modo de inspección visual de la etapa 1 sigue disponible con `?view=far`, `?view=mid` y `?view=near`.
 
 ## Recorrido
 

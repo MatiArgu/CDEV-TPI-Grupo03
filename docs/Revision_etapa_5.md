@@ -23,3 +23,16 @@ El hall ahora continúa en una galería con cinco pares de salas compactas. Las 
 - `npm run typecheck`, `npm run build` y `git diff --check` se ejecutaron al cierre de la entrega. Las capturas se revisaron visualmente con Chrome en renderizado por software.
 
 La integración de exhibiciones, fotografía y progreso queda para Roma en la etapa 6. La fluidez con aceleración gráfica real todavía requiere revisión del equipo en el equipo de desarrollo.
+
+## Refinamiento posterior de la etapa 5
+
+Se mantuvo la disposición de diez salas y se reforzó su lectura desde la altura del jugador: cada puerta tiene ahora un número lateral a la vista, un marco con acentos del área y trazos de tinta selectivos. El corredor usa manchas de color planas sobre el suelo; los muros y el piso de la galería dejan de recibir las sombras duras del sol, que se veían distintas entre filas. El guardia recibió rasgos faciales sencillos. Estas decisiones siguen la [paleta toon con bandas discretas](https://threejs.org/docs/pages/MeshToonMaterial.html) y el uso de [sombras pintadas para escenas estáticas](https://threejs.org/manual/pages/shadows.html) descritos por Three.js.
+
+| Vista refinada | Captura | Punto revisado |
+| --- | --- | --- |
+| Galería | [Ver imagen](capturas/etapa-5-galeria-refinada.png) | Números laterales, manchas del suelo y luz uniforme. |
+| Guardia | [Ver imagen](capturas/etapa-5-guardia-refinado.png) | Rostro legible a distancia de conversación. |
+
+La palabra WIP del mapa, índice, avisos y letreros procede ahora de la disponibilidad del catálogo. Una prueba temporal con Roma marcada `playable` mostró «LISTA» en mapa e índice y cambió la nota de disponibilidad; se restauró `wip` al terminar. El panfleto conserva Pointer Lock porque se maneja solo con M y bloquea el movimiento; Escape lo libera al pausar, conforme al comportamiento de la [API de Pointer Lock](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API). La captura fotográfica definitiva seguirá requiriendo validación al integrar Roma.
+
+Tras restaurar el estado WIP, `npm run typecheck`, `npm run build`, la comprobación de enlaces y `git diff --check` pasaron. En Chrome se confirmó que el inicio muestra las diez áreas WIP en orden, que los diez nombres caben completos en un máximo de dos líneas por letrero, que M no abre el panfleto antes de recibirlo y que Escape pausa y libera el puntero. La inspección visual usó renderizado por software; falta medir fluidez con GPU real.

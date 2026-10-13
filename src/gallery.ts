@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import { areaCatalog, areaOrder, type AreaId } from './catalog';
+import { areaCatalog, areaOrder, availabilityCopy, type AreaId } from './catalog';
 import type { Collider } from './scene';
-import { box, mesh, outline, palette, toon } from './visual';
+import { box, inkStroke, mesh, outline, palette, toon } from './visual';
 
 export type GalleryRoom = {
   id: AreaId;
@@ -47,7 +47,26 @@ function roomSign(id: AreaId, number: number): THREE.CanvasTexture {
   lines.slice(0, 2).forEach((line, index) => context.fillText(line, 232, lines.length === 1 ? 142 : 103 + index * 70));
   context.font = 'bold 29px sans-serif';
   context.fillStyle = '#6d8077';
-  context.fillText('EN PREPARACIÓN · WIP', 235, 255);
+  context.fillText(availabilityCopy(area.availability).sign, 235, 255);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+function numberPlaque(id: AreaId, number: number): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 256;
+  const context = canvas.getContext('2d')!;
+  context.fillStyle = areaCatalog[id].accent;
+  context.fillRect(0, 0, 256, 256);
+  context.strokeStyle = '#354044';
+  context.lineWidth = 12;
+  context.strokeRect(6, 6, 244, 244);
+  context.fillStyle = '#354044';
+  context.font = 'bold 116px sans-serif';
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+  context.fillText(String(number).padStart(2, '0'), 128, 132);
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
@@ -59,15 +78,22 @@ export function createGallery(scene: THREE.Scene): { rooms: GalleryRoom[]; colli
   const wallMaterial = toon(palette.cream);
   const floorMaterial = toon(palette.stone);
   const trimMaterial = toon(palette.sand);
+  const floorWash = new THREE.MeshBasicMaterial({ color: palette.turquoise, transparent: true, opacity: 0.18, depthWrite: false });
 
-  function wall(width: number, height: number, depth: number, x: number, y: number, z: number): void {
-    box(width, height, depth, wallMaterial, [x, y, z], scene);
+  function wall(width: number, height: number, depth: number, x: number, y: number, z: number): THREE.Mesh {
+    const surface = box(width, height, depth, wallMaterial, [x, y, z], scene);
+    surface.castShadow = false;
+    surface.receiveShadow = false;
     colliders.push({ minX: x - width / 2, maxX: x + width / 2, minZ: z - depth / 2, maxZ: z + depth / 2 });
+    return surface;
   }
 
-  box(17.3, 0.14, 22.5, floorMaterial, [0, 0.02, -32.45], scene).castShadow = false;
-  box(4.35, 0.018, 22.2, toon(palette.sage), [0, 0.1, -32.45], scene).castShadow = false;
-  box(17.3, 0.2, 22.5, trimMaterial, [0, 4.02, -32.45], scene).castShadow = false;
+  const floor = box(17.3, 0.14, 22.5, floorMaterial, [0, 0.02, -32.45], scene);
+  floor.castShadow = floor.receiveShadow = false;
+  const runner = box(4.35, 0.018, 22.2, toon(palette.sage), [0, 0.1, -32.45], scene);
+  runner.castShadow = runner.receiveShadow = false;
+  const ceiling = box(17.3, 0.2, 22.5, trimMaterial, [0, 4.02, -32.45], scene);
+  ceiling.castShadow = ceiling.receiveShadow = false;
   for (const side of [-1, 1] as const) {
     wall(0.32, 3.9, 22.1, side * outerWallX, 1.95, -32.5);
     for (let boundary = 0; boundary <= 5; boundary++) {
@@ -85,6 +111,18 @@ export function createGallery(scene: THREE.Scene): { rooms: GalleryRoom[]; colli
     light.position.set(0, 3.47, z);
     scene.add(light);
     box(4.1, 0.012, 0.055, trimMaterial, [0, 0.12, z + rowStep / 2], scene).castShadow = false;
+    const patch = new THREE.Shape();
+    const points: Array<[number, number]> = [
+      [-1.58, z + 1.52], [-0.68, z + 1.68], [0.88, z + 1.21],
+      [1.56, z + 0.58], [1.19, z - 0.06], [-0.41, z + 0.1], [-1.44, z + 0.65],
+    ];
+    patch.moveTo(points[0][0], -points[0][1]);
+    for (const [x, pointZ] of points.slice(1)) patch.lineTo(x, -pointZ);
+    patch.closePath();
+    const wash = mesh(new THREE.ShapeGeometry(patch), floorWash, [0, 0.132, 0], scene);
+    wash.rotation.x = -Math.PI / 2;
+    wash.castShadow = wash.receiveShadow = false;
+    inkStroke(points.slice(0, 4).map(([x, pointZ]) => [x, 0.137, pointZ]), scene, 0.18);
   }
 
   areaOrder.forEach((id, index) => {
@@ -98,16 +136,26 @@ export function createGallery(scene: THREE.Scene): { rooms: GalleryRoom[]; colli
     scene.add(root);
     const accent = toon(areaCatalog[id].accent);
 
-    box(5.85, 0.014, 3.94, accent, [0, 0.12, 0], root).castShadow = false;
-    box(0.065, 2.48, 3.78, accent, [side * 2.93, 1.61, 0], root);
+    const roomFloor = box(5.85, 0.014, 3.94, accent, [0, 0.12, 0], root);
+    roomFloor.castShadow = roomFloor.receiveShadow = false;
+    const backdrop = box(0.065, 2.48, 3.78, accent, [side * 2.93, 1.61, 0], root);
+    backdrop.castShadow = backdrop.receiveShadow = false;
     const backStripe = box(0.08, 0.1, 3.9, trimMaterial, [side * 2.87, 2.94, 0], root);
+    backStripe.castShadow = backStripe.receiveShadow = false;
     outline(backStripe, 0.35);
+    inkStroke([[side * 2.86, 0.53, -1.64], [side * 2.86, 0.56, -0.7], [side * 2.86, 0.52, 0.3], [side * 2.86, 0.55, 1.64]], root, 0.35);
     for (const offset of [-1.525, 1.525]) {
-      wall(0.29, 3.9, 1.25, side * innerWallX, 1.95, z + offset);
+      outline(wall(0.29, 3.9, 1.25, side * innerWallX, 1.95, z + offset), 0.22);
     }
-    box(0.34, 0.9, 1.8, trimMaterial, [-side * 3.15, 3.45, 0], root);
+    const lintel = box(0.34, 0.9, 1.8, trimMaterial, [-side * 3.15, 3.45, 0], root);
+    lintel.castShadow = lintel.receiveShadow = false;
+    outline(lintel, 0.3);
     for (const offset of [-0.94, 0.94]) {
-      outline(box(0.32, 2.9, 0.14, trimMaterial, [-side * 3.15, 1.45, offset], root), 0.5);
+      const post = box(0.32, 2.9, 0.14, trimMaterial, [-side * 3.15, 1.45, offset], root);
+      post.castShadow = post.receiveShadow = false;
+      outline(post, 0.5);
+      const stripe = box(0.035, 2.42, 0.075, accent, [-side * 3.32, 1.45, offset], root);
+      stripe.castShadow = stripe.receiveShadow = false;
     }
 
     const texture = roomSign(id, number);
@@ -116,6 +164,9 @@ export function createGallery(scene: THREE.Scene): { rooms: GalleryRoom[]; colli
     const corridorSign = mesh(new THREE.PlaneGeometry(2.55, 0.8), signMaterial, [-side * 3.33, 3.31, 0], root);
     corridorSign.rotation.y = signRotation;
     corridorSign.castShadow = false;
+    const plaque = mesh(new THREE.PlaneGeometry(0.46, 0.46), new THREE.MeshBasicMaterial({ map: numberPlaque(id, number), side: THREE.DoubleSide }), [-side * 3.34, 1.72, 1.52], root);
+    plaque.rotation.y = signRotation;
+    plaque.castShadow = false;
     const insideSign = mesh(new THREE.PlaneGeometry(3.4, 1.0625), signMaterial, [side * 2.82, 1.95, 0], root);
     insideSign.rotation.y = signRotation;
     insideSign.castShadow = false;

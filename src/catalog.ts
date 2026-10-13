@@ -12,6 +12,17 @@ export const areaCatalog = {
 } as const;
 
 export type AreaId = keyof typeof areaCatalog;
+export type AreaAvailability = 'wip' | 'playable';
+
+export function availabilityOf(id: AreaId): AreaAvailability {
+  return areaCatalog[id].availability;
+}
+
+export function availabilityCopy(availability: AreaAvailability): { badge: string; sign: string; description: string } {
+  return availability === 'wip'
+    ? { badge: 'WIP', sign: 'EN PREPARACIÓN · WIP', description: 'sala en preparación' }
+    : { badge: 'LISTA', sign: 'EXHIBICIÓN INSTALADA', description: 'exhibición instalada' };
+}
 
 // The index determines the physical slot, room number and map position.
 export const areaOrder: AreaId[] = [

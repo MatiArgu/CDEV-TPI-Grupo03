@@ -1,6 +1,6 @@
 # Revisión de la etapa 3 — museo e introducción
 
-El recorrido principal empieza en el patio de un museo ficticio inspirado en el Louvre. La pirámide de cristal, la fachada y el guardia se construyeron con la paleta y los materiales ilustrados de la etapa 1. La puerta central se abre tras recibir el panfleto; el patio y el hall forman una escena 3D continua.
+Esta revisión registra el museo al cierre de la etapa 3; desde la etapa 5 el hall continúa hacia diez salas WIP abiertas. El recorrido principal empieza en el patio de un museo ficticio inspirado en el Louvre. La pirámide de cristal, la fachada y el guardia se construyeron con la paleta y los materiales ilustrados de la etapa 1. La puerta central se abre tras recibir el panfleto; el patio y el hall forman una escena 3D continua.
 
 ## Recorrido y controles
 
