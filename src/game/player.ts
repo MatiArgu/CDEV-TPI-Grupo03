@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { Collider } from './scene';
+import type { Collider } from './collision';
 
 type Mode = 'intro' | 'playing' | 'paused' | 'pamphlet' | 'camera' | 'revealing' | 'transition';
 

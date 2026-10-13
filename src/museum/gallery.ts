@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { areaCatalog, areaOrder, availabilityCopy, type AreaId } from './catalog';
-import type { Collider } from './scene';
+import { areaCatalog, areaOrder, availabilityCopy, type AreaId } from '../game/catalog';
+import type { Collider } from '../game/collision';
 import { exhibition, stoneFloor, museumWallMaterial, wallPanels } from './exhibition';
 import { galleryLayout, museumLayout, roomSlots } from './museumLayout';
-import { box, inkStroke, mesh, outline, toon } from './visual';
+import { box, inkStroke, mesh, outline, toon } from '../rendering/visual';
 
 export type GalleryRoom = {
   id: AreaId;

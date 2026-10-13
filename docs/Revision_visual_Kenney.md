@@ -1,8 +1,10 @@
 # Renovación visual con Kenney
 
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+
 ## Reorganización del edificio y del hall
 
-La planta del hall se alinea con las alas y la fachada: **24,9 unidades de ancho**, con límites y nivel de suelo compartidos en `src/museumLayout.ts`. Roma conserva sus 10,8 × 16 unidades, la distribución de piezas, el casco al 55 % y sus cinco focos.
+La planta del hall se alinea con las alas y la fachada: **24,9 unidades de ancho**, con límites y nivel de suelo compartidos en `src/museum/museumLayout.ts`. Roma conserva sus 10,8 × 16 unidades, la distribución de piezas, el casco al 55 % y sus cinco focos.
 
 - Nave central con columnas y arcos alineados; dos pasillos laterales conducen directamente a las puertas. La última fila de columnas deja visibles los carteles desde el acceso.
 - Vitrinas, esculturas, cuadros y bancos agrupados en los laterales. La zona posterior queda libre para distribuir la circulación.
@@ -32,7 +34,7 @@ Las diez salas pasan de **6,9 × 12,4 a 10,8 × 16 unidades**, aproximadamente e
 
 En Roma, las piezas y sus focos se distribuyen junto a las nuevas paredes laterales. El casco de la exhibición se reduce al **55 % de su tamaño anterior**, y su pedestal pasa de 1,8 × 1,6 a 1,25 × 1,12 unidades de base, con una colisión ajustada al nuevo volumen. Se conserva su identificación como artefacto fotografiable.
 
-Capturas de las nuevas proporciones: [desde la entrada](capturas/roma-ampliada-entrada.png), [cerca del pedestal](capturas/roma-ampliada-detalle.png) y [en el visor](capturas/roma-ampliada-visor.png). Las capturas de atmósfera siguientes muestran la distribución anterior a esta ampliación.
+Capturas de las nuevas proporciones: desde la entrada — captura no incluida (`capturas/roma-ampliada-entrada.png`), cerca del pedestal — captura no incluida (`capturas/roma-ampliada-detalle.png`) y en el visor — captura no incluida (`capturas/roma-ampliada-visor.png`). Las capturas de atmósfera siguientes muestran la distribución anterior a esta ampliación.
 
 Verificación de la ampliación: tipos y build correctos; recorrido completo hasta el regreso con 1/10; fotografía centrada, en borde y con oclusión parcial/total; ocho obstáculos, pedestal central, ambos pasos laterales, muros exteriores y 30 puntos de detección de sala. Reordenar Egipto al puesto 8 conserva su ID, número y posición en el panfleto.
 
@@ -40,11 +42,11 @@ Verificación de la ampliación: tipos y build correctos; recorrido completo has
 
 | Vista | Captura |
 | --- | --- |
-| Hall desde el acceso | [Hall](capturas/atmosfera-hall-entrada.png) |
-| Vitrinas y pared lateral | [Detalle del hall](capturas/atmosfera-hall-lateral.png) |
-| Sala de Roma | [Exhibición](capturas/atmosfera-roma.png) |
-| Polaroid en el juego | [Visor](capturas/atmosfera-visor.png) |
-| Foto y regreso | [Panfleto 1/10](capturas/atmosfera-completado.png) |
+| Hall desde el acceso | Hall — captura no incluida (`capturas/atmosfera-hall-entrada.png`) |
+| Vitrinas y pared lateral | Detalle del hall — captura no incluida (`capturas/atmosfera-hall-lateral.png`) |
+| Sala de Roma | Exhibición — captura no incluida (`capturas/atmosfera-roma.png`) |
+| Polaroid en el juego | Visor — captura no incluida (`capturas/atmosfera-visor.png`) |
+| Foto y regreso | Panfleto 1/10 — captura no incluida (`capturas/atmosfera-completado.png`) |
 
 ### Verificación de esta actualización
 
@@ -63,17 +65,17 @@ Esta revisión mejora los escenarios y las herramientas existentes de las etapas
 
 - **Patio:** cuatro canteros con árboles en `x = ±11.1`, `z = 4.35 / 20.75`, entre los ejes de las puertas de las casas. Se rediseñaron con césped, flores y bancos hacia la plaza. Dos paños adicionales de pasto son transitables y tienen matas bajas instanciadas. El paso junto a las fachadas queda libre y se eliminaron los ocho carteles sobre las puertas.
 - **Estación:** el cartel se conserva y se alinea con el punto de llegada. Debajo hay un portón de dos hojas con bisagras, manijas y pestillo, sin zócalo que atraviese el acceso. Al mirar atrás, termina de cerrarse durante 1,2 segundos y luego sale el tren. La abertura inicial es menor al diámetro del personaje; las colisiones acompañan las hojas y reservan el espacio del cierre para evitar atraparlo. La pausa también detiene esta animación.
-- **Hall principal:** `src/hall.ts` reúne el interior renovado: piso con guardas y medallón de reloj, paneles y molduras, columnas, arcos, techo con casetones y tragaluz rematado en sus extremos. Cuatro ilustraciones originales enmarcadas, cuatro vitrinas con piezas ajustadas al vidrio, esculturas, bancos y lámparas cálidas acompañan el paseo central. Las colisiones se obtienen del mobiliario colocado. Se reutilizan los modelos existentes; la selección sigue siendo de 31 GLB.
+- **Hall principal:** `src/museum/hall.ts` reúne el interior renovado: piso con guardas y medallón de reloj, paneles y molduras, columnas, arcos, techo con casetones y tragaluz rematado en sus extremos. Cuatro ilustraciones originales enmarcadas, cuatro vitrinas con piezas ajustadas al vidrio, esculturas, bancos y lámparas cálidas acompañan el paseo central. Las colisiones se obtienen del mobiliario colocado. Se reutilizan los modelos existentes; la selección sigue siendo de 31 GLB.
 
 | Vista actual | Captura |
 | --- | --- |
-| Jardines del patio | [Conjunto](capturas/renovacion-jardin.png) |
-| Accesos de las casas | [Puertas despejadas y sin carteles](capturas/renovacion-puertas.png) |
-| Salida del andén | [Portón con bisagras](capturas/renovacion-porton.png) |
-| Galería principal | [Desde la entrada](capturas/renovacion-hall-entrada.png) |
-| Obras y esculturas | [Lateral del hall](capturas/renovacion-hall-lateral.png) |
-| Techo y regreso | [Mirando hacia el patio](capturas/renovacion-hall-regreso.png) |
-| Piso y vitrinas | [Vista de detalle](capturas/renovacion-hall-piso.png) |
+| Jardines del patio | Conjunto — captura no incluida (`capturas/renovacion-jardin.png`) |
+| Accesos de las casas | Puertas despejadas y sin carteles — captura no incluida (`capturas/renovacion-puertas.png`) |
+| Salida del andén | Portón con bisagras — captura no incluida (`capturas/renovacion-porton.png`) |
+| Galería principal | Desde la entrada — captura no incluida (`capturas/renovacion-hall-entrada.png`) |
+| Obras y esculturas | Lateral del hall — captura no incluida (`capturas/renovacion-hall-lateral.png`) |
+| Techo y regreso | Mirando hacia el patio — captura no incluida (`capturas/renovacion-hall-regreso.png`) |
+| Piso y vitrinas | Vista de detalle — captura no incluida (`capturas/renovacion-hall-piso.png`) |
 
 Verificación en Chrome: cierre antes de la partida, pausa a mitad del cierre y posibilidad de alejarse del portón sin quedar atrapado. Se comprobaron las ocho aproximaciones a las puertas, ambos pasos laterales del patio, los dos paños de pasto, canteros, esquinas y colisiones de vitrinas, columnas, bancos y pedestales. El recorrido desde el andén hasta el guardia, panfleto, hall y Roma, con foto inválida, foto válida y regreso con 1/10, funciona con el nuevo interior. El hall visto desde la entrada registra aproximadamente 15.900 triángulos y 598 llamadas de dibujo; estas cifras no equivalen a FPS en hardware real.
 
@@ -85,17 +87,17 @@ El jugador comienza en `(1, 26.3)`, a altura humana, del lado seguro del andén 
 
 Ocho casas adosadas, de uno o dos pisos, cierran los laterales. Muros cortos las conectan con la fachada; una baranda continua separa el andén de los rieles. Todos esos límites tienen colisiones, incluidas sus uniones. Las puertas de las casas son decorativas y permanecen cerradas. El único acceso que continúa el recorrido es la entrada del museo.
 
-La fachada ahora tiene cubiertas rectangulares a cuatro aguas, buhardillas, cornisas y un pabellón central con reloj y frontón. Los marcos Kenney, las contraventanas, la piedra clara y los tonos salvia unifican museo y casas. Se añaden tres modelos de Train Kit con su textura y licencia CC0. `src/courtyard.ts` construye el perímetro y la llegada; el museo expone su posición inicial y recibe la cámara solamente durante el juego activo para actualizar el tren.
+La fachada ahora tiene cubiertas rectangulares a cuatro aguas, buhardillas, cornisas y un pabellón central con reloj y frontón. Los marcos Kenney, las contraventanas, la piedra clara y los tonos salvia unifican museo y casas. Se añaden tres modelos de Train Kit con su textura y licencia CC0. `src/museum/courtyard.ts` construye el perímetro y la llegada; el museo expone su posición inicial y recibe la cámara solamente durante el juego activo para actualizar el tren.
 
-Corrección de terminaciones: las 16 ventanas arqueadas incorporan un fondo verde con el mismo perfil poligonal del marco, compartido desde la plantilla del modelo; se retiraron sus fondos rectangulares. Las cubiertas inclinadas incluyen una cara inferior con normales hacia abajo, cerrando los aleros del museo, las casas y las buhardillas. Se revisaron de frente y desde abajo en Chrome, incluido el techo del hall, y nueve rayos ascendentes confirmaron el cierre de la base de la cubierta. Capturas: [ventana sin esquinas sobresalientes](capturas/detalle-ventana-arco.png) y [alero desde abajo](capturas/detalle-alero-inferior.png).
+Corrección de terminaciones: las 16 ventanas arqueadas incorporan un fondo verde con el mismo perfil poligonal del marco, compartido desde la plantilla del modelo; se retiraron sus fondos rectangulares. Las cubiertas inclinadas incluyen una cara inferior con normales hacia abajo, cerrando los aleros del museo, las casas y las buhardillas. Se revisaron de frente y desde abajo en Chrome, incluido el techo del hall, y nueve rayos ascendentes confirmaron el cierre de la base de la cubierta. Capturas: ventana sin esquinas sobresalientes — captura no incluida (`capturas/detalle-ventana-arco.png`) y alero desde abajo — captura no incluida (`capturas/detalle-alero-inferior.png`).
 
 | Vista de esa revisión | Captura |
 | --- | --- |
-| Llegada al museo | [Desde el andén](capturas/patio-llegada.png) |
-| Plaza cerrada | [Vista de conjunto](capturas/patio-plaza.png) |
-| Fachada y techo | [Pabellón central](capturas/patio-fachada.png) |
-| Casas bajas | [Lateral de la plaza](capturas/patio-casas.png) |
-| Tren y vías | [Andén](capturas/patio-anden.png) |
+| Llegada al museo | Desde el andén — captura no incluida (`capturas/patio-llegada.png`) |
+| Plaza cerrada | Vista de conjunto — captura no incluida (`capturas/patio-plaza.png`) |
+| Fachada y techo | Pabellón central — captura no incluida (`capturas/patio-fachada.png`) |
+| Casas bajas | Lateral de la plaza — captura no incluida (`capturas/patio-casas.png`) |
+| Tren y vías | Andén — captura no incluida (`capturas/patio-anden.png`) |
 
 Verificado en Chrome con el controlador del juego: inicio sin partida automática; activación al girar; continuidad al volver a mirar al frente; pausa con Escape y panfleto; partida única sin reaparecer. Pasaron 14 pruebas de colisión corriendo contra paredes, juntas entre casas, esquinas delanteras y traseras, baranda y fachada. También se recorrió desde el nuevo inicio hasta el guardia, hall, foto inválida, foto válida, Roma, recogida del casco y regreso con 1/10. Se comprobó recuperar Pointer Lock después de una transición en pausa.
 
@@ -117,16 +119,16 @@ La vista de llegada registra unas 28.600 caras triangulares y 1.136 llamadas de 
 
 | Vista | Captura |
 | --- | --- |
-| Inicio jugable | [Portada](capturas/kenney-inicio.png) |
-| Patio y fachada | [Vista general](capturas/kenney-patio.png) |
-| Entrada | [Acceso](capturas/kenney-acceso.png) |
-| Hall | [Interior](capturas/kenney-hall.png) |
-| Exhibición | [Roma en el museo](capturas/kenney-exhibicion.png) |
-| Fotografía | [Visor](capturas/kenney-visor.png) y [revelado](capturas/kenney-revelado.png) |
-| Mundo romano | [Naumaquia](capturas/kenney-roma.png) y [embarcación](capturas/kenney-barco.png) |
-| Ayuda | [Ruta iluminada](capturas/kenney-ayuda.png) |
-| Regreso | [Panfleto con 1/10](capturas/kenney-completado.png) |
-| Estudio | [Vista de conjunto](capturas/kenney-estudio.png) |
+| Inicio jugable | Portada — captura no incluida (`capturas/kenney-inicio.png`) |
+| Patio y fachada | Vista general — captura no incluida (`capturas/kenney-patio.png`) |
+| Entrada | Acceso — captura no incluida (`capturas/kenney-acceso.png`) |
+| Hall | Interior — captura no incluida (`capturas/kenney-hall.png`) |
+| Exhibición | Roma en el museo — captura no incluida (`capturas/kenney-exhibicion.png`) |
+| Fotografía | Visor — captura no incluida (`capturas/kenney-visor.png`) y revelado — captura no incluida (`capturas/kenney-revelado.png`) |
+| Mundo romano | Naumaquia — captura no incluida (`capturas/kenney-roma.png`) y embarcación — captura no incluida (`capturas/kenney-barco.png`) |
+| Ayuda | Ruta iluminada — captura no incluida (`capturas/kenney-ayuda.png`) |
+| Regreso | Panfleto con 1/10 — captura no incluida (`capturas/kenney-completado.png`) |
+| Estudio | Vista de conjunto — captura no incluida (`capturas/kenney-estudio.png`) |
 
 Las vistas generales se renderizaron con las mismas fábricas de escena del juego y cámaras de inspección. Inicio, visor, revelado, ayuda y panfleto corresponden al recorrido con la interfaz real.
 
@@ -134,7 +136,7 @@ Las vistas generales se renderizaron con las mismas fábricas de escena del jueg
 
 Se integraron **28 modelos de cinco paquetes**, con sus licencias CC0 y sus texturas externas. El [informe de selección](Seleccion_Kenney.md) contiene el alcance de la exploración, el inventario completo y las recomendaciones. El [manifiesto](../public/assets/kenney/manifest.json) identifica cada archivo y su procedencia.
 
-`src/assets.ts` carga la selección antes de habilitar la visita. Convierte materiales a toon, ajusta colores de vegetación y madera y normaliza tamaños y apoyo en el suelo. Los sólidos nuevos tienen colisiones; los objetos de la exhibición también participan en la oclusión fotográfica. Los bounds de colisión se calculan después de aplicar la posición de la sala.
+`src/rendering/assets.ts` carga la selección antes de habilitar la visita. Convierte materiales a toon, ajusta colores de vegetación y madera y normaliza tamaños y apoyo en el suelo. Los sólidos nuevos tienen colisiones; los objetos de la exhibición también participan en la oclusión fotográfica. Los bounds de colisión se calculan después de aplicar la posición de la sala.
 
 Las instancias comparten geometría y texturas del caché de modelos durante la sesión; las figuras tienen esqueletos independientes. Al salir de Roma se liberan geometrías y materiales propios del mundo y las texturas de huesos, conservando los recursos compartidos que todavía usa el museo. Los 80 arcos de la arena se dibujan con dos `InstancedMesh`.
 

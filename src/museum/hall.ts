@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { modelCollider, placeModel, type ModelId } from './assets';
-import type { Collider } from './scene';
+import { modelCollider, placeModel, type ModelId } from '../rendering/assets';
+import type { Collider } from '../game/collision';
 import { galleryLayout, museumLayout } from './museumLayout';
 import { exhibition, exhibitSpot, stoneFloor, museumWallMaterial } from './exhibition';
-import { box, materials as mat, mesh, outline, toon } from './visual';
+import { box, materials as mat, mesh, outline, toon } from '../rendering/visual';
 
 function artTexture(variant: number): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');

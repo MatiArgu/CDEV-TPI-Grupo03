@@ -1,5 +1,7 @@
 # Revisión de la etapa 5 — diez salas WIP
 
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+
 La disposición abierta documentada a continuación fue la primera versión de la etapa 5. El [replanteo del recorrido en U](#replanteo-del-recorrido-en-u) al final de este archivo describe el estado actual.
 
 El hall ahora continúa en una galería con cinco pares de salas compactas. Las diez se pueden visitar y están vacías: sus letreros muestran número, nombre y estado «En preparación · WIP». El color de cada área aparece en el suelo y muro interior y se repite en el panfleto. Roma conserva la luz cálida que orienta al visitante después de abrir el mapa.
@@ -10,11 +12,11 @@ El hall ahora continúa en una galería con cinco pares de salas compactas. Las 
 
 | Vista | Captura | Punto revisado |
 | --- | --- | --- |
-| Panfleto | [Ver imagen](capturas/etapa-5-panfleto.png) | Cinco pares de salas, números, colores y estado WIP. |
-| Acceso a galería | [Ver imagen](capturas/etapa-5-galeria.png) | Corredor abierto desde el hall, entradas y señalización. |
-| Sala 01 | [Ver imagen](capturas/etapa-5-roma.png) | Interior visitable y vacío, identidad de Roma. |
-| Sala 10 | [Ver imagen](capturas/etapa-5-luna.png) | Última sala visitable e identidad de Luna. |
-| Reordenamiento temporal | [Ver imagen](capturas/etapa-5-egipto-reordenado.png) | Egipto en la sala 08, con letrero y aviso correspondientes. |
+| Panfleto | Ver imagen — captura no incluida (`capturas/etapa-5-panfleto.png`) | Cinco pares de salas, números, colores y estado WIP. |
+| Acceso a galería | Ver imagen — captura no incluida (`capturas/etapa-5-galeria.png`) | Corredor abierto desde el hall, entradas y señalización. |
+| Sala 01 | Ver imagen — captura no incluida (`capturas/etapa-5-roma.png`) | Interior visitable y vacío, identidad de Roma. |
+| Sala 10 | Ver imagen — captura no incluida (`capturas/etapa-5-luna.png`) | Última sala visitable e identidad de Luna. |
+| Reordenamiento temporal | Ver imagen — captura no incluida (`capturas/etapa-5-egipto-reordenado.png`) | Egipto en la sala 08, con letrero y aviso correspondientes. |
 
 ## Aceptación y verificación
 
@@ -32,8 +34,8 @@ Se mantuvo la disposición de diez salas y se reforzó su lectura desde la altur
 
 | Vista refinada | Captura | Punto revisado |
 | --- | --- | --- |
-| Galería | [Ver imagen](capturas/etapa-5-galeria-refinada.png) | Números laterales, manchas del suelo y luz uniforme. |
-| Guardia | [Ver imagen](capturas/etapa-5-guardia-refinado.png) | Rostro legible a distancia de conversación. |
+| Galería | Ver imagen — captura no incluida (`capturas/etapa-5-galeria-refinada.png`) | Números laterales, manchas del suelo y luz uniforme. |
+| Guardia | Ver imagen — captura no incluida (`capturas/etapa-5-guardia-refinado.png`) | Rostro legible a distancia de conversación. |
 
 La palabra WIP del mapa, índice, avisos y letreros procede ahora de la disponibilidad del catálogo. Una prueba temporal con Roma marcada `playable` mostró «LISTA» en mapa e índice y cambió la nota de disponibilidad; se restauró `wip` al terminar. El panfleto conserva Pointer Lock porque se maneja solo con M y bloquea el movimiento; Escape lo libera al pausar, conforme al comportamiento de la [API de Pointer Lock](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API). La captura fotográfica definitiva seguirá requiriendo validación al integrar Roma.
 
@@ -45,12 +47,12 @@ El hall conserva la introducción con guardia y panfleto. La antigua galería de
 
 | Vista actual | Captura |
 | --- | --- |
-| Plano en U | [Ver imagen](capturas/etapa-5-u-mapa.png) |
-| Puerta 01 cerrada | [Ver imagen](capturas/etapa-5-u-puerta-01.png) |
-| Parpadeo encendido | [Ver imagen](capturas/etapa-5-u-parpadeo-encendido.png) |
-| Parpadeo apagado | [Ver imagen](capturas/etapa-5-u-parpadeo-apagado.png) |
-| Roma iluminada | [Ver imagen](capturas/etapa-5-u-roma-encendida.png) |
-| Puerta 02 cerrada | [Ver imagen](capturas/etapa-5-u-puerta-02.png) |
+| Plano en U | Ver imagen — captura no incluida (`capturas/etapa-5-u-mapa.png`) |
+| Puerta 01 cerrada | Ver imagen — captura no incluida (`capturas/etapa-5-u-puerta-01.png`) |
+| Parpadeo encendido | Ver imagen — captura no incluida (`capturas/etapa-5-u-parpadeo-encendido.png`) |
+| Parpadeo apagado | Ver imagen — captura no incluida (`capturas/etapa-5-u-parpadeo-apagado.png`) |
+| Roma iluminada | Ver imagen — captura no incluida (`capturas/etapa-5-u-roma-encendida.png`) |
+| Puerta 02 cerrada | Ver imagen — captura no incluida (`capturas/etapa-5-u-puerta-02.png`) |
 
 Las diez posiciones y sus letreros se generan desde `areaOrder`. En el prototipo actual todas las áreas siguen WIP. Solo se abre la primera puerta para mostrar el recorrido; no hay todavía artefacto ni acción que complete Roma, por lo que la segunda puerta permanece cerrada. Al implementar las etapas 6 y 7, Roma y Egipto serán las únicas épocas jugables del MVP. Las ocho puertas restantes seguirán cerradas.
 

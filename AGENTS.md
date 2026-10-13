@@ -7,6 +7,7 @@ Antes de trabajar, leer [CLAUDE.md](CLAUDE.md): sus principios de razonamiento, 
 ## Estado del repositorio y fuentes de verdad
 
 - El repositorio contiene documentación y un prototipo Three.js + TypeScript + Vite de las etapas 1 a 7. Egipto y Roma integran exhibición, fotografía, mundo histórico, recogida y regreso. El panfleto y las fotos se guardan localmente por ID; hay reinicio y efecto de disparo con opción de silencio. La [renovación visual con Kenney](docs/Revision_visual_Kenney.md) incorpora modelos locales con licencias; las fábricas de escenas requieren cargar previamente los modelos mediante `loadModels()`. Los comandos disponibles están en [package.json](package.json).
+- [docs/CODEMAP.md](docs/CODEMAP.md) ubica los módulos actuales y sus responsabilidades.
 - [README.md](README.md) resume el proyecto. [docs/Proyecto_general.md](docs/Proyecto_general.md) define la experiencia, la jugabilidad y la dirección artística.
 - [docs/Plan_de_desarrollo.md](docs/Plan_de_desarrollo.md) divide el trabajo en siete entregas con criterios de aceptación. Sus decisiones aclaradas prevalecen sobre los puntos correspondientes de la especificación maestra. No implementar las siete entregas de una vez ni avanzar a la siguiente sin revisar la anterior.
 - [docs/Arquitectura_prevista.md](docs/Arquitectura_prevista.md) fija decisiones transversales. El catálogo, las cinco salas, ambos ciclos históricos y la persistencia están implementados.

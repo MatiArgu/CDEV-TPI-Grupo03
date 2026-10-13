@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { areaCatalog, areaOrder, availabilityOf, type AreaId } from './catalog';
 import { holdingHand, foreground } from './held';
-import { roomSlots } from './museumLayout';
+import { roomSlots } from '../museum/museumLayout';
 
 export function createPamphlet(camera: THREE.PerspectiveCamera) {
   const root = new THREE.Group();

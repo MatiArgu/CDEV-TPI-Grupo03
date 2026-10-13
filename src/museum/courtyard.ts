@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { batchStaticMeshes } from './staticMeshes';
-import { modelCollider, placeModel } from './assets';
-import type { Collider } from './scene';
-import { box, hippedRoof, materials as mat, mesh, outline, toon } from './visual';
+import { batchStaticMeshes } from '../rendering/staticMeshes';
+import { modelCollider, placeModel } from '../rendering/assets';
+import type { Collider } from '../game/collision';
+import { box, hippedRoof, materials as mat, mesh, outline, toon } from '../rendering/visual';
 
 function plaque(parent: THREE.Object3D, text: string, x: number, y: number, z: number, width: number): void {
   const canvas = document.createElement('canvas');

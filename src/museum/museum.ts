@@ -1,17 +1,17 @@
 import * as THREE from 'three';
-import { batchStaticMeshes } from './staticMeshes';
-import { modelCollider, placeModel } from './assets';
-import type { AreaId } from './catalog';
+import { batchStaticMeshes } from '../rendering/staticMeshes';
+import { modelCollider, placeModel } from '../rendering/assets';
+import type { AreaId } from '../game/catalog';
 import { courtyardPaving, createCourtyardArrival } from './courtyard';
 import { createGallery, type GalleryDoor, type GalleryRoom } from './gallery';
 import { createGuard } from './guard';
 import { createHall } from './hall';
 import { galleryLayout, museumLayout } from './museumLayout';
-import { installEgyptExhibit } from './egypt';
-import { addSky } from './sky';
-import { installRomeExhibit } from './rome';
-import type { Collider } from './scene';
-import { box, hippedRoof, materials as mat, mesh, outline, palette, silhouette, toon } from './visual';
+import { installEgyptExhibit } from '../worlds/egypt';
+import { addSky } from '../rendering/sky';
+import { installRomeExhibit } from '../worlds/rome';
+import type { Collider } from '../game/collision';
+import { box, hippedRoof, materials as mat, mesh, outline, palette, silhouette, toon } from '../rendering/visual';
 
 export type MuseumWorld = {
   scene: THREE.Scene;

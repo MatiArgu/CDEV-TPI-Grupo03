@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { mesh, shadowBlob } from './visual';
+import { mesh, shadowBlob } from '../rendering/visual';
 
 type Ring = readonly [height: number, halfWidth: number, halfDepth: number, offsetZ?: number];
 

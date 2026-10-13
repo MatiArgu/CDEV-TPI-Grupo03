@@ -1,16 +1,18 @@
 # Revisión de la etapa 1 — motor visual
 
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+
 La escena de prueba usa Three.js, TypeScript y Vite. Combina fachada clásica ficticia, dos árboles, jardineras y un casco sobre pedestal. No representa todavía una sala definitiva ni habilita viaje temporal.
 
 ## Capturas de inspección
 
 | Distancia | Captura | Punto a revisar |
 | --- | --- | --- |
-| Lejos | [Ver imagen](capturas/etapa-1-far.png) | Composición, siluetas y paleta general. |
-| Medio | [Ver imagen](capturas/etapa-1-mid.png) | Separación entre arquitectura, vegetación y exhibición. |
-| Cerca | [Ver imagen](capturas/etapa-1-near.png) | Forma del casco, tres bandas de luz y contornos selectivos. |
+| Lejos | Ver imagen — captura no incluida (`capturas/etapa-1-far.png`) | Composición, siluetas y paleta general. |
+| Medio | Ver imagen — captura no incluida (`capturas/etapa-1-mid.png`) | Separación entre arquitectura, vegetación y exhibición. |
+| Cerca | Ver imagen — captura no incluida (`capturas/etapa-1-near.png`) | Forma del casco, tres bandas de luz y contornos selectivos. |
 
-La biblioteca en `src/visual.ts` comparte paleta, materiales toon, bloques, coronas irregulares y contornos. La escena usa una luz ambiental, una direccional con sombra simple y manchas planas de sombra. El render está limitado a 1,75 veces la densidad de píxeles del dispositivo.
+La biblioteca en `src/rendering/visual.ts` comparte paleta, materiales toon, bloques, coronas irregulares y contornos. La escena usa una luz ambiental, una direccional con sombra simple y manchas planas de sombra. El render está limitado a 1,75 veces la densidad de píxeles del dispositivo.
 
 ## Dirección visual revisada
 

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
-import type { Collider } from './scene';
+import type { Collider } from '../game/collision';
 import { materials as mat, outline, toon } from './visual';
 
 const sources = {

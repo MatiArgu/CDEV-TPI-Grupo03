@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { box } from './visual';
+import { box } from '../rendering/visual';
 
 export function createRouteHelp(
   scene: THREE.Scene,

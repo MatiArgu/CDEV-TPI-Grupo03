@@ -1,5 +1,7 @@
 # Revisión de la etapa 4 — Polaroid
 
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+
 Esta revisión documenta la prueba de la etapa 4, realizada en un laboratorio temporal separado del recorrido principal. Al completar la etapa 5 se retiró la ruta `?photo-test` y su escena: los pasos siguientes son un registro histórico de esa verificación, no instrucciones para la versión actual. El cristal de ensayo y el eco temporal no eran áreas del catálogo ni contenido histórico definitivo.
 
 ## Recorrido de prueba
@@ -15,10 +17,10 @@ El visor y la captura usan la misma cámara y proyección. La validación limita
 
 | Momento | Captura | Punto revisado |
 | --- | --- | --- |
-| Visor | [Ver imagen](capturas/etapa-4-visor-borde.png) | Cristal parcialmente dentro del borde derecho; cámara 3D fuera del área capturada. |
-| Revelado | [Ver imagen](capturas/etapa-4-revelado.png) | La fotografía conserva el recorte visible y llega a una imagen nítida. |
-| Oclusión | [Ver imagen](capturas/etapa-4-occlusion.png) | El panel tapa el cristal desde la posición de prueba lateral. |
-| Eco | [Ver imagen](capturas/etapa-4-eco.png) | Destino temporal pequeño y portal de regreso. |
+| Visor | Ver imagen — captura no incluida (`capturas/etapa-4-visor-borde.png`) | Cristal parcialmente dentro del borde derecho; cámara 3D fuera del área capturada. |
+| Revelado | Ver imagen — captura no incluida (`capturas/etapa-4-revelado.png`) | La fotografía conserva el recorte visible y llega a una imagen nítida. |
+| Oclusión | Ver imagen — captura no incluida (`capturas/etapa-4-occlusion.png`) | El panel tapa el cristal desde la posición de prueba lateral. |
+| Eco | Ver imagen — captura no incluida (`capturas/etapa-4-eco.png`) | Destino temporal pequeño y portal de regreso. |
 
 ## Aceptación y verificación
 
