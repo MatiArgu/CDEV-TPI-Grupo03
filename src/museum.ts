@@ -4,9 +4,10 @@ import type { AreaId } from './catalog';
 import { createCourtyardArrival } from './courtyard';
 import { createGallery, galleryLayout, type GalleryDoor, type GalleryRoom } from './gallery';
 import { createGuard } from './guard';
+import { createHall } from './hall';
 import { installRomeExhibit } from './rome';
 import type { Collider } from './scene';
-import { box, hippedRoof, materials as mat, mesh, outline, palette, shadowBlob, silhouette, toon } from './visual';
+import { box, hippedRoof, materials as mat, mesh, outline, palette, silhouette, toon } from './visual';
 
 export type MuseumWorld = {
   scene: THREE.Scene;
@@ -45,41 +46,53 @@ function sign(parent: THREE.Object3D, label: string, position: [number, number, 
   return panel;
 }
 
-function displayCase(parent: THREE.Object3D, x: number, z: number): void {
-  outline(box(1.3, 0.78, 1.05, mat.sand, [x, 0.47, z], parent), 0.5);
-  const glass = mesh(new THREE.BoxGeometry(1.13, 0.88, 0.88), new THREE.MeshPhongMaterial({ color: 0xb4e9de, transparent: true, opacity: 0.24, depthWrite: false }), [x, 1.29, z], parent);
-  glass.castShadow = false;
-  outline(glass, 0.6);
-  placeModel(x < 0 ? 'statue' : 'rowboat', parent, [x, 0.87, z], x < 0
-    ? { height: 0.62, color: 0xb4a17b }
-    : { width: 0.76, rotation: 0.3 });
-}
-
-function tree(parent: THREE.Object3D, x: number, z: number, seed: number): void {
-  shadowBlob(x + 0.3, z + 0.3, 1.7, 0.8, parent);
-  placeModel(seed % 2 ? 'oak' : 'tree', parent, [x, 0.1, z], { height: 5.2 + seed * 0.12, rotation: seed * 1.3 });
-}
-
 function courtyardDetails(scene: THREE.Scene, colliders: Collider[]): void {
-  const soil = toon(0xb4bda0);
+  const grass = toon(0x9fbd91);
   const bronze = toon(0x567573);
   const glow = new THREE.MeshBasicMaterial({ color: 0xffedbf });
   for (const side of [-1, 1]) {
-    for (const z of [2, 16]) {
-      const x = side * 13;
-      const planter = box(4.2, 0.25, 5.3, mat.sand, [x, 0.16, z], scene);
+    // Garden islands sit between the house entrances, leaving a broad perimeter walk.
+    for (const [index, z] of [4.35, 20.75].entries()) {
+      const x = side * 11.1;
+      const planter = box(3.8, 0.24, 4.2, mat.sand, [x, 0.17, z], scene);
+      planter.name = 'cantero-patio';
       colliders.push(modelCollider(planter));
-      box(3.95, 0.04, 5.05, soil, [x, 0.3, z], scene);
-      for (let i = 0; i < 7; i++) {
-        const angle = i * Math.PI * 2 / 7;
-        const dx = Math.cos(angle) * 1.4;
-        const dz = Math.sin(angle) * 1.85;
-        placeModel(i % 2 ? 'bush' : 'smallBush', scene, [x + dx, 0.31, z + dz], { height: 0.5 + i % 3 * 0.08, rotation: angle });
-        placeModel(i % 2 ? 'flowers' : 'yellowFlowers', scene, [x + dx * 1.15, 0.31, z + dz * 1.12], { height: 0.35 });
+      box(3.56, 0.025, 3.96, grass, [x, 0.3, z], scene).castShadow = false;
+      placeModel(index ? 'tree' : 'oak', scene, [x, 0.32, z], { height: 5.3, rotation: side + index });
+      for (let i = 0; i < 6; i++) {
+        const angle = i * Math.PI / 3;
+        const dx = Math.cos(angle) * 1.2;
+        const dz = Math.sin(angle) * 1.5;
+        placeModel('smallBush', scene, [x + dx, 0.32, z + dz], { height: 0.36, rotation: angle });
+        placeModel(i % 2 ? 'flowers' : 'yellowFlowers', scene, [x + dx * 1.15, 0.32, z + dz * 1.08], { height: 0.3 });
       }
-      const bench = placeModel('bench', scene, [side * 9.35, 0.1, z + 1], { height: 0.9, width: 2.45, rotation: -side * Math.PI / 2 });
+      const bench = placeModel('bench', scene, [side * 8.25, 0.1, z + 0.75], { height: 0.9, width: 2.45, rotation: -side * Math.PI / 2 });
       colliders.push(modelCollider(bench));
     }
+    const lawn = box(3.8, 0.025, 7.2, grass, [side * 11.1, 0.08, 12.55], scene);
+    lawn.name = 'cesped-patio';
+    lawn.castShadow = false;
+    for (const dx of [-1.94, 1.94]) box(0.08, 0.025, 7.35, mat.sand, [side * 11.1 + dx, 0.08, 12.55], scene).castShadow = false;
+    for (const dz of [-3.64, 3.64]) box(3.96, 0.025, 0.08, mat.sand, [side * 11.1, 0.08, 12.55 + dz], scene).castShadow = false;
+    // Low, walkable tufts add texture without blocking the house approaches.
+    const blades = new THREE.BufferGeometry();
+    blades.setAttribute('position', new THREE.Float32BufferAttribute([
+      -0.055, 0, 0, 0.025, 0.17, 0.035, 0.04, 0, 0,
+      0, 0, -0.06, -0.025, 0.12, 0.015, 0, 0, 0.055,
+    ], 3));
+    blades.computeVertexNormals();
+    const bladeMaterial = toon(0x83a97d);
+    bladeMaterial.side = THREE.DoubleSide;
+    const tufts = new THREE.InstancedMesh(blades, bladeMaterial, 90);
+    const transform = new THREE.Object3D();
+    for (let i = 0; i < 90; i++) {
+      transform.position.set(side * 11.1 + ((i * 47 % 89) / 89 - 0.5) * 3.45, 0.1, 12.55 + ((i * 31 % 83) / 83 - 0.5) * 6.9);
+      transform.rotation.y = i * 2.4;
+      transform.scale.setScalar(0.55 + (i % 5) * 0.16);
+      transform.updateMatrix();
+      tufts.setMatrixAt(i, transform.matrix);
+    }
+    scene.add(tufts);
     for (const z of [0.5, 19.5]) {
       const x = side * 7.8;
       const foot = mesh(new THREE.CylinderGeometry(0.23, 0.32, 0.18, 8), bronze, [x, 0.17, z], scene);
@@ -223,39 +236,6 @@ function marbleMaterial(): THREE.MeshToonMaterial {
   return material;
 }
 
-function skylight(parent: THREE.Object3D): void {
-  const glassMaterial = new THREE.MeshPhongMaterial({
-    color: 0xd8e9e4, transparent: true, opacity: 0.62, side: THREE.DoubleSide, depthWrite: false,
-  });
-  const roofY = (x: number): number => 5.46 + 0.78 * (1 - (x / 4.5) ** 2);
-  for (let segment = 0; segment < 8; segment++) {
-    const x0 = -4.5 + segment * 1.125;
-    const x1 = x0 + 1.125;
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute([
-      x0, roofY(x0), -5.0, x1, roofY(x1), -5.0,
-      x0, roofY(x0), -21.3, x1, roofY(x1), -21.3,
-    ], 3));
-    geometry.setIndex([0, 2, 1, 1, 2, 3]);
-    geometry.computeVertexNormals();
-    const pane = mesh(geometry, glassMaterial, [0, 0, 0], parent);
-    pane.castShadow = false;
-    pane.receiveShadow = false;
-  }
-  for (let segment = 0; segment <= 8; segment++) {
-    const x = -4.5 + segment * 1.125;
-    const rib = box(0.065, 0.095, 16.3, mat.darkGold, [x, roofY(x) + 0.01, -13.15], parent);
-    rib.castShadow = segment % 2 === 0;
-  }
-  for (const z of [-5.1, -7.4, -9.7, -12, -14.3, -16.6, -18.9, -21.1]) {
-    const points = Array.from({ length: 17 }, (_, index) => {
-      const x = -4.5 + index * 0.5625;
-      return new THREE.Vector3(x, roofY(x) - 0.025, z);
-    });
-    mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 24, 0.055, 5, false), mat.darkGold, [0, 0, 0], parent);
-  }
-}
-
 function turnstiles(parent: THREE.Object3D): { wings: THREE.Group[]; colliders: Collider[]; blocker: Collider } {
   const metal = toon(0x879d9a);
   const metalTop = toon(0x526b70);
@@ -317,9 +297,6 @@ export function createMuseumScene(): MuseumWorld {
   const marble = marbleMaterial();
   box(8.2, 0.02, 8.3, marble, [0, 0.085, 0.45], scene).castShadow = false;
   pyramid(scene, -3, 8);
-  for (const [x, z, seed] of [[-13, 2, 1], [13, 2, 2], [-13, 16, 3], [13, 16, 4]] as const) {
-    tree(scene, x, z, seed);
-  }
   courtyardDetails(scene, decorationColliders);
   const arrival = createCourtyardArrival(scene, decorationColliders);
   upperFacade(scene);
@@ -343,53 +320,8 @@ export function createMuseumScene(): MuseumWorld {
   const entranceGate = turnstiles(scene);
   const attendant = createGuard(scene);
 
-  // The original hall leads to the first room and later receives the returning route.
-  box(17, 0.14, 18, marble, [0, 0.02, -12.4], scene).castShadow = false;
-  box(2.7, 0.012, 16, mat.sage, [0, 0.1, -12.2], scene).castShadow = false;
-  for (const side of [-1, 1]) {
-    outline(box(0.56, 5.5, 18, mat.cream, [side * 8.55, 2.75, -12.4], scene), 0.38);
-    box(0.06, 1.1, 17.8, mat.sage, [side * 8.24, 0.67, -12.4], scene);
-    for (const z of [-8, -13.2, -18.4]) {
-      column(scene, side * (z === -18.4 ? 7 : 6.4), z, 5.42);
-      if (z !== -18.4) {
-        outline(box(1.35, 0.22, 1.2, mat.sand, [side * 5.3, 0.22, z - 0.5], scene), 0.4);
-        placeModel('statue', scene, [side * 5.3, 0.34, z - 0.5], { height: 2.05, width: 1.05, color: 0xe7ddc4, rotation: -side * 0.3 });
-        sign(scene, z === -8 ? 'MEMORIA' : 'EL INSTANTE', [side * 5.3, 0.44, z + 0.13], 0.8);
-      }
-      outline(box(0.05, 2.2, 2.1, mat.door, [side * 8.19, 2.45, z], scene), 0.38);
-      placeModel('tallWindow', scene, [side * 8.12, 1.32, z], { height: 2.25, width: 1.6, rotation: -side * Math.PI / 2 });
-    }
-    for (const z of [-10.7, -15.8]) {
-      const bench = placeModel('museumBench', scene, [side * 7.35, 0.1, z], { height: 0.9, width: 2.1, rotation: -side * Math.PI / 2 });
-      decorationColliders.push(modelCollider(bench));
-    }
-    const plant = placeModel('plant', scene, [side * 7.4, 0.1, -5.6], { height: 1.7 });
-    decorationColliders.push(modelCollider(plant, 0.13));
-    placeModel('smallPlant', scene, [side * 7.25, 0.1, -19.5], { height: 0.7 });
-  }
-  for (const z of [-8, -13.2, -18.4]) {
-    const points = Array.from({ length: 15 }, (_, index) => {
-      const x = -6.4 + index * 12.8 / 14;
-      return new THREE.Vector3(x, 3.72 + 1.55 * (1 - (x / 6.4) ** 2), z);
-    });
-    mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 30, 0.11, 6, false), mat.sand, [0, 0, 0], scene);
-  }
-  displayCase(scene, -3.9, -10.4);
-  displayCase(scene, 3.9, -15.6);
-  outline(box(17, 1.6, 0.52, mat.cream, [0, 4.7, -21.45], scene), 0.4);
-  sign(scene, 'RECORRIDO EN U · 01—10', [0, 4.6, -21.08], 3.65);
-  for (const side of [-1, 1]) box(4, 0.25, 18, mat.sand, [side * 6.5, 5.5, -12.4], scene).receiveShadow = false;
-  box(9, 0.23, 1.55, mat.sand, [0, 5.55, -4.25], scene);
-  skylight(scene);
-  for (const z of [-7, -12, -17]) {
-    mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.85, 5), mat.darkGold, [0, 5.6, z], scene);
-    const bulb = mesh(new THREE.CylinderGeometry(0.18, 0.32, 0.32, 8), new THREE.MeshBasicMaterial({ color: 0xffebc7 }), [0, 5.03, z], scene);
-    bulb.castShadow = false;
-    outline(bulb, 0.35);
-    const light = new THREE.PointLight(0xffecd1, 0.38, 9);
-    light.position.set(0, 4.9, z);
-    scene.add(light);
-  }
+  createHall(scene, decorationColliders, marble);
+  sign(scene, 'GALERÍA DEL TIEMPO', [0, 4.7, -21.08], 4.4);
   const gallery = createGallery(scene);
   const romeExhibit = installRomeExhibit(gallery.rooms.find((room) => room.id === 'roma')!);
   const exhibits = new Map<AreaId, { artifact: THREE.Object3D; photoSolids: THREE.Object3D[] }>([
@@ -405,25 +337,13 @@ export function createMuseumScene(): MuseumWorld {
     doorBlock,
     { minX: -6.4, maxX: 0.4, minZ: 4.6, maxZ: 11.4 },
     { minX: 3.3, maxX: 4.1, minZ: -1.1, maxZ: -0.25 },
-    { minX: -8.9, maxX: -8.2, minZ: -21.5, maxZ: -3.5 },
-    { minX: 8.2, maxX: 8.9, minZ: -21.5, maxZ: -3.5 },
-    { minX: -4.55, maxX: -3.25, minZ: -10.93, maxZ: -9.87 },
-    { minX: 3.25, maxX: 4.55, minZ: -16.13, maxZ: -15.07 },
   ];
   colliders.push(...entranceGate.colliders);
   colliders.push(...gallery.colliders);
   colliders.push(...romeExhibit.colliders);
-  for (const [x, z] of [[-13, 2], [13, 2], [-13, 16], [13, 16]]) {
-    colliders.push({ minX: x - 0.32, maxX: x + 0.32, minZ: z - 0.32, maxZ: z + 0.32 });
-  }
   for (const side of [-1, 1]) {
     for (const x of [side * 3.3, side * 5.55]) {
       colliders.push({ minX: x - 0.45, maxX: x + 0.45, minZ: -3.56, maxZ: -2.67 });
-    }
-    for (const z of [-8, -13.2, -18.4]) {
-      const columnX = side * (z === -18.4 ? 7 : 6.4);
-      colliders.push({ minX: columnX - 0.45, maxX: columnX + 0.45, minZ: z - 0.45, maxZ: z + 0.45 });
-      if (z !== -18.4) colliders.push({ minX: side * 5.3 - 0.68, maxX: side * 5.3 + 0.68, minZ: z - 1.1, maxZ: z + 0.1 });
     }
   }
   let entranceOpening = false;

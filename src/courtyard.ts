@@ -64,7 +64,6 @@ function townhouses(scene: THREE.Scene, colliders: Collider[]): void {
       outline(box(1.35, 2.28, 0.12, shutters, [0, 1.2, 2.77], house), 0.35);
       box(0.07, 2.2, 0.04, mat.sand, [0, 1.2, 2.85], house);
       for (const x of [-0.17, 0.17]) box(0.035, 0.17, 0.04, mat.gold, [x, 1.08, 2.9], house);
-      plaque(house, ['ATELIER', 'LIBRERÍA', 'CAFÉ DE LA PLAZA', 'CASA DEL RELOJ'][i], 0, 2.83, 2.87, 3.2);
       if (height > 4) {
         box(8.2, 0.15, 0.22, mat.stone, [0, 3.42, 2.77], house);
         placeModel('archedWindow', house, [0, 3.95, 2.76], { height: 1.62, width: 1.14 });
@@ -93,25 +92,54 @@ export function createCourtyardArrival(scene: THREE.Scene, colliders: Collider[]
   for (let x = -159.8; x <= 159.8; x += 9.4) {
     placeModel('railroad', scene, [x, 0.02, 32.2], { width: 2.35, rotation: Math.PI / 2 });
   }
-  // Continuous railing, including the closed arrival gate, protects the entire platform.
-  const barrier = box(35.2, 0.32, 0.38, mat.sand, [0, 0.17, 28.65], scene);
-  colliders.push(modelCollider(barrier));
-  for (const y of [0.45, 1.22]) box(35.2, 0.065, 0.075, iron, [0, y, 28.65], scene);
-  const pickets = new THREE.InstancedMesh(new THREE.BoxGeometry(0.045, 0.89, 0.045), iron, 117);
-  const transform = new THREE.Matrix4();
-  for (let i = 0; i < 117; i++) pickets.setMatrixAt(i, transform.makeTranslation(-17.4 + i * 0.3, 0.79, 28.65));
-  pickets.castShadow = true;
-  scene.add(pickets);
-  for (let x = -17.5; x <= 17.5; x += 3.5) {
-    box(0.13, 1.32, 0.13, iron, [x, 0.68, 28.65], scene);
-    mesh(new THREE.SphereGeometry(0.1, 6, 4), mat.gold, [x, 1.4, 28.65], scene);
+  // A hinged exit occupies the gap beneath the station sign, aligned with the spawn.
+  const gateCenter = 1;
+  const gateHalfWidth = 2.3;
+  const gateLeft = gateCenter - gateHalfWidth;
+  const gateRight = gateCenter + gateHalfWidth;
+  const railZ = 28.65;
+  for (const [left, right] of [[-17.6, gateLeft], [gateRight, 17.6]]) {
+    const barrier = box(right - left, 0.32, 0.38, mat.sand, [(left + right) / 2, 0.17, railZ], scene);
+    colliders.push(modelCollider(barrier));
+    for (const y of [0.45, 1.22]) box(right - left, 0.065, 0.075, iron, [(left + right) / 2, y, railZ], scene);
+    const count = Math.floor((right - left) / 0.3);
+    const pickets = new THREE.InstancedMesh(new THREE.BoxGeometry(0.045, 0.89, 0.045), iron, count);
+    const transform = new THREE.Matrix4();
+    for (let i = 0; i < count; i++) pickets.setMatrixAt(i, transform.makeTranslation(left + (i + 0.5) * (right - left) / count, 0.79, railZ));
+    pickets.castShadow = true;
+    scene.add(pickets);
+    for (let x = left + 0.1; x < right; x += 3.5) {
+      box(0.13, 1.32, 0.13, iron, [x, 0.68, railZ], scene);
+      mesh(new THREE.SphereGeometry(0.1, 6, 4), mat.gold, [x, 1.4, railZ], scene);
+    }
   }
+  const gateLeaves: THREE.Group[] = [];
+  for (const side of [-1, 1]) {
+    const hingeX = gateCenter + side * gateHalfWidth;
+    const leaf = new THREE.Group();
+    leaf.name = `porton-anden:${side}`;
+    leaf.position.set(hingeX, 0, railZ);
+    scene.add(leaf);
+    gateLeaves.push(leaf);
+    for (const x of [0, -side * (gateHalfWidth - 0.06)]) box(0.09, 1.35, 0.09, iron, [x, 0.78, 0], leaf);
+    for (const y of [0.15, 0.73, 1.43]) box(gateHalfWidth, 0.09, 0.09, iron, [-side * gateHalfWidth / 2, y, 0], leaf);
+    for (let i = 1; i <= 7; i++) box(0.045, 1.2, 0.045, iron, [-side * i * 0.285, 0.79, 0], leaf);
+    // Visible hinge barrels, pull handle and latch distinguish the leaves from the fixed fence.
+    for (const y of [0.34, 1.25]) mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.18, 8), mat.gold, [0, y, 0], leaf);
+    box(0.08, 0.3, 0.1, mat.gold, [-side * 2.05, 0.92, -0.1], leaf);
+    box(0.25, 0.055, 0.12, mat.gold, [-side * 2.19, 0.74, -0.08], leaf);
+    leaf.rotation.y = side * 0.42;
+  }
+  // The residual opening is narrower than the player's diameter throughout the closing motion.
+  // Reserve the handles' closed position so the moving leaves cannot pin a visitor.
+  const gateColliders = gateLeaves.map((leaf) => ({ ...modelCollider(leaf), minZ: railZ - 0.2 }));
+  colliders.push(...gateColliders);
   const stationSign = new THREE.Group();
-  stationSign.position.set(-8.2, 0, 28.55);
+  stationSign.position.set(gateCenter, 0, railZ);
   stationSign.rotation.y = Math.PI;
   scene.add(stationSign);
-  for (const x of [-2.3, 2.3]) {
-    const post = box(0.14, 3.25, 0.14, iron, [x, 1.65, 0], stationSign);
+  for (const x of [-gateHalfWidth, gateHalfWidth]) {
+    const post = box(0.18, 3.25, 0.18, iron, [x, 1.65, 0], stationSign);
     colliders.push(modelCollider(post));
   }
   plaque(stationSign, 'ESTACIÓN · MUSEO DEL TIEMPO', 0, 2.95, 0.05, 5.2);
@@ -136,6 +164,7 @@ export function createCourtyardArrival(scene: THREE.Scene, colliders: Collider[]
   const gaze = new THREE.Vector3();
   let departed = false;
   let speed = 0;
+  let gateProgress = 0;
   return {
     spawn: new THREE.Vector2(1, 26.3),
     update: (delta: number, camera: THREE.Camera) => {
@@ -145,6 +174,14 @@ export function createCourtyardArrival(scene: THREE.Scene, colliders: Collider[]
       if (!departed && camera.position.z > -3 && gaze.z > 0.55) departed = true;
       if (!departed) return;
       const step = Math.min(delta, 0.05);
+      if (gateProgress < 1) {
+        gateProgress = Math.min(1, gateProgress + step / 1.2);
+        const eased = gateProgress * gateProgress * (3 - 2 * gateProgress);
+        gateLeaves[0].rotation.y = -0.42 * (1 - eased);
+        gateLeaves[1].rotation.y = 0.42 * (1 - eased);
+        gateLeaves.forEach((leaf, index) => Object.assign(gateColliders[index], modelCollider(leaf), { minZ: railZ - 0.2 }));
+        if (gateProgress < 1) return;
+      }
       speed = Math.min(6.5, speed + step * 0.85);
       const distance = speed * step;
       train.position.x += distance;
