@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import { modelCollider, placeModel } from './assets';
-import type { AreaId } from './catalog';
+import { disposeHistoricalScene, type HistoricalWorld } from './history';
 import type { GalleryRoom } from './gallery';
 import { galleryLayout } from './museumLayout';
-import { exhibition, exhibitSpot, plinth } from './exhibition';
+import { exhibition, exhibitSpot, plinth, exhibitLabel } from './exhibition';
+import { addLowPolySky } from './sky';
 import { createRouteHelp } from './help';
 import { createRomanHelmet as helmet } from './helmet';
 import type { Collider } from './scene';
@@ -78,20 +79,6 @@ export function installRomeExhibit(room: GalleryRoom): { artifact: THREE.Object3
     minZ: room.center.y - 1.01, maxZ: room.center.y + 0.11,
   };
   return { artifact, photoSolids: [base, top, foot, ...photoSolids], colliders: [collider, ...colliders] };
-}
-
-function exhibitLabel(parent: THREE.Object3D, title: string, subtitle: string, position: [number, number, number], width: number): void {
-  const canvas = document.createElement('canvas');
-  canvas.width = 768; canvas.height = 192;
-  const ctx = canvas.getContext('2d')!;
-  ctx.fillStyle = '#252d29'; ctx.fillRect(0, 0, 768, 192);
-  ctx.strokeStyle = '#b2986f'; ctx.strokeRect(8, 8, 752, 176);
-  ctx.textAlign = 'center'; ctx.fillStyle = '#e4d7b7';
-  ctx.font = '38px Georgia'; ctx.fillText(title, 384, 85);
-  ctx.font = '20px sans-serif'; ctx.fillText(subtitle, 384, 135);
-  const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
-  const label = mesh(new THREE.PlaneGeometry(width, width / 4), new THREE.MeshBasicMaterial({ map: texture }), position, parent);
-  label.castShadow = false;
 }
 
 function amphora(parent: THREE.Object3D, position: [number, number, number]): THREE.Group {
@@ -209,20 +196,9 @@ function arena(scene: THREE.Scene, stone: THREE.Material, trim: THREE.Material):
   }
 }
 
-export type RomeWorld = {
-  id: AreaId;
-  scene: THREE.Scene;
-  colliders: Collider[];
-  spawn: THREE.Vector2;
-  artifact: THREE.Vector3;
-  helpActive: () => boolean;
-  update: (delta: number) => void;
-  dispose: () => void;
-};
-
-export function createRomeWorld(): RomeWorld {
+export function createRomeWorld(): HistoricalWorld {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xd9dfcd);
+  addLowPolySky(scene);
   scene.fog = new THREE.Fog(0xd9dfcd, 42, 95);
   scene.add(new THREE.HemisphereLight(0xfff2d4, 0x779e98, 1.85));
   const sun = new THREE.DirectionalLight(0xffebc8, 1.6);
@@ -304,19 +280,6 @@ export function createRomeWorld(): RomeWorld {
     id: 'roma', scene, colliders, spawn: new THREE.Vector2(0, 7.5), artifact: artifact.position.clone(),
     helpActive: guide.active,
     update: guide.update,
-    dispose: () => {
-      const geometries = new Set<THREE.BufferGeometry>();
-      const materials = new Set<THREE.Material>();
-      scene.traverse((object) => {
-        if (!(object instanceof THREE.Mesh || object instanceof THREE.Line)) return;
-        if (object instanceof THREE.SkinnedMesh) object.skeleton.dispose();
-        if (!object.userData.sharedAsset) geometries.add(object.geometry);
-        const list = Array.isArray(object.material) ? object.material : [object.material];
-        if (!object.userData.sharedAsset || object.userData.ownedMaterial) list.forEach((material) => materials.add(material));
-      });
-      geometries.forEach((geometry) => geometry.dispose());
-      materials.forEach((material) => material.dispose());
-      scene.clear();
-    },
+    dispose: () => disposeHistoricalScene(scene),
   };
 }

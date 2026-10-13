@@ -186,3 +186,34 @@ Revisión del 13 de octubre de 2026. Sustituye la planta anterior de diez salas 
 ![Fotografía real durante el revelado en la mano](capturas/polaroid-revelado-fisico.png)
 
 ![Panfleto físico con el recorrido nuevo y el recuerdo de Roma](capturas/panfleto-fisico-cinco-salas.png)
+
+
+## Patio, paredes y ciclo completo de Egipto
+
+Segunda revisión del 13 de octubre de 2026. Esta sección actualiza el estado de las revisiones anteriores: Egipto y Roma son jugables, con guardado local; Medieval, Japón y Luna siguen siendo salas visitables sin viaje histórico.
+
+- Patio: una base continua con baldosas instanciadas sustituye las superficies superpuestas. El camino claro rodea la pirámide y conecta estación, guardia y entrada; conserva el césped y los canteros.
+- Cielo: cúpula facetada pastel y siete nubes low-poly, también presentes en los viajes. Iluminación exterior ligeramente más clara y luz ambiental interior ajustada sin perder los focos cálidos.
+- Paredes: acabado de piedra/revoque, zócalos, paneles y pilastras en las salas. Roma mantiene sus dimensiones, el casco a escala 0,55 y sus focos.
+- Egipto: escarabajo alado, sarcófago, estatua, columnas de loto, vasijas y relieves en el museo. El viaje lleva a un patio ceremonial con pirámides lejanas, pilonos, obeliscos, figuras congeladas y un templo con altar, antorchas y polvo suspendido. Las formas y motivos son ilustraciones originales inspiradas en Egipto, sin pretensión de reconstrucción arqueológica.
+- Ciclo completo: fotografiar el escarabajo, revelar, viajar, recogerlo con E y regresar. Egipto habilita después la fotografía de Roma; todas las puertas del museo siguen siendo transitables desde el principio. Ayuda visual tras 20 segundos en ambos mundos.
+- Persistencia: panfleto y fotografías reales reducidas a JPEG se guardan por ID al recibir el papel y al regresar de cada viaje. La recarga retoma desde el hall; un viaje interrumpido debe repetirse. El panfleto muestra ambos recuerdos y 2/5 al terminar los dos viajes disponibles. Menú con reinicio confirmado y control del sonido ambiental.
+- Se mantienen los 31 modelos Kenney existentes. Los elementos nuevos son geometría y texturas procedurales propias; no se añadieron dependencias ni recursos externos.
+
+### Verificación de esta revisión
+
+- Tipos, compilación y `git diff --check`: correctos. Vite conserva el aviso de bundle mayor de 500 kB.
+- Compilado de producción: 31 GLB y cuatro texturas cargados sin errores; arranque jugable, restauración de las dos fotos y modo estudio comprobados.
+- Recorrido real en Chrome: guardia, Egipto, fotografía inválida y reintento, fotografía válida, viaje, recogida, regreso, recarga, Roma y segundo recuerdo. Pausa durante la transición y bloqueo de movimiento/panfleto durante fotografía verificados.
+- Fotografía en ambas exhibiciones: centro, borde y visibilidad parcial aceptados; fuera del encuadre y oclusión total rechazados.
+- Ruta central del templo libre para el radio del jugador, ayuda a los 20 segundos, liberación y recreación de la escena histórica verificadas. Siete muestras del pavimento y 39 del techo de las cinco salas sin huecos.
+- Recarga con los dos recuerdos, reinicio, silencio, datos malformados y JPEG dañado comprobados. Reordenar Egipto temporalmente al puesto cinco cambió sala, número y panfleto sin perder la foto asociada a su ID.
+- Revisión visual con Chrome/SwiftShader; la automatización avanza el tiempo del controlador para recorrer las escenas. Queda pendiente medir FPS en una GPU de escritorio real.
+
+| Escenario | Captura |
+| --- | --- |
+| Patio, suelo y cielo | [Vista exterior](capturas/patio-cielo-pavimento.png) |
+| Paredes de Roma | [Sala romana](capturas/roma-paredes-paneladas.png) |
+| Exhibición egipcia | [Escarabajo y sala](capturas/egipto-exhibicion.png) |
+| Viaje a Egipto | [Patio ceremonial](capturas/egipto-templo-patio.png) y [templo](capturas/egipto-templo-interior.png) |
+| Ambos viajes completados | [Panfleto con dos recuerdos](capturas/egipto-roma-dos-recuerdos.png) |

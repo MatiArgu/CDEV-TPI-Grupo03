@@ -4,7 +4,7 @@
 
 Este documento convierte [Proyecto_general.md](Proyecto_general.md) en entregas pequeñas y verificables. Es un plan de trabajo: **no autoriza a implementar las siete etapas juntas**. Antes de comenzar la siguiente, se revisa el resultado de la anterior, especialmente la dirección visual y la fotografía.
 
-El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un navegador de escritorio. El museo tiene cinco épocas. Hoy solo Roma tiene viaje histórico; Egipto, Medieval, Japón Feudal y Luna se pueden recorrer como salas en preparación. La siguiente entrega histórica sigue siendo Egipto; los otros tres viajes requieren entregas posteriores. La calidad de la imagen ilustrada, la Polaroid y las transiciones tiene prioridad sobre el tamaño de los escenarios.
+El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un navegador de escritorio. El museo tiene cinco épocas. Egipto y Roma tienen sus viajes completos. Medieval, Japón Feudal y Luna se pueden recorrer como salas en preparación; sus viajes requieren entregas posteriores. La calidad de la imagen ilustrada, la Polaroid y las transiciones tiene prioridad sobre el tamaño de los escenarios.
 
 ### Decisiones acordadas
 
@@ -65,7 +65,7 @@ El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un
 
 **Aceptación:** todo el ciclo funciona sin intervención de desarrollo. Al volver, Roma figura completada y el panfleto físico muestra 1/5 y conserva la foto y el casco recuperado. Se puede seguir recorriendo el museo.
 
-### 7. Egipto y cierre del MVP
+### 7. Egipto y cierre del MVP — implementada
 
 **Objetivo:** demostrar que el sistema es reutilizable y cerrar una experiencia de dos épocas.
 
@@ -78,7 +78,7 @@ El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un
 - **Visual:** revisar cada escenario nuevo contra la etapa 1: colores pastel, lectura de siluetas, contornos selectivos y sensación de tiempo detenido. Limitar el tamaño del escenario si hace falta para preservar la calidad.
 - **Foto:** probar artefacto centrado, en el borde, fuera del cuadro, parcialmente visible y completamente tapado; comparar cada captura con lo que se veía en el encuadre.
 - **Estado:** probar panfleto, cámara, pausa y transiciones en distintos órdenes para impedir acciones incompatibles o controles bloqueados.
-- **Progreso:** actualmente comprobar el regreso de Roma y 1/5 durante la sesión. Al implementar persistencia: completar Egipto y Roma, recargar y reiniciar. Intercambiar Egipto y Luna debe mover la sala y su número y conservar los datos por ID.
+- **Progreso:** completar Egipto y Roma, comprobar ambos recuerdos y 2/5, recargar y reiniciar. Intercambiar Egipto y Luna debe mover la sala y su número y conservar los datos por ID.
 - **Recorrido:** probar las siete entregas en el navegador, además de ejecutar las comprobaciones de compilación y tipos disponibles en cada etapa.
 
 Cada entrega se cierra con una demostración del recorrido correspondiente, una revisión de sus criterios y una lista breve de pendientes. Los problemas que rompan el flujo de esa entrega se corrigen antes de iniciar la siguiente.

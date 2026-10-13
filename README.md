@@ -1,6 +1,6 @@
 # Museo de viajes en el tiempo
 
-Proyecto de videojuego 3D en primera persona para navegador. El recorrido comienza en el andén de una plaza: al mirar atrás, el portón termina de cerrarse y el tren parte; el museo ficticio inspirado en el Louvre queda enfrente. Casas de uno y dos pisos, jardines y una baranda delimitan el patio. Se puede recibir un panfleto, recorrer un hall de piedra oscura con obras, vitrinas y luz cálida y recorrer cinco salas en U: Antiguo Egipto → Antigua Roma → Época Medieval → Japón Feudal → Llegada a la Luna. Egipto y Roma ocupan el ala izquierda, Medieval conecta ambas alas al fondo y Japón y Luna regresan por la derecha. Todas son visitables; Roma conserva el único viaje histórico disponible.
+Proyecto de videojuego 3D en primera persona para navegador. El recorrido comienza en el andén de una plaza: al mirar atrás, el portón termina de cerrarse y el tren parte; el museo ficticio inspirado en el Louvre queda enfrente. Casas de uno y dos pisos, jardines y una baranda delimitan el patio. Se puede recibir un panfleto, recorrer un hall de piedra oscura con obras, vitrinas y luz cálida y recorrer cinco salas en U: Antiguo Egipto → Antigua Roma → Época Medieval → Japón Feudal → Llegada a la Luna. Egipto y Roma ocupan el ala izquierda, Medieval conecta ambas alas al fondo y Japón y Luna regresan por la derecha. Todas son visitables; Egipto y Roma tienen viajes históricos completos, en ese orden. El patio tiene pavimento continuo, cielo de facetas y nubes low-poly; el interior combina paneles de piedra, molduras y luz cálida.
 
 ## Ejecutar el prototipo
 
@@ -11,11 +11,15 @@ npm install
 npm run dev
 ```
 
-Abrir la dirección local que muestra Vite y hacer clic en **Comenzar visita**. Usar **WASD** para caminar, mantener **Shift** para correr y mover el **mouse** para mirar. Acercarse al guardia junto a la entrada y pulsar **E** para recibir el panfleto; **M** levanta y despliega el papel en las manos, baja la mirada y libera el cursor. **M** o un clic lo guardan y recuperan el mouse. En el hall, abrir la puerta 01 con **E**, recorrer Egipto y abrir la 02 para entrar en Roma. Dentro de Roma, pulsar **C** para equipar la Polaroid y hacer **clic** para fotografiar el casco. Una foto válida lleva a la naumaquia; seguir la pasarela y recoger el casco con **E** para regresar y ver 1/5 en el panfleto. **Escape** pausa; hacer clic en **Volver al recorrido** recupera el control del mouse.
+Abrir la dirección local que muestra Vite y hacer clic en **Comenzar visita**. **WASD** camina, **Shift** corre y el **mouse** controla la mirada. Recibir el panfleto del guardia con **E**; **M** lo levanta y libera el cursor, **M o clic** lo guardan. Abrir las puertas con **E**.
+
+En la sala 01 (Egipto), **C** prepara la Polaroid y **clic** fotografía el escarabajo. Una foto válida lleva al templo ceremonial; recorrerlo y recoger el amuleto con **E** para volver. Luego completar Roma, sala 02, fotografiando el casco y recuperándolo en la naumaquia. El panfleto conserva ambos recuerdos y muestra **2/5**. Las otras tres épocas son visitables, sin viajes.
+
+**Escape** pausa. Inicio y pausa incluyen sonido y **Reiniciar visita**, que pide confirmar antes de borrar las fotos. El panfleto recibido y las épocas completadas se guardan localmente por ID; al recargar se continúa desde el hall. Un viaje interrumpido antes de recoger el artefacto debe repetirse.
 
 Para revisar el estilo de la etapa 1 sin caminar, abrir `?view=far`, `?view=mid` o `?view=near` al final de la dirección local. En ese modo se puede orbitar con el mouse, acercar con la rueda y cambiar entre las tres vistas. `npm run typecheck` revisa tipos y `npm run build` genera la versión estática en `dist/`.
 
-El laboratorio temporal de la etapa 4 fue retirado de la experiencia pública. Roma es el único viaje histórico jugable en esta entrega. Las otras cuatro salas se pueden recorrer y están señalizadas como viajes en preparación. La Polaroid se levanta con las manos, expulsa una foto real del encuadre y la revela como objeto 3D; el panfleto también es físico. Solo quedan avisos contextuales, encuadre y pausa en pantalla. El progreso todavía vive solo en la sesión: la persistencia local y la opción de reiniciar llegarán con Egipto. El modo de estudio conserva la fachada, la vegetación y el casco de gladiador de la etapa 1.
+La Polaroid expulsa y revela una fotografía real como objeto 3D, y el panfleto se despliega en las manos. Solo quedan avisos contextuales, encuadre y pausa en pantalla. La ayuda de los mundos aparece tras 20 segundos de exploración. El progreso se conserva en este navegador; no existe backend ni sincronización entre dispositivos.
 
 [Revisión visual y capturas de la etapa 1](docs/Revision_etapa_1.md).
 [Revisión del recorrido de la etapa 2](docs/Revision_etapa_2.md).
