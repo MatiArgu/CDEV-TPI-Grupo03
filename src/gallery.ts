@@ -191,7 +191,7 @@ export function createGallery(scene: THREE.Scene): {
     const lamp = mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.06, 16), new THREE.MeshBasicMaterial({ color: dark.clone() }), [0, 5.31, 3.5], root);
     lamp.castShadow = false;
     const light = new THREE.PointLight(0xffedce, 0, 9);
-    light.visible = false;
+    // Keep the light list stable: opening doors changes intensity, not shader variants.
     light.position.set(0, 4.5, 3.5);
     root.add(light);
     const bridgeLights: THREE.PointLight[] = [];
@@ -213,7 +213,6 @@ export function createGallery(scene: THREE.Scene): {
       (lamp.material as THREE.MeshBasicMaterial).color.copy(dark).lerp(new THREE.Color(0xfff0c8), strength);
       light.intensity = strength * 5;
       bridgeLights.forEach((item) => { item.intensity = strength * 9; });
-      if (strength > 0) light.visible = true;
       insideSign.visible = strength > 0.08;
     };
   });

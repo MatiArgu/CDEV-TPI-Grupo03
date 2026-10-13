@@ -85,6 +85,21 @@ function displayCase(scene: THREE.Scene, colliders: Collider[], x: number, z: nu
       : { height: 0.67, color: 0xd4c5a6, rotation: 0.25 });
 }
 
+/** Slender limestone shaft with restrained stepped base and capital. */
+function hallColumn(parent: THREE.Object3D, x: number, z: number): THREE.Group {
+  const column = new THREE.Group();
+  column.name = 'columna-hall'; column.position.set(x, 0.15, z); parent.add(column);
+  const limestone = toon(0xc6c2ac);
+  const edge = toon(0xaaa38c);
+  box(0.88, 0.13, 0.88, edge, [0, 0.065, 0], column);
+  box(0.74, 0.13, 0.74, limestone, [0, 0.195, 0], column);
+  mesh(new THREE.CylinderGeometry(0.28, 0.34, 4.36, 12), limestone, [0, 2.48, 0], column);
+  for (const y of [0.3, 4.67]) mesh(new THREE.CylinderGeometry(0.37, 0.37, 0.1, 12), edge, [0, y, 0], column);
+  mesh(new THREE.CylinderGeometry(0.43, 0.32, 0.19, 12), limestone, [0, 4.81, 0], column);
+  box(0.88, 0.14, 0.88, edge, [0, 4.975, 0], column);
+  return column;
+}
+
 export function createHall(scene: THREE.Scene, colliders: Collider[]): void {
   const { halfWidth, frontZ, hallBackZ, wallHeight, wallThickness, floorY } = museumLayout;
   const depth = frontZ - hallBackZ;
@@ -136,28 +151,29 @@ export function createHall(scene: THREE.Scene, colliders: Collider[]): void {
       box(0.26, 0.35, 0.32, glow, [side * (wallFace - 0.34), 3.03, z], scene).castShadow = false;
       box(0.32, 0.05, 0.42, bronze, [side * (wallFace - 0.34), 3.23, z], scene);
     }
-    for (const [index, z] of [-8.8, -12.8].entries()) {
-      const art = new THREE.Group();
-      art.position.set(side * (wallFace - 0.12), 0, z);
-      art.rotation.y = -side * Math.PI / 2;
-      scene.add(art);
-      const variant = index + (side > 0 ? 2 : 0);
-      artwork(art, variant, ['LA MEMORIA', 'EL VIAJE', 'EL INSTANTE', 'EL HORIZONTE'][variant]);
-      const bench = placeModel('museumBench', scene, [side * (wallFace - 0.95), 0.15, z], { height: 0.8, width: 2.1, rotation: -side * Math.PI / 2 });
-      colliders.push(modelCollider(bench));
-      const id: ModelId = side < 0 ? (index === 0 ? 'statue' : 'pot') : (index === 0 ? 'rowboat' : 'column');
-      displayCase(scene, colliders, side * 9.45, z, id);
-      exhibitSpot(scene, side * 9.45, z, 5.08, 12, 2.15, true);
-    }
-    for (const z of bays.slice(0, 2)) {
-      const x = side * (wallFace - 1.15);
-      box(1, 0.72, 1, panelColor, [x, 0.51, z], scene);
-      const cap = box(1.14, 0.1, 1.14, stone, [x, 0.91, z], scene);
-      colliders.push(modelCollider(cap));
-      placeModel('statue', scene, [x, 0.97, z], { height: 1.82, width: 0.9, color: 0xc3b99f, rotation: -side * Math.PI / 2 });
-    }
+    // Three separate viewing bays: sculpture, seating with artwork, then a single case.
+    const statueX = side * 10.15;
+    const pedestal = box(1.24, 0.68, 1.24, panelColor, [statueX, 0.49, -8.1], scene);
+    pedestal.name = 'pedestal-hall';
+    const cap = box(1.36, 0.08, 1.36, stone, [statueX, 0.87, -8.1], scene);
+    colliders.push(modelCollider(cap));
+    placeModel('statue', scene, [statueX, 0.92, -8.1], { height: 1.85, width: 0.9, color: 0xc3b99f, rotation: -side * Math.PI / 2 });
+    exhibitSpot(scene, statueX, -8.1, 5.08, 13, 2.1);
+
+    const art = new THREE.Group();
+    art.name = 'cuadro-hall';
+    art.position.set(side * (wallFace - 0.12), 0, -12.7);
+    art.rotation.y = -side * Math.PI / 2;
+    scene.add(art);
+    artwork(art, side < 0 ? 0 : 3, side < 0 ? 'LA MEMORIA' : 'EL HORIZONTE');
+    const bench = placeModel('museumBench', scene, [side * 9.5, 0.15, -12.7], { height: 0.8, width: 2.1, rotation: side * Math.PI / 2 });
+    bench.name = 'banco-contemplacion';
+    colliders.push(modelCollider(bench));
+
+    displayCase(scene, colliders, side * 10.15, -17.3, side < 0 ? 'pot' : 'rowboat');
+    exhibitSpot(scene, side * 10.15, -17.3, 5.08, 12, 1.85, true);
     for (const z of bays) {
-      const column = placeModel('column', scene, [side * naveX, 0.15, z], { height: 5.03, width: 0.9, depth: 0.9, color: 0xa9a48f });
+      const column = hallColumn(scene, side * naveX, z);
       colliders.push(modelCollider(column));
     }
     const aisleWidth = halfWidth - naveX + wallThickness / 2;

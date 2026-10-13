@@ -11,7 +11,6 @@ import { createRomeWorld } from './rome';
 import { createEgyptWorld } from './egypt';
 import type { HistoricalWorld } from './history';
 import { loadProgress, photoForSave, resetProgress, saveProgress } from './progress';
-import { createAmbience } from './audio';
 import { createStudyScene } from './scene';
 import { playTimeTransition } from './timeTransition';
 
@@ -35,7 +34,7 @@ try {
   startButton.textContent = 'Preparando la visita…';
   await loadModels();
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -45,6 +44,7 @@ try {
   let scene: THREE.Scene;
   let updateControls: (delta: number) => void;
   let updateScene: (delta: number) => void = () => {};
+  let hasHeldItems = () => false;
 
   if (studyMode) {
     const world = createStudyScene();
@@ -94,6 +94,7 @@ try {
     updateScene = updateMuseum;
     const pamphletView = createPamphlet(camera);
     const cameraModel = createCameraModel(camera);
+    hasHeldItems = () => pamphletView.root.visible || cameraModel.root.visible;
     const toast = document.querySelector<HTMLElement>('#game-toast')!;
     const help = document.querySelector<HTMLElement>('#player-help')!;
     const viewfinder = document.querySelector<HTMLElement>('#photo-viewfinder')!;
@@ -108,13 +109,11 @@ try {
     let acceptedPhoto: string | null = null;
     let museumColliders = [...world.colliders];
     let toastTimer = 0;
-    const ambient = createAmbience();
+    let soundEnabled = true;
     const soundButton = document.querySelector<HTMLButtonElement>('#sound-button')!;
-    document.querySelector('#menu-button')!.addEventListener('click', () => { void ambient.start().catch(() => {}); });
     soundButton.addEventListener('click', () => {
-      const enabled = ambient.toggle(); soundButton.textContent = enabled ? 'Sonido: activado' : 'Sonido: silenciado';
+      const enabled = soundEnabled = !soundEnabled; soundButton.textContent = enabled ? 'Sonido: activado' : 'Sonido: silenciado';
       soundButton.setAttribute('aria-pressed', String(enabled));
-      void ambient.start().catch(() => {});
     });
     document.querySelector('#restart-button')!.addEventListener('click', () => {
       if (!window.confirm('¿Reiniciar la visita y borrar las fotos y recuerdos guardados?')) return;
@@ -160,7 +159,7 @@ try {
       const photo = captureFrame(renderer, viewfinder);
       const valid = artifactVisible(camera, exhibit.artifact, exhibit.photoSolids, frame);
       cameraModel.root.visible = true;
-      if (ambient.enabled()) playShutter();
+      if (soundEnabled) playShutter();
       await cameraModel.develop(photo, `${areaCatalog[active].name.toUpperCase()} / ${String(world.rooms.find((room) => room.id === active)!.number).padStart(2, '0')}`);
       if (!valid) {
         cameraModel.hidePrint();
@@ -309,7 +308,6 @@ try {
     updateControls = (delta) => {
       updatePlayer(delta);
       const running = app.dataset.playState !== 'paused' && app.dataset.playState !== 'intro';
-      ambient.update(app.dataset.location ?? 'exterior', !running);
       if (running) {
         pamphletView.update(delta);
         cameraModel.update(delta);
@@ -332,18 +330,27 @@ try {
 
   function renderFrame(): void {
     renderer.render(scene, camera);
-    if (studyMode) return;
+    if (studyMode || !hasHeldItems()) return;
     const background = scene.background;
     scene.background = null;
     renderer.autoClear = false;
     renderer.clearDepth();
+    // Held objects use unlit materials and never need another shadow or matrix pass.
+    const updateShadows = renderer.shadowMap.autoUpdate;
+    renderer.shadowMap.autoUpdate = false;
+    scene.matrixWorldAutoUpdate = false;
     camera.layers.set(1);
     renderer.render(scene, camera);
     camera.layers.set(0);
+    scene.matrixWorldAutoUpdate = true;
+    renderer.shadowMap.autoUpdate = updateShadows;
     renderer.autoClear = true;
     scene.background = background;
   }
 
+  // Prepare material programs before the visitor starts turning the camera.
+  await renderer.compileAsync(scene, camera);
+  renderFrame();
   let previousTime = performance.now();
   renderer.setAnimationLoop((time) => {
     const delta = (time - previousTime) / 1000;

@@ -1,23 +1,20 @@
 import * as THREE from 'three';
 
-/** Faceted pastel dome and a few low-poly cloud silhouettes; no textures or effects. */
-export function addLowPolySky(scene: THREE.Scene, desert = false): void {
-  const horizon = new THREE.Color(desert ? 0xf0ddba : 0xd9e8dd);
-  const zenith = new THREE.Color(desert ? 0x87bbc3 : 0x83bfcf);
-  scene.background = horizon;
-  const geometry = new THREE.SphereGeometry(85, 20, 12).toNonIndexed();
-  const positions = geometry.attributes.position;
-  const colors: number[] = [];
-  for (let i = 0; i < positions.count; i += 3) {
-    const height = (positions.getY(i) + positions.getY(i + 1) + positions.getY(i + 2)) / 255;
-    const color = horizon.clone().lerp(zenith, THREE.MathUtils.clamp(height, 0, 1) * 0.72);
-    for (let j = 0; j < 3; j++) colors.push(color.r, color.g, color.b);
-  }
-  geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-  const dome = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, depthWrite: false, fog: false }));
-  dome.name = 'cielo-lowpoly'; dome.frustumCulled = false; dome.renderOrder = -100;
-  dome.onBeforeRender = (_renderer, _scene, camera) => { camera.getWorldPosition(dome.position); dome.updateMatrixWorld(); };
-  scene.add(dome);
+/** Infinite smooth gradient; the background has no visible geometry or parallax. */
+export function addSky(scene: THREE.Scene, desert = false): void {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512; canvas.height = 256;
+  const context = canvas.getContext('2d')!;
+  const gradient = context.createLinearGradient(0, 0, 0, 144);
+  gradient.addColorStop(0, desert ? '#80b8cc' : '#80b6d2');
+  gradient.addColorStop(0.48, desert ? '#b3d1d7' : '#b0d2e0');
+  gradient.addColorStop(0.88, desert ? '#eee0c4' : '#d9e8dd');
+  gradient.addColorStop(1, desert ? '#f0ddba' : '#d9e8dd');
+  context.fillStyle = gradient; context.fillRect(0, 0, 512, 256);
+  const background = new THREE.CanvasTexture(canvas);
+  background.colorSpace = THREE.SRGBColorSpace;
+  background.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = background;
   const cloudGeometry = new THREE.IcosahedronGeometry(1, 1);
   const cloudPositions = cloudGeometry.attributes.position;
   const cloudColors: number[] = [];

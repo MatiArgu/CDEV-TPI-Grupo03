@@ -33,5 +33,6 @@ export function disposeHistoricalScene(scene: THREE.Scene): void {
   geometries.forEach((geometry) => geometry.dispose());
   materials.forEach((material) => material.dispose());
   textures.forEach((texture) => texture.dispose());
+  if (scene.background instanceof THREE.Texture) scene.background.dispose();
   scene.clear();
 }

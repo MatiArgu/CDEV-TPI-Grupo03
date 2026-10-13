@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { batchStaticMeshes } from './staticMeshes';
 import { modelCollider, placeModel } from './assets';
 import type { Collider } from './scene';
 import { box, hippedRoof, materials as mat, mesh, outline, toon } from './visual';
@@ -68,6 +69,7 @@ function townhouses(scene: THREE.Scene, colliders: Collider[]): void {
         box(8.2, 0.15, 0.22, mat.stone, [0, 3.42, 2.77], house);
         placeModel('archedWindow', house, [0, 3.95, 2.76], { height: 1.62, width: 1.14 });
       }
+      batchStaticMeshes(house);
     }
     // Join the townhouses to the museum so the front corners cannot be bypassed.
     const wall = box(4.5, 3.2, 0.65, mat.cream, [side * 14.7, 1.6, -3.9], scene);
@@ -168,11 +170,11 @@ export function createCourtyardArrival(scene: THREE.Scene, colliders: Collider[]
   return {
     spawn: new THREE.Vector2(1, 26.3),
     update: (delta: number, camera: THREE.Camera) => {
-      if (!train.visible) return;
+      if (!train.visible) return false;
       camera.getWorldDirection(gaze);
       // Looking back from the plaza starts one departure. Looking away never resets it.
       if (!departed && camera.position.z > -3 && gaze.z > 0.55) departed = true;
-      if (!departed) return;
+      if (!departed) return false;
       const step = Math.min(delta, 0.05);
       if (gateProgress < 1) {
         gateProgress = Math.min(1, gateProgress + step / 1.2);
@@ -180,13 +182,14 @@ export function createCourtyardArrival(scene: THREE.Scene, colliders: Collider[]
         gateLeaves[0].rotation.y = -0.42 * (1 - eased);
         gateLeaves[1].rotation.y = 0.42 * (1 - eased);
         gateLeaves.forEach((leaf, index) => Object.assign(gateColliders[index], modelCollider(leaf), { minZ: railZ - 0.2 }));
-        if (gateProgress < 1) return;
+        if (gateProgress < 1) return true;
       }
       speed = Math.min(6.5, speed + step * 0.85);
       const distance = speed * step;
       train.position.x += distance;
       for (const wheel of drivingWheels) wheel.rotation.x += distance / 0.667;
       if (train.position.x > 145) train.visible = false;
+      return true;
     },
   };
 }

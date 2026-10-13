@@ -1,6 +1,6 @@
 # Arquitectura prevista del MVP
 
-Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md), el [inicio en el museo](Revision_etapa_3.md), una [prueba aislada de la Polaroid](Revision_etapa_4.md), el [circuito original de la etapa 5](Revision_etapa_5.md), ahora reducido a cinco salas visitables y el [ciclo romano](Revision_etapa_6.md). El laboratorio temporal de fotografía ya fue retirado. El catálogo y `areaOrder` alimentan la ubicación física, la señalización y el panfleto. La etapa 7 incorpora Egipto, el guardado local, reinicio, audio ambiental y cierre con dos recuerdos.
+Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md), el [inicio en el museo](Revision_etapa_3.md), una [prueba aislada de la Polaroid](Revision_etapa_4.md), el [circuito original de la etapa 5](Revision_etapa_5.md), ahora reducido a cinco salas visitables y el [ciclo romano](Revision_etapa_6.md). El laboratorio temporal de fotografía ya fue retirado. El catálogo y `areaOrder` alimentan la ubicación física, la señalización y el panfleto. La etapa 7 incorpora Egipto, el guardado local, reinicio y cierre con dos recuerdos.
 
 ## Catálogo y orden de las áreas
 
@@ -44,7 +44,15 @@ Shift acelera el movimiento en exploración del museo, Roma y Egipto. La carrera
 
 El guardado usa la clave `museo-del-tiempo:v1`, versión 1 y IDs estables. Cada foto se reduce a JPEG 480 × 360 antes de guardarse, sin modificar la impresión que se revela. El orden **no** se guarda: al recargar se toma el `areaOrder` actual. Los datos malformados o de otra versión se descartan; un fallo de almacenamiento permite seguir jugando y muestra un aviso. Se retoma desde el hall con las entradas de las salas completadas abiertas. Reiniciar requiere confirmar y borra únicamente la partida de este juego.
 
-El ambiente sonoro se sintetiza con Web Audio, sin archivos externos. Empieza tras un clic, se atenúa en interiores, se silencia al pausar y puede desactivarse desde el menú junto con el disparo. `disposeHistoricalScene` libera geometrías, materiales, mapas y sombras propios al regresar; conserva los recursos de los modelos Kenney y la rampa toon compartida.
+Se retiró el viento ambiental sintetizado a pedido del usuario. Se conserva el efecto puntual de disparo con opción de silencio en el menú, sin bucles de audio durante la exploración. `disposeHistoricalScene` libera geometrías, materiales, mapas y sombras propios al regresar; conserva los recursos de los modelos Kenney y la rampa toon compartida.
+
+## Render y decoración estática
+
+El cielo es un fondo equirectangular con gradiente continuo; las nubes mantienen su geometría low-poly. No hay cúpula facetada. Se precargan los programas de materiales antes de habilitar el inicio y la lista de luces permanece estable al abrir salas: se cambia su intensidad sin recompilar por cada puerta.
+
+La pasada de objetos sostenidos solo se ejecuta cuando se muestran; no vuelve a calcular sombras ni matrices del entorno. El sol de Egipto y los focos de exhibición conservan sus mapas de sombras estáticos. En el museo, el mapa solar se actualiza durante el movimiento del tren, del portón y del acceso. El guardia usa su sombra de contacto. El límite de densidad de píxeles es 1,5.
+
+`staticMeshes.ts` agrupa geometrías opacas por material dentro de casas, fachada superior y jardinería. Conserva contornos y transformaciones; los colliders se calculan antes de agrupar. No se aplica a tren, portones, puertas, personajes ni artefactos fotografiables.
 
 ## Pruebas de arquitectura obligatorias
 

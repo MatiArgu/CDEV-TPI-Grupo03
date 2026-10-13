@@ -4,7 +4,7 @@ import { disposeHistoricalScene, type HistoricalWorld } from './history';
 import type { GalleryRoom } from './gallery';
 import { galleryLayout } from './museumLayout';
 import { exhibition, exhibitSpot, plinth, exhibitLabel } from './exhibition';
-import { addLowPolySky } from './sky';
+import { addSky } from './sky';
 import { createRouteHelp } from './help';
 import { createRomanHelmet as helmet } from './helmet';
 import type { Collider } from './scene';
@@ -198,7 +198,7 @@ function arena(scene: THREE.Scene, stone: THREE.Material, trim: THREE.Material):
 
 export function createRomeWorld(): HistoricalWorld {
   const scene = new THREE.Scene();
-  addLowPolySky(scene);
+  addSky(scene);
   scene.fog = new THREE.Fog(0xd9dfcd, 42, 95);
   scene.add(new THREE.HemisphereLight(0xfff2d4, 0x779e98, 1.85));
   const sun = new THREE.DirectionalLight(0xffebc8, 1.6);
