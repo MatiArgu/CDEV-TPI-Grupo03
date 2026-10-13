@@ -2,7 +2,27 @@
 
 Esta revisión mejora los escenarios y las herramientas existentes de las etapas 1 a 6. Se mantiene el recorrido jugable del [plan](Plan_de_desarrollo.md): inicio, guardia, panfleto, primera puerta, exhibición, fotografía, naumaquia y regreso con Roma completada. Egipto y las otras ocho épocas permanecen WIP.
 
-## Actualización: patio con estación
+## Actualización: jardines, portón y galería principal
+
+- **Patio:** cuatro canteros con árboles en `x = ±11.1`, `z = 4.35 / 20.75`, entre los ejes de las puertas de las casas. Se rediseñaron con césped, flores y bancos hacia la plaza. Dos paños adicionales de pasto son transitables y tienen matas bajas instanciadas. El paso junto a las fachadas queda libre y se eliminaron los ocho carteles sobre las puertas.
+- **Estación:** el cartel se conserva y se alinea con el punto de llegada. Debajo hay un portón de dos hojas con bisagras, manijas y pestillo, sin zócalo que atraviese el acceso. Al mirar atrás, termina de cerrarse durante 1,2 segundos y luego sale el tren. La abertura inicial es menor al diámetro del personaje; las colisiones acompañan las hojas y reservan el espacio del cierre para evitar atraparlo. La pausa también detiene esta animación.
+- **Hall principal:** `src/hall.ts` reúne el interior renovado: piso con guardas y medallón de reloj, paneles y molduras, columnas, arcos, techo con casetones y tragaluz rematado en sus extremos. Cuatro ilustraciones originales enmarcadas, cuatro vitrinas con piezas ajustadas al vidrio, esculturas, bancos y lámparas cálidas acompañan el paseo central. Las colisiones se obtienen del mobiliario colocado. Se reutilizan los modelos existentes; la selección sigue siendo de 31 GLB.
+
+| Vista actual | Captura |
+| --- | --- |
+| Jardines del patio | [Conjunto](capturas/renovacion-jardin.png) |
+| Accesos de las casas | [Puertas despejadas y sin carteles](capturas/renovacion-puertas.png) |
+| Salida del andén | [Portón con bisagras](capturas/renovacion-porton.png) |
+| Galería principal | [Desde la entrada](capturas/renovacion-hall-entrada.png) |
+| Obras y esculturas | [Lateral del hall](capturas/renovacion-hall-lateral.png) |
+| Techo y regreso | [Mirando hacia el patio](capturas/renovacion-hall-regreso.png) |
+| Piso y vitrinas | [Vista de detalle](capturas/renovacion-hall-piso.png) |
+
+Verificación en Chrome: cierre antes de la partida, pausa a mitad del cierre y posibilidad de alejarse del portón sin quedar atrapado. Se comprobaron las ocho aproximaciones a las puertas, ambos pasos laterales del patio, los dos paños de pasto, canteros, esquinas y colisiones de vitrinas, columnas, bancos y pedestales. El recorrido desde el andén hasta el guardia, panfleto, hall y Roma, con foto inválida, foto válida y regreso con 1/10, funciona con el nuevo interior. El hall visto desde la entrada registra aproximadamente 15.900 triángulos y 598 llamadas de dibujo; estas cifras no equivalen a FPS en hardware real.
+
+Tipos, compilación y `git diff --check` correctos. La vista previa de producción carga los 31 modelos y cuatro texturas externas, inicia con Pointer Lock y abre el estudio visual sin errores. Vite mantiene el aviso por tamaño del bundle principal, de aproximadamente 708 kB antes de gzip.
+
+## Revisión anterior: patio con estación
 
 El jugador comienza en `(1, 26.3)`, a altura humana, del lado seguro del andén y mirando al museo. La locomotora y sus tres vagones quedan detrás. La primera mirada hacia las vías desde el patio inicia una partida con aceleración suave; continúa al mirar al frente y no se repite. Se detiene durante la pausa y al consultar el panfleto. El tren se oculta únicamente después de salir del alcance de la niebla desde toda la plaza.
 
@@ -12,7 +32,7 @@ La fachada ahora tiene cubiertas rectangulares a cuatro aguas, buhardillas, corn
 
 Corrección de terminaciones: las 16 ventanas arqueadas incorporan un fondo verde con el mismo perfil poligonal del marco, compartido desde la plantilla del modelo; se retiraron sus fondos rectangulares. Las cubiertas inclinadas incluyen una cara inferior con normales hacia abajo, cerrando los aleros del museo, las casas y las buhardillas. Se revisaron de frente y desde abajo en Chrome, incluido el techo del hall, y nueve rayos ascendentes confirmaron el cierre de la base de la cubierta. Capturas: [ventana sin esquinas sobresalientes](capturas/detalle-ventana-arco.png) y [alero desde abajo](capturas/detalle-alero-inferior.png).
 
-| Vista actual | Captura |
+| Vista de esa revisión | Captura |
 | --- | --- |
 | Llegada al museo | [Desde el andén](capturas/patio-llegada.png) |
 | Plaza cerrada | [Vista de conjunto](capturas/patio-plaza.png) |
