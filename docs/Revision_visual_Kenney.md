@@ -261,3 +261,39 @@ Son contadores de trabajo de render, no una medición de FPS. Chrome usa SwiftSh
 - Se revisaron visualmente patio, hall, lateral, Roma, exhibición egipcia y patio del templo con el nuevo render. Las herramientas de inspección son temporales y no se incorporan al juego.
 
 - Compilado de producción: 31 modelos y cuatro texturas cargados; inicio jugable y modo estudio sin errores de ejecución.
+
+
+## Sala Medieval y selección para las tres épocas
+
+Ampliación del 13 de octubre de 2026:
+
+- **Medieval:** exhibición instalada en el salón transversal de 24,9 × 10, con llave fotografiable, cofre, escudos, espadas, figuras de piedra y maqueta de fortaleza. El corredor frontal comunica ambas alas y conserva espacio para circular. La iluminación usa los mismos focos cálidos del museo.
+- **Viaje medieval:** patio de castillo con murallas, torres, portones, estandartes, catapulta, guardias inmóviles y mesa de armas. La ruta lleva hasta la llave del portón; tiene colisiones, ayuda tras 20 segundos, recogida, regreso y liberación de la escena.
+- **Egipto:** palmeras y obeliscos en el patio ceremonial, urnas en el templo; obelisco votivo y cerámica en la exhibición. El escarabajo y las piezas egipcias propias se conservan.
+- **Roma:** gladius y trofeo en la sala; armeros y trofeos en la naumaquia. Se mantienen el casco, la escala del cuarto y su iluminación.
+- **Panfleto y progreso:** tres recuerdos en la hoja derecha, con ilustración de la llave. La secuencia es Egipto → Roma → Medieval; las partidas con los dos primeros recuerdos habilitan el tercero al recargar. Japón y Luna siguen visitables sin viajes.
+- **Assets:** 19 GLB adicionales; el total es 50 modelos de nueve paquetes CC0 y siete texturas externas. Se verificaron los hashes, tamaños, rutas de texturas y licencias del manifiesto. Los modelos originales permanecen intactos.
+- **Render:** arquitectura medieval estática agrupada y sombras solares reutilizadas. La liberación distingue geometrías propias de materiales y texturas compartidos para poder volver a crear el mundo sin invalidar los modelos del museo.
+
+### Verificación
+
+- `npm run typecheck`, `npm run build` y `git diff --check`: correctos. Vite mantiene su aviso de bundle principal superior a 500 kB.
+- Recorrido completo en Chrome: guardia, foto inválida y reintento en Egipto, tres viajes válidos, recogida y regreso con los tres recuerdos. Pausa durante transición, bloqueo de movimiento/panfleto, recarga por ID, silencio y reinicio comprobados. La automatización usa teclado y mouse y adelanta el tiempo del controlador.
+- Centro, borde y visibilidad parcial aceptados en las tres exhibiciones; fuera del encuadre y oclusión total rechazados.
+- Ruta central del castillo y paso transversal de la galería libres para el radio del jugador. Ayuda ausente antes de 20 segundos y presente después.
+- Liberación y recreación medieval: se liberaron recursos propios sin emitir eventos de liberación sobre los compartidos. Intercambiar Egipto y Luna conservó los tres recuerdos por ID.
+- Revisión visual de sala, maqueta, patio medieval, llave, obelisco, urna, palmeras y nuevas piezas romanas. Se corrigió la orientación nativa del portón y de los estandartes.
+- Inspección en Chrome con SwiftShader; queda pendiente medir FPS en una GPU de escritorio real.
+
+### Capturas
+
+| Vista | Captura |
+| --- | --- |
+| Artefacto medieval | [Llave en la sala](capturas/medieval-sala.png) |
+| Colección medieval | [Maqueta y armas](capturas/medieval-maqueta.png) y [paso transversal](capturas/medieval-galeria.png) |
+| Mundo medieval | [Patio de la fortaleza](capturas/medieval-patio.png) |
+| Egipto | [Obelisco votivo](capturas/egipto-kenney-obelisco.png) y [palmeras](capturas/egipto-kenney-palmeras.png) |
+| Roma | [Trofeo y gladius](capturas/roma-kenney-coleccion.png) |
+| Progreso | [Tres recuerdos en el panfleto](capturas/egipto-roma-medieval-recuerdos.png) |
+
+- Compilado de producción: 50 modelos y siete texturas cargados sin fallos; inicio jugable verificado.

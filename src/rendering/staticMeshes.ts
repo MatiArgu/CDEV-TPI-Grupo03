@@ -25,6 +25,8 @@ export function batchStaticMeshes(root: THREE.Object3D): void {
     if (!geometry) continue;
     const merged = new THREE.Mesh(geometry, objects[0].material);
     merged.name = 'decoracion-estatica';
+    merged.userData.sharedMaterial = !!objects[0].userData.sharedAsset && !objects[0].userData.ownedMaterial;
+    merged.userData.sharedTexture = !!objects[0].userData.sharedAsset;
     merged.castShadow = objects[0].castShadow;
     merged.receiveShadow = objects[0].receiveShadow;
     for (const object of objects) {

@@ -1,7 +1,7 @@
 # Codemap del museo
 
 Guía breve del código actual. Stack: **Three.js + TypeScript + Vite**, sin backend.
-Egipto y Roma tienen viajes jugables; las otras tres salas se pueden recorrer.
+Egipto, Roma y Medieval tienen viajes jugables; Japón y Luna se pueden recorrer.
 
 ## Estructura
 
@@ -37,7 +37,7 @@ docs/                    Especificación, arquitectura, revisiones y capturas
 | Patio, casas, andén y tren | [museum/courtyard.ts](../src/museum/courtyard.ts); jardines y pirámide en `museum.ts` |
 | Interior del hall y guardia | [museum/hall.ts](../src/museum/hall.ts), [guard.ts](../src/museum/guard.ts) |
 | Acabados, pedestales y focos compartidos | [museum/exhibition.ts](../src/museum/exhibition.ts) |
-| Contenido egipcio y romano, incluida cada exhibición | [worlds/egypt.ts](../src/worlds/egypt.ts), [rome.ts](../src/worlds/rome.ts) |
+| Contenido de Egipto, Roma y Medieval, incluida cada exhibición | [worlds/egypt.ts](../src/worlds/egypt.ts), [rome.ts](../src/worlds/rome.ts), [medieval.ts](../src/worlds/medieval.ts) |
 | Contrato `HistoricalWorld` y liberación de recursos | [worlds/history.ts](../src/worlds/history.ts) |
 | Carga de modelos y materiales toon | [rendering/assets.ts](../src/rendering/assets.ts), [visual.ts](../src/rendering/visual.ts) |
 | Cielo, agrupación estática y casco compartido | [rendering/sky.ts](../src/rendering/sky.ts), [staticMeshes.ts](../src/rendering/staticMeshes.ts), [helmet.ts](../src/rendering/helmet.ts) |
@@ -52,7 +52,7 @@ flowchart LR
   Main --> Museum[Museo y salas]
   Main --> Player[Controles y modos]
   Player --> Photo[Foto y validación]
-  Photo --> World[Egipto o Roma]
+  Photo --> World[Egipto, Roma o Medieval]
   World --> Return[Recogida y regreso]
   Return --> Paper[Panfleto]
   Return --> Save[Guardado por ID]

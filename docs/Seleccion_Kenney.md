@@ -16,14 +16,27 @@ Hay **5.314 archivos GLB/glTF** sueltos; esta cifra incluye variantes y no repre
 
 | Paquete | Modelos | Uso |
 | --- | ---: | --- |
-| Nature Kit | 11 | Árboles con raíces y ramas, jardineras, arbustos, flores, piedras y vegetación del estudio. |
+| Nature Kit | 14 | Árboles con raíces y ramas, jardineras, arbustos, flores, piedras y vegetación del estudio. |
 | Furniture Kit | 4 | Bancos de patio, bancos tapizados y plantas del hall. |
-| Mini Arena | 6 | Esculturas, columnas acanaladas, fragmentos, estandartes, soldados y lanzas decorativas de Roma. |
+| Mini Arena | 9 | Esculturas, columnas acanaladas, fragmentos, estandartes, soldados y lanzas decorativas de Roma. |
 | Pirate Kit | 5 | Casco de bote de remos, remos, tablones, barriles y cajas para las embarcaciones de la naumaquia. |
 | Modular Buildings | 2 | Marcos de ventanas altas y arqueadas para fachada y hall. |
 | Train Kit | 3 | Locomotora clásica, vagón de pasajeros y vías rectas del andén. |
+| Castle Kit | 6 | Murallas, torres, cubiertas, portón, estandartes y catapulta medieval. |
+| Mini Dungeon | 6 | Llave, cofre, escudo, espada, mesa y personaje medieval. |
+| Graveyard Kit | 1 | Urna sin símbolos funerarios, adaptada a Egipto. |
 
-La selección actual contiene **31 modelos**: los 28 de la revisión general y tres incorporados para el patio con estación. Los modelos GLB suman **814.848 bytes**. Se incluyen las cuatro texturas de paleta externas que necesitan Mini Arena, Pirate Kit, Modular Buildings y Train Kit; GLB no garantiza que las imágenes estén embebidas. El conjunto en el repositorio ocupa aproximadamente 988 KiB en disco, contando licencias y manifiesto. Las seis licencias originales son CC0; Mini Arena acredita además a Tony Schär y Train Kit a Guus Vermeulen y Tony Schaer.
+La selección actual contiene **50 modelos de nueve paquetes**: 31 anteriores y 19 añadidos para Medieval y las mejoras de Egipto/Roma. Los GLB suman **1.384.892 bytes**, con siete texturas de paleta externas. Las nueve licencias originales son CC0 y se conservan junto a los modelos; el manifiesto registra tamaño, origen y SHA-256 de cada archivo. Los originales de Windows no se modificaron.
+
+### Ampliación medieval y mejoras de Egipto/Roma
+
+Se revisaron las vistas previas y modelos de Castle Kit, Mini Dungeon, Mini Arena y Nature Kit, además de las urnas de Graveyard Kit y alternativas de Fantasy Town Kit. Se eligieron 19 GLB (570.044 bytes adicionales):
+
+- **Medieval:** llave como artefacto, cofre, escudos, espadas, figuras de piedra y maqueta. El viaje utiliza los mismos módulos para una fortaleza con catapulta y guardias inmóviles.
+- **Egipto:** dos palmeras, obelisco y urna. Se mantienen propios el escarabajo, faraones, sarcófago, columnas y templo para conservar su identidad.
+- **Roma:** gladius, trofeo y armero. Se conserva el casco fotografiable propio y el tamaño de la sala.
+
+La revisión visual de los modelos seleccionados se hizo en el juego. No se afirma que se hayan renderizado individualmente todos los modelos del catálogo.
 
 Los colores se adaptan en ejecución y los materiales se convierten a `MeshToonMaterial`. Las esculturas y columnas reciben tonos de piedra y contornos discretos. Las figuras usan esqueletos independientes. Los archivos originales del catálogo permanecen intactos.
 
@@ -39,7 +52,7 @@ Los colores se adaptan en ejecución y los materiales se convierten a `MeshToonM
 
 | Necesidad | Recursos locales | Adaptación necesaria |
 | --- | --- | --- |
-| Egipto, etapa 7 | Nature Kit: palmeras, piedras, `statue_obelisk`, columnas; algunas piezas de Building Kit | Crear escarabajo, templo, relieves y estatuaria egipcia propios. Ningún paquete revisado resuelve esa época completa. |
+| Más detalles egipcios | Building Kit y piezas naturales compatibles | Palmeras, obelisco y urnas ya incorporados; conservar los artefactos y la arquitectura temática propios. |
 | Detalles ilustrados del panfleto | Cartography Pack, Map Pack, Pattern Pack Lines | Usar iconos y ornamentos; mantener el mapa generado desde `areaOrder`. |
 | Polvo y acentos de transición | Particle Pack, Light Masks | Pocas partículas con colores del juego y sin tapar el encuadre. |
 | Cielo ilustrado | Skyboxes | Revisar tono y orientación contra la iluminación del museo antes de sustituir el fondo. |
@@ -115,4 +128,4 @@ Los conteos corresponden a archivos por formato, incluyendo variantes.
 
 ## Implementación y verificación
 
-La renovación corresponde al aspecto visual de las etapas 1 a 6 existentes. Egipto sigue WIP y el progreso continúa en memoria durante la sesión. [Revisión visual, capturas y pruebas](Revision_visual_Kenney.md).
+El estado actual incluye Egipto, Roma y Medieval jugables, con persistencia local por ID. Japón y Luna permanecen visitables sin viajes. [Revisión visual, capturas y pruebas](Revision_visual_Kenney.md).

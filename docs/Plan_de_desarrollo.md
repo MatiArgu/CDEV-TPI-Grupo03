@@ -4,7 +4,7 @@
 
 Este documento convierte [Proyecto_general.md](Proyecto_general.md) en entregas pequeñas y verificables. Es un plan de trabajo: **no autoriza a implementar las siete etapas juntas**. Antes de comenzar la siguiente, se revisa el resultado de la anterior, especialmente la dirección visual y la fotografía.
 
-El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un navegador de escritorio. El museo tiene cinco épocas. Egipto y Roma tienen sus viajes completos. Medieval, Japón Feudal y Luna se pueden recorrer como salas en preparación; sus viajes requieren entregas posteriores. La calidad de la imagen ilustrada, la Polaroid y las transiciones tiene prioridad sobre el tamaño de los escenarios.
+El MVP original terminó con Roma y Egipto jugables de principio a fin. Por pedido posterior, la ampliación medieval agrega un tercer viaje completo. El museo tiene cinco épocas; Japón Feudal y Luna se pueden recorrer como salas en preparación, con sus viajes pendientes. La calidad de la imagen ilustrada, la Polaroid y las transiciones tiene prioridad sobre el tamaño de los escenarios.
 
 ### Decisiones acordadas
 
@@ -73,12 +73,20 @@ El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un
 
 **Aceptación:** un jugador nuevo puede completar Egipto y Roma en secuencia, ver ambas fotos y artefactos en el panfleto y recibir el cierre 2/5. Puede volver al hall por las puertas abiertas o empezar de nuevo; las otras tres salas siguen visitables sin viajes. Recargar el navegador conserva el progreso.
 
+## Ampliación solicitada: Medieval — implementada
+
+**Objetivo:** completar la tercera época en el salón transversal y enriquecer Egipto y Roma con una selección de modelos Kenney.
+
+**Trabajo:** llave fotografiable, cofre, armas y maqueta del castillo en el museo; patio de fortaleza con murallas, torres, catapulta y personajes inmóviles. Reutilizar foto, ayuda a los 20 segundos, recogida, regreso y guardado por ID. Incorporar palmeras, obeliscos y cerámica en Egipto; gladius, trofeos y armeros en Roma.
+
+**Aceptación:** completar Egipto → Roma → Medieval, ver tres fotos y tres artefactos en el panfleto con 3/5; conservar partidas previas de Egipto/Roma al recargar; recorrer la galería de lado a lado sin obstáculos en el paso; mantener Japón y Luna visitables sin viajes. Revisar los tres escenarios, colisiones, fotografía y liberación de recursos compartidos.
+
 ## Verificación transversal
 
 - **Visual:** revisar cada escenario nuevo contra la etapa 1: colores pastel, lectura de siluetas, contornos selectivos y sensación de tiempo detenido. Limitar el tamaño del escenario si hace falta para preservar la calidad.
 - **Foto:** probar artefacto centrado, en el borde, fuera del cuadro, parcialmente visible y completamente tapado; comparar cada captura con lo que se veía en el encuadre.
 - **Estado:** probar panfleto, cámara, pausa y transiciones en distintos órdenes para impedir acciones incompatibles o controles bloqueados.
-- **Progreso:** completar Egipto y Roma, comprobar ambos recuerdos y 2/5, recargar y reiniciar. Intercambiar Egipto y Luna debe mover la sala y su número y conservar los datos por ID.
+- **Progreso:** completar Egipto, Roma y Medieval, comprobar los tres recuerdos y 3/5, recargar y reiniciar. Intercambiar Egipto y Luna debe mover la sala y su número y conservar los datos por ID.
 - **Recorrido:** probar las siete entregas en el navegador, además de ejecutar las comprobaciones de compilación y tipos disponibles en cada etapa.
 
 Cada entrega se cierra con una demostración del recorrido correspondiente, una revisión de sus criterios y una lista breve de pendientes. Los problemas que rompan el flujo de esa entrega se corrigen antes de iniciar la siguiente.

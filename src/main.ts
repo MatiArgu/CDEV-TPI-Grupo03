@@ -8,6 +8,7 @@ import { createPamphlet } from './game/pamphlet';
 import { createPlayerControls } from './game/player';
 import { artifactVisible, captureFrame, createCameraModel, getFrameBounds, playShutter } from './game/photo';
 import { createRomeWorld } from './worlds/rome';
+import { createMedievalWorld } from './worlds/medieval';
 import { createEgyptWorld } from './worlds/egypt';
 import type { HistoricalWorld } from './worlds/history';
 import { loadProgress, photoForSave, resetProgress, saveProgress } from './game/progress';
@@ -173,7 +174,7 @@ try {
         cameraModel.hidePrint();
         scene.remove(camera);
         museumColliders = [...world.colliders];
-        history = active === 'egipto' ? createEgyptWorld() : createRomeWorld();
+        history = active === 'egipto' ? createEgyptWorld() : active === 'medieval' ? createMedievalWorld() : createRomeWorld();
         scene = history.scene;
         scene.add(camera);
         world.colliders.splice(0, world.colliders.length, ...history.colliders);
@@ -182,12 +183,12 @@ try {
           if (app.dataset.playState !== 'playing' || !history) return;
           const hadHelp = history.helpActive();
           history.update(delta);
-          if (!hadHelp && history.helpActive()) showToast(history.id === 'egipto' ? 'Un rastro de luz recorre el templo hacia el altar.' : 'Un rastro tenue recorre la pasarela hacia el casco.');
+          if (!hadHelp && history.helpActive()) showToast(history.id === 'egipto' ? 'Un rastro de luz recorre el templo hacia el altar.' : history.id === 'medieval' ? 'Un rastro dorado cruza el patio hacia la llave.' : 'Un rastro tenue recorre la pasarela hacia el casco.');
         };
       });
       controls.finishCinematic(false);
       help.textContent = 'WASD CAMINAR · SHIFT CORRER · E RECOGER · M PANFLETO · ESC PAUSAR';
-      showToast(active === 'egipto' ? 'El tiempo se detuvo en el templo. Buscá el escarabajo del sol.' : 'El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
+      showToast(active === 'egipto' ? 'El tiempo se detuvo en el templo. Buscá el escarabajo del sol.' : active === 'medieval' ? 'El tiempo se detuvo en la fortaleza. Recuperá la llave junto al portón.' : 'El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
     }
 
     async function finishHistory(): Promise<void> {
@@ -215,7 +216,7 @@ try {
       controls.openPamphlet();
       help.textContent = 'WASD CAMINAR · SHIFT CORRER · M PANFLETO · E PUERTAS · ESC PAUSAR';
       const next = areaOrder.find((id) => availabilityOf(id) === 'playable' && !completedAreas.has(id));
-      showToast(!stored ? 'Recuerdo recuperado. El navegador no pudo guardarlo: se conservará solo durante esta visita.' : next ? `${areaCatalog[completedId].name}: recuerdo recuperado. El próximo viaje está en ${areaCatalog[next].name}.` : 'Dos viajes, dos recuerdos. La visita continúa: podés recorrer las cinco salas.');
+      showToast(!stored ? 'Recuerdo recuperado. El navegador no pudo guardarlo: se conservará solo durante esta visita.' : next ? `${areaCatalog[completedId].name}: recuerdo recuperado. El próximo viaje está en ${areaCatalog[next].name}.` : `${completedAreas.size} viajes, ${completedAreas.size} recuerdos. La visita continúa: podés recorrer las cinco salas.`);
     }
 
     const controls = createPlayerControls(camera, renderer.domElement, {
