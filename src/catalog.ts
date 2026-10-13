@@ -1,5 +1,5 @@
 export const areaCatalog = {
-  roma: { name: 'Roma Antigua', artifact: 'Casco de gladiador', accent: '#e9a077', availability: 'wip' },
+  roma: { name: 'Roma Antigua', artifact: 'Casco de gladiador', accent: '#e9a077', availability: 'playable' },
   egipto: { name: 'Egipto Antiguo', artifact: 'Escarabajo egipcio', accent: '#e4c989', availability: 'wip' },
   grecia: { name: 'Grecia Antigua', artifact: 'Corona de laurel', accent: '#a9d8d0', availability: 'wip' },
   babilonia: { name: 'Mesopotamia · Babilonia', artifact: 'Tablilla cuneiforme', accent: '#c3bbd8', availability: 'wip' },

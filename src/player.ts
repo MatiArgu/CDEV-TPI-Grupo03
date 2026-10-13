@@ -21,12 +21,14 @@ export type PlayerControls = {
   update: (delta: number) => void;
   setCinematic: (mode: 'revealing' | 'transition') => void;
   finishCinematic: (cameraEquipped: boolean) => void;
+  openPamphlet: () => void;
   teleport: (start: THREE.Vector2) => void;
 };
 
 const eyeHeight = 1.7;
 const playerRadius = 0.28;
 const walkSpeed = 3.2;
+const runSpeed = 5.4;
 
 export function createPlayerControls(
   camera: THREE.PerspectiveCamera,
@@ -113,6 +115,7 @@ export function createPlayerControls(
   });
   document.addEventListener('keydown', (event) => {
     if (event.code === 'Escape') {
+      if (mode === 'revealing' || mode === 'transition') return;
       if (mode !== 'intro' && mode !== 'paused') pause();
       return;
     }
@@ -135,7 +138,7 @@ export function createPlayerControls(
       prompt.hidden = true;
       return;
     }
-    if (['KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(event.code)) {
+    if (['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ShiftLeft', 'ShiftRight'].includes(event.code)) {
       event.preventDefault();
       pressed.add(event.code);
     }
@@ -162,7 +165,8 @@ export function createPlayerControls(
       const sideways = Number(pressed.has('KeyD')) - Number(pressed.has('KeyA'));
       const length = Math.hypot(forward, sideways);
       if (length > 0) {
-        const amount = walkSpeed * step / length;
+        const speed = pressed.has('ShiftLeft') || pressed.has('ShiftRight') ? runSpeed : walkSpeed;
+        const amount = speed * step / length;
         const dx = (-Math.sin(yaw) * forward + Math.cos(yaw) * sideways) * amount;
         const dz = (-Math.cos(yaw) * forward - Math.sin(yaw) * sideways) * amount;
         if (Math.abs(dx) > 0.0001 && !blocked(position.x + dx, position.y)) {
@@ -200,6 +204,9 @@ export function createPlayerControls(
         options.onCameraChange?.(equipped);
       }
       if (mode === 'revealing' || mode === 'transition') setMode(equipped ? 'camera' : 'playing');
+    },
+    openPamphlet: () => {
+      if (mode === 'playing' && options.canOpenPamphlet()) setMode('pamphlet');
     },
     teleport: (start) => {
       position.copy(start);

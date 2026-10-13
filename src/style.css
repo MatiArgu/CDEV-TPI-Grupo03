@@ -102,9 +102,16 @@ h1 em { color: #4eaa76; font-style: normal; }
 .map-room-left { grid-column: 1; }
 .map-room-right { grid-column: 3; }
 .map-room::after { content: attr(data-status); position: absolute; right: 4px; bottom: 3px; font-size: 6px; letter-spacing: .08em; }
+.map-room[data-progress="completed"] { justify-content: flex-start; padding-left: 12px; }
+.map-photo-thumb { position: absolute; right: 10px; top: 4px; width: 42px; height: 31px; object-fit: cover; border: 3px solid #fffdf0; box-shadow: 1px 2px 0 #35404466; transform: rotate(5deg); }
 .map-courtyard { grid-column: 2; grid-row: 1 / 6; display: flex; align-items: center; justify-content: center; margin: 0 7px; border: 1px solid #a3c9b7; background: #dcebd8; color: #638e7d; font-size: 8px; font-weight: 700; letter-spacing: .15em; writing-mode: vertical-rl; }
 .map-entrance { display: flex; justify-content: space-between; margin-top: 9px; padding-top: 8px; border-top: 1px solid #a9bbb2; color: #536c67; }
 .map-entrance span { color: #688077; }
+.pamphlet-collection { margin-top: 10px; padding: 8px 10px; border: 1px solid #bda88e; background: #f8f3e6; }
+.pamphlet-memory { display: flex; align-items: center; gap: 12px; }
+.pamphlet-memory img { width: 66px; height: 54px; padding: 4px 4px 10px; background: #fffdf0; object-fit: cover; box-shadow: 2px 2px 0 #a9bbb2; transform: rotate(-4deg); }
+.pamphlet-memory div { display: flex; align-items: center; gap: 8px; color: #8c6950; font-size: 9px; font-weight: 700; letter-spacing: .08em; }
+.pamphlet-memory svg { width: 36px; height: 36px; flex: 0 0 auto; }
 .pamphlet-index { display: grid; flex: 1; grid-template-rows: repeat(10, 1fr); min-height: 0; margin: 0; padding: 0; list-style: none; }
 .pamphlet-index li { display: flex; align-items: center; gap: 9px; border-bottom: 1px solid #cad5c8; color: #354044; font-size: clamp(11px, 1vw, 14px); font-weight: 600; }
 .pamphlet-index li::before { content: ''; flex: 0 0 8px; height: 8px; border: 1px solid #77958a; background: var(--area-accent, #f7f2e4); }
@@ -124,4 +131,11 @@ h1 em { color: #4eaa76; font-style: normal; }
   h1 { margin-top: 14px; font-size: 36px; }
   .masthead p, .specimen-label, .hint, .controls-title { display: none; }
   .view-controls { left: 50%; transform: translateX(-50%); bottom: 24px; }
+}
+@media (max-height: 540px) {
+  .pamphlet-paper { height: calc(100vh - 44px); min-height: 0; }
+  .pamphlet-leaf { padding: 12px; }
+  .pamphlet-leaf h2, .pamphlet-leaf h3 { margin: 9px 0 6px; font-size: clamp(22px, 2.7vw, 32px); }
+  .pamphlet-intro { margin-bottom: 7px; }
+  .pamphlet-note { margin: 6px 0; font-size: 10px; }
 }
