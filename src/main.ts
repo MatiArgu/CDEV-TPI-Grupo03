@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { createMuseumScene } from './museum';
 import { createPamphlet } from './pamphlet';
 import { createPlayerControls } from './player';
+import { createPhotoDemo } from './photoDemo';
 import { createStudyScene } from './scene';
 import './style.css';
 
@@ -18,10 +19,11 @@ const views = {
 type View = keyof typeof views;
 const requestedView = new URLSearchParams(location.search).get('view');
 const studyMode = requestedView !== null && requestedView in views;
-app.dataset.mode = studyMode ? 'study' : 'player';
+const photoTestMode = !studyMode && new URLSearchParams(location.search).has('photo-test');
+app.dataset.mode = studyMode ? 'study' : photoTestMode ? 'photo' : 'player';
 
 try {
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: photoTestMode });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -32,8 +34,13 @@ try {
   let scene: THREE.Scene;
   let updateControls: (delta: number) => void;
   let updateScene: (delta: number) => void = () => {};
+  let afterRender: () => void = () => {};
 
-  if (studyMode) {
+  if (photoTestMode) {
+    const demo = createPhotoDemo(renderer, camera, app, (next) => { scene = next; });
+    updateControls = demo.update;
+    afterRender = demo.afterRender;
+  } else if (studyMode) {
     const world = createStudyScene();
     scene = world.scene;
     const initialView = requestedView as View;
@@ -132,7 +139,7 @@ try {
           app.dataset.location = 'exterior';
         }
       },
-    });
+    }).update;
   }
 
   function resize(): void {
@@ -152,6 +159,7 @@ try {
     updateControls(delta);
     updateScene(delta);
     renderer.render(scene, camera);
+    afterRender();
   });
 } catch (cause) {
   error.hidden = false;

@@ -32,6 +32,21 @@
         <div id="interaction-prompt" class="interaction-prompt" hidden><kbd>E</kbd><span id="interaction-label"></span></div>
         <div id="player-help" class="player-help">WASD CAMINAR · MOUSE MIRAR · E INTERACTUAR · ESC PAUSAR</div>
       </div>
+      <div id="photo-hud" class="photo-hud" aria-hidden="true">
+        <div class="camera-frame">
+          <div id="photo-viewfinder" class="photo-viewfinder"></div>
+          <span class="camera-frame-label">POLAROID / VISOR 01</span>
+          <span class="camera-frame-count">● LISTA PARA CAPTURAR</span>
+        </div>
+        <div class="photo-instruction">CLIC DISPARAR · C GUARDAR CÁMARA</div>
+      </div>
+      <section id="photo-result" class="photo-result" aria-label="Fotografía en revelado" hidden>
+        <div class="polaroid-print">
+          <div class="polaroid-image-wrap"><img id="photo-image" alt="Fotografía tomada desde el visor" /></div>
+          <div class="polaroid-caption"><span id="photo-result-label">REVELANDO / 00</span><span>LABORATORIO TEMPORAL</span></div>
+        </div>
+      </section>
+      <div id="time-transition" class="time-transition" aria-hidden="true" hidden><span>UN INSTANTE FUERA DEL TIEMPO</span></div>
       <div id="game-toast" class="game-toast" role="status" hidden></div>
       <section id="game-menu" class="game-overlay" role="dialog" aria-labelledby="menu-title">
         <div class="game-card">

@@ -1,6 +1,6 @@
 # Museo de viajes en el tiempo
 
-Proyecto de videojuego 3D en primera persona para navegador. Las etapas 1 a 3 permiten recorrer el patio de un museo ficticio inspirado en el Louvre, recibir un panfleto y entrar al hall. Las salas históricas y los viajes temporales llegan en etapas posteriores.
+Proyecto de videojuego 3D en primera persona para navegador. Las etapas 1 a 3 permiten recorrer el patio de un museo ficticio inspirado en el Louvre, recibir un panfleto y entrar al hall. La etapa 4 añade una prueba aislada de la Polaroid; las salas históricas llegan en etapas posteriores.
 
 ## Ejecutar el prototipo
 
@@ -15,11 +15,14 @@ Abrir la dirección local que muestra Vite y hacer clic en **Comenzar visita**. 
 
 Para revisar el estilo de la etapa 1 sin caminar, abrir `?view=far`, `?view=mid` o `?view=near` al final de la dirección local. En ese modo se puede orbitar con el mouse, acercar con la rueda y cambiar entre las tres vistas. `npm run typecheck` revisa tipos y `npm run build` genera la versión estática en `dist/`.
 
-El modo de estudio conserva la fachada, la vegetación y el casco de gladiador de la etapa 1. En el recorrido principal todavía no hay salas históricas, fotografía ni viajes temporales.
+Para probar la etapa 4, abrir `?photo-test` al final de la dirección local. En el laboratorio temporal, usar **C** para equipar la Polaroid y **clic** para disparar. La imagen del visor se revela incluso si el cristal de prueba no aparece en ella. Una foto con cualquier parte visible del cristal, sin un sólido delante, abre un eco temporal breve; acercarse al portal y pulsar **E** para regresar. Desde la derecha del laboratorio, el panel oscuro permite ensayar una oclusión completa. Esta prueba todavía no forma parte del recorrido principal ni registra progreso.
+
+El modo de estudio conserva la fachada, la vegetación y el casco de gladiador de la etapa 1. En el recorrido principal todavía no hay salas históricas ni viajes temporales.
 
 [Revisión visual y capturas de la etapa 1](docs/Revision_etapa_1.md).
 [Revisión del recorrido de la etapa 2](docs/Revision_etapa_2.md).
 [Revisión del museo y la introducción de la etapa 3](docs/Revision_etapa_3.md).
+[Revisión de la Polaroid de la etapa 4](docs/Revision_etapa_4.md).
 
 ## Documentación
 
