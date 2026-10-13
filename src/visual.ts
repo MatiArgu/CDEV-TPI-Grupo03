@@ -69,7 +69,7 @@ export function box(
   return mesh(new THREE.BoxGeometry(width, height, depth), material, position, parent);
 }
 
-// Rectangular roof with four pitched faces, a level ridge and flat face normals.
+// Closed rectangular roof with four pitched faces, a level ridge and a soffit.
 export function hippedRoof(
   width: number, height: number, depth: number, material: THREE.Material,
   position: [number, number, number], parent: THREE.Object3D,
@@ -83,7 +83,8 @@ export function hippedRoof(
     w * 0.82, height, -d * 0.38, -w * 0.82, height, -d * 0.38,
   ], 3));
   geometry.setIndex([0, 1, 5, 0, 5, 4, 1, 2, 6, 1, 6, 5,
-    2, 3, 7, 2, 7, 6, 3, 0, 4, 3, 4, 7, 4, 5, 6, 4, 6, 7]);
+    2, 3, 7, 2, 7, 6, 3, 0, 4, 3, 4, 7, 4, 5, 6, 4, 6, 7,
+    0, 3, 2, 0, 2, 1]);
   const flat = geometry.toNonIndexed();
   flat.computeVertexNormals();
   geometry.dispose();

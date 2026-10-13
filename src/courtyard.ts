@@ -67,7 +67,6 @@ function townhouses(scene: THREE.Scene, colliders: Collider[]): void {
       plaque(house, ['ATELIER', 'LIBRERÍA', 'CAFÉ DE LA PLAZA', 'CASA DEL RELOJ'][i], 0, 2.83, 2.87, 3.2);
       if (height > 4) {
         box(8.2, 0.15, 0.22, mat.stone, [0, 3.42, 2.77], house);
-        box(1.02, 1.5, 0.04, mat.door, [0, 4.72, 2.72], house);
         placeModel('archedWindow', house, [0, 3.95, 2.76], { height: 1.62, width: 1.14 });
       }
     }

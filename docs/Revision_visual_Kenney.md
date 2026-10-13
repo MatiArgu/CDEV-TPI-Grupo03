@@ -10,6 +10,8 @@ Ocho casas adosadas, de uno o dos pisos, cierran los laterales. Muros cortos las
 
 La fachada ahora tiene cubiertas rectangulares a cuatro aguas, buhardillas, cornisas y un pabellón central con reloj y frontón. Los marcos Kenney, las contraventanas, la piedra clara y los tonos salvia unifican museo y casas. Se añaden tres modelos de Train Kit con su textura y licencia CC0. `src/courtyard.ts` construye el perímetro y la llegada; el museo expone su posición inicial y recibe la cámara solamente durante el juego activo para actualizar el tren.
 
+Corrección de terminaciones: las 16 ventanas arqueadas incorporan un fondo verde con el mismo perfil poligonal del marco, compartido desde la plantilla del modelo; se retiraron sus fondos rectangulares. Las cubiertas inclinadas incluyen una cara inferior con normales hacia abajo, cerrando los aleros del museo, las casas y las buhardillas. Se revisaron de frente y desde abajo en Chrome, incluido el techo del hall, y nueve rayos ascendentes confirmaron el cierre de la base de la cubierta. Capturas: [ventana sin esquinas sobresalientes](capturas/detalle-ventana-arco.png) y [alero desde abajo](capturas/detalle-alero-inferior.png).
+
 | Vista actual | Captura |
 | --- | --- |
 | Llegada al museo | [Desde el andén](capturas/patio-llegada.png) |

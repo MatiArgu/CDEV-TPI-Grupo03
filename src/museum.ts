@@ -105,7 +105,6 @@ function upperFacade(scene: THREE.Scene): void {
     box(9.85, 0.18, 4.75, mat.sand, [side * 7.75, 8.12, -5.6], scene);
     hippedRoof(10.1, 1.55, 5.05, roof, [side * 7.75, 8.21, -5.6], scene);
     for (const x of [side * 4.45, side * 7.7, side * 10.9]) {
-      box(0.93, 1.68, 0.04, mat.door, [x, 6.64, -3.33], scene);
       placeModel('archedWindow', scene, [x, 5.8, -3.28], { height: 1.8, width: 1.08 });
       box(1.37, 0.1, 0.32, mat.sand, [x, 5.75, -3.18], scene);
       box(0.16, 2.3, 0.16, mat.sand, [x - 0.85, 6.8, -3.29], scene);
@@ -331,7 +330,6 @@ export function createMuseumScene(): MuseumWorld {
     silhouette(wall, 1.006);
     outline(wall, 0.28);
     for (const x of [side * 6.5, side * 9.7]) {
-      box(1.22, 2.57, 0.04, mat.door, [x, 2.16, -3.49], scene);
       placeModel('archedWindow', scene, [x, 0.85, -3.45], { height: 2.8, width: 1.45 });
       box(1.7, 0.16, 0.4, mat.sand, [x, 0.79, -3.39], scene);
     }

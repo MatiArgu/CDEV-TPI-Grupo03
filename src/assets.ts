@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
 import type { Collider } from './scene';
-import { outline, toon } from './visual';
+import { materials as mat, outline, toon } from './visual';
 
 const sources = {
   oak: 'nature-kit/tree_oak',
@@ -89,6 +89,24 @@ export async function loadModels(): Promise<void> {
       }
     });
     converted.forEach((_, original) => original.dispose());
+    if (id === 'archedWindow') {
+      // Follow the polygonal arch midway through the Kenney frame's thickness.
+      // Native model coordinates keep pane and frame aligned at every placement scale.
+      const shape = new THREE.Shape();
+      shape.moveTo(-0.13125, 0);
+      shape.lineTo(0.13125, 0);
+      shape.lineTo(0.13125, 0.305);
+      shape.lineTo(0.09135, 0.40135);
+      shape.lineTo(0, 0.43919);
+      shape.lineTo(-0.09135, 0.40135);
+      shape.lineTo(-0.13125, 0.305);
+      shape.closePath();
+      const pane = new THREE.Mesh(new THREE.ShapeGeometry(shape), mat.door);
+      pane.name = 'arched-window-pane';
+      pane.position.z = 0.026;
+      pane.userData.sharedAsset = true;
+      scene.add(pane);
+    }
     templates.set(id, scene);
   }));
   if (missing.length) throw new Error(`No se pudieron cargar recursos: ${missing.join(', ')}`);
