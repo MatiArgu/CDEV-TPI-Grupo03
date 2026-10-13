@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import type { AreaId } from './catalog';
-import type { Collider } from './scene';
+import type { AreaId } from '../game/catalog';
+import type { Collider } from '../game/collision';
 
 export type HistoricalWorld = {
   id: AreaId;

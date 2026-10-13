@@ -1,5 +1,7 @@
 # Revisión de la etapa 6 — Roma de principio a fin
 
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+
 Roma es la única época jugable de esta entrega. La puerta 01 conduce a una exhibición con casco de gladiador sobre un pedestal. La Polaroid se equipa con C dentro de la sala, captura el render real al hacer clic y solo inicia el viaje si el casco aparece visible dentro del visor. Una foto inválida se revela y permite reintentar.
 
 El destino es una naumaquia estilizada y detenida en el tiempo: graderío del Coliseo, barcos, figuras y salpicaduras inmóviles rodean una pasarela transitable. El casco al final se recoge con E. El regreso registra la foto y una ilustración del casco en el panfleto, marca Roma como completada y muestra 1/10. Egipto aún está WIP; su puerta permanece cerrada después de completar Roma.
@@ -10,11 +12,11 @@ Por pedido posterior a la etapa 2, mantener Shift permite correr a 5,4 unidades/
 
 | Momento | Captura |
 | --- | --- |
-| Exhibición romana | [Ver imagen](capturas/etapa-6-exhibicion.png) |
-| Casco dentro del visor | [Ver imagen](capturas/etapa-6-visor.png) |
-| Naumaquia desde la entrada | [Ver imagen](capturas/etapa-6-naumaquia.png) |
-| Ayuda tenue tras 20 segundos | [Ver imagen](capturas/etapa-6-ayuda.png) |
-| Panfleto con foto, casco y 1/10 | [Ver imagen](capturas/etapa-6-panfleto.png) |
+| Exhibición romana | Ver imagen — captura no incluida (`capturas/etapa-6-exhibicion.png`) |
+| Casco dentro del visor | Ver imagen — captura no incluida (`capturas/etapa-6-visor.png`) |
+| Naumaquia desde la entrada | Ver imagen — captura no incluida (`capturas/etapa-6-naumaquia.png`) |
+| Ayuda tenue tras 20 segundos | Ver imagen — captura no incluida (`capturas/etapa-6-ayuda.png`) |
+| Panfleto con foto, casco y 1/10 | Ver imagen — captura no incluida (`capturas/etapa-6-panfleto.png`) |
 
 ## Verificación y límites
 

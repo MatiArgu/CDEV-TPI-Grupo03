@@ -32,8 +32,14 @@ La Polaroid expulsa y revela una fotografía real como objeto 3D, y el panfleto 
 
 La renovación incorpora 31 modelos de seis paquetes Kenney, con sus texturas y licencias CC0 en `public/assets/kenney/`. El juego carga esa selección local antes de habilitar la visita; no necesita acceder a la carpeta original de Windows. Los materiales mantienen el sombreado toon y la paleta del museo.
 
+## Organización del código
+
+El código se agrupa en `game/`, `museum/`, `worlds/`, `rendering/` y `study/`.
+Consultá el [codemap](docs/CODEMAP.md) para ubicar cada responsabilidad y seguir el flujo del juego.
+
 ## Documentación
 
+- [Codemap](docs/CODEMAP.md): mapa breve del código y puntos de entrada.
 - [Especificación maestra](docs/Proyecto_general.md): visión, dirección artística y recorrido completo del MVP.
 - [Plan de desarrollo](docs/Plan_de_desarrollo.md): siete etapas independientes, entregables y criterios de aceptación.
 - [Arquitectura prevista](docs/Arquitectura_prevista.md): áreas reordenables, progresión, fotografía y persistencia.

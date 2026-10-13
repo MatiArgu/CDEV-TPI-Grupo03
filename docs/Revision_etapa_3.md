@@ -1,5 +1,7 @@
 # Revisión de la etapa 3 — museo e introducción
 
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+
 Esta revisión registra el museo al cierre de la etapa 3; desde la etapa 5 el hall continúa hacia diez salas WIP abiertas. El recorrido principal empieza en el patio de un museo ficticio inspirado en el Louvre. La pirámide de cristal, la fachada y el guardia se construyeron con la paleta y los materiales ilustrados de la etapa 1. La puerta central se abre tras recibir el panfleto; el patio y el hall forman una escena 3D continua.
 
 ## Recorrido y controles
@@ -10,16 +12,16 @@ Esta revisión registra el museo al cierre de la etapa 3; desde la etapa 5 el ha
 4. Al desplegarlo por primera vez se enciende una luz cálida y aparece la señal del futuro sector romano. El jugador puede atravesar la entrada y recorrer el hall hasta ese umbral cerrado.
 5. **Escape** pausa y libera el puntero, incluso con el panfleto abierto. Un clic en **Volver al recorrido** recupera Pointer Lock.
 
-El catálogo en `src/catalog.ts` aporta IDs estables, nombres y artefactos. Su lista `areaOrder` determina los números y posiciones del panfleto y el número de la señal romana. Ninguna de las diez áreas tiene aún sala histórica jugable: los módulos físicos llegan en la etapa 5. La [etapa 4](Revision_etapa_4.md) ensaya la fotografía y un viaje en un laboratorio temporal separado.
+El catálogo en `src/game/catalog.ts` aporta IDs estables, nombres y artefactos. Su lista `areaOrder` determina los números y posiciones del panfleto y el número de la señal romana. Ninguna de las diez áreas tiene aún sala histórica jugable: los módulos físicos llegan en la etapa 5. La [etapa 4](Revision_etapa_4.md) ensaya la fotografía y un viaje en un laboratorio temporal separado.
 
 ## Capturas de inspección
 
 | Momento | Captura | Punto revisado |
 | --- | --- | --- |
-| Patio | [Ver imagen](capturas/etapa-3-patio.png) | Pirámide, fachada, vegetación y ruta hacia el guardia. |
-| Guardia | [Ver imagen](capturas/etapa-3-guardia.png) | Proximidad y señal contextual de E. |
-| Panfleto | [Ver imagen](capturas/etapa-3-panfleto.png) | Papel desplegado, mapa e índice de diez áreas. |
-| Hall | [Ver imagen](capturas/etapa-3-hall.png) | Arquitectura, vitrinas y luz hacia Roma. |
+| Patio | Ver imagen — captura no incluida (`capturas/etapa-3-patio.png`) | Pirámide, fachada, vegetación y ruta hacia el guardia. |
+| Guardia | Ver imagen — captura no incluida (`capturas/etapa-3-guardia.png`) | Proximidad y señal contextual de E. |
+| Panfleto | Ver imagen — captura no incluida (`capturas/etapa-3-panfleto.png`) | Papel desplegado, mapa e índice de diez áreas. |
+| Hall | Ver imagen — captura no incluida (`capturas/etapa-3-hall.png`) | Arquitectura, vitrinas y luz hacia Roma. |
 
 ## Aceptación y verificación
 

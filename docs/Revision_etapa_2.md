@@ -1,5 +1,7 @@
 # Revisión de la etapa 2 — movimiento
 
+> Registro histórico de esta revisión. Algunas capturas originales no están incluidas en el repositorio y se identifican como tales. Para la organización actual del código, ver el [codemap](CODEMAP.md).
+
 Esta revisión registra el patio de prueba tal como estaba en la etapa 2. El recorrido principal actual usa el museo de las etapas 3 y 5; el modo de inspección visual de la etapa 1 sigue disponible con `?view=far`, `?view=mid` y `?view=near`.
 
 ## Recorrido
@@ -15,9 +17,9 @@ El retorno mediante clic es deliberado: después de liberar Pointer Lock con Esc
 
 | Momento | Captura | Punto revisado |
 | --- | --- | --- |
-| Recorrido | [Ver imagen](capturas/etapa-2-recorrido.png) | Altura de cámara, escala del patio y ayuda de controles. |
-| Frente al casco | [Ver imagen](capturas/etapa-2-interaccion.png) | Indicación contextual de E. |
-| Ficha abierta | [Ver imagen](capturas/etapa-2-inspeccion.png) | Lectura de la interfaz sobre la escena detenida. |
+| Recorrido | Ver imagen — captura no incluida (`capturas/etapa-2-recorrido.png`) | Altura de cámara, escala del patio y ayuda de controles. |
+| Frente al casco | Ver imagen — captura no incluida (`capturas/etapa-2-interaccion.png`) | Indicación contextual de E. |
+| Ficha abierta | Ver imagen — captura no incluida (`capturas/etapa-2-inspeccion.png`) | Lectura de la interfaz sobre la escena detenida. |
 
 ## Verificación
 

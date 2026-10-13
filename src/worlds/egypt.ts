@@ -1,12 +1,12 @@
 import * as THREE from 'three';
-import { modelCollider, placeModel } from './assets';
-import { exhibitLabel, exhibitSpot, plinth, stoneFloor } from './exhibition';
-import type { GalleryRoom } from './gallery';
-import { createRouteHelp } from './help';
+import { modelCollider, placeModel } from '../rendering/assets';
+import { exhibitLabel, exhibitSpot, plinth, stoneFloor } from '../museum/exhibition';
+import type { GalleryRoom } from '../museum/gallery';
+import { createRouteHelp } from '../game/help';
 import { disposeHistoricalScene, type HistoricalWorld } from './history';
-import type { Collider } from './scene';
-import { addSky } from './sky';
-import { box, mesh, outline, toon } from './visual';
+import type { Collider } from '../game/collision';
+import { addSky } from '../rendering/sky';
+import { box, mesh, outline, toon } from '../rendering/visual';
 
 export function createScarab(parent: THREE.Object3D, position: [number, number, number], scale = 1): THREE.Group {
   const root = new THREE.Group(); root.name = 'escarabajo-egipcio'; root.position.set(...position); root.scale.setScalar(scale); parent.add(root);

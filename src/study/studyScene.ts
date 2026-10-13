@@ -1,9 +1,8 @@
 import * as THREE from 'three';
-import { placeModel } from './assets';
-import { createRomanHelmet } from './helmet';
-import { box, inkStroke, materials as mat, mesh, outline, shadowBlob, silhouette } from './visual';
-
-export type Collider = { minX: number; maxX: number; minZ: number; maxZ: number };
+import { placeModel } from '../rendering/assets';
+import { createRomanHelmet } from '../rendering/helmet';
+import { box, inkStroke, materials as mat, mesh, outline, shadowBlob, silhouette } from '../rendering/visual';
+import type { Collider } from '../game/collision';
 
 export type StudyWorld = {
   scene: THREE.Scene;

@@ -1,14 +1,14 @@
 import * as THREE from 'three';
-import { modelCollider, placeModel } from './assets';
+import { modelCollider, placeModel } from '../rendering/assets';
 import { disposeHistoricalScene, type HistoricalWorld } from './history';
-import type { GalleryRoom } from './gallery';
-import { galleryLayout } from './museumLayout';
-import { exhibition, exhibitSpot, plinth, exhibitLabel } from './exhibition';
-import { addSky } from './sky';
-import { createRouteHelp } from './help';
-import { createRomanHelmet as helmet } from './helmet';
-import type { Collider } from './scene';
-import { box, inkStroke, materials as mat, mesh, outline, palette, toon } from './visual';
+import type { GalleryRoom } from '../museum/gallery';
+import { galleryLayout } from '../museum/museumLayout';
+import { exhibition, exhibitSpot, plinth, exhibitLabel } from '../museum/exhibition';
+import { addSky } from '../rendering/sky';
+import { createRouteHelp } from '../game/help';
+import { createRomanHelmet as helmet } from '../rendering/helmet';
+import type { Collider } from '../game/collision';
+import { box, inkStroke, materials as mat, mesh, outline, palette, toon } from '../rendering/visual';
 
 export function installRomeExhibit(room: GalleryRoom): { artifact: THREE.Object3D; photoSolids: THREE.Object3D[]; colliders: Collider[] } {
   const root = room.root;

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { box, mesh, toon } from './visual';
+import { box, mesh, toon } from '../rendering/visual';
 
 // Shared museum finishes; the outdoor scenes keep their daylight palette.
 export const exhibition = {
