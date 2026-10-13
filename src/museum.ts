@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import type { AreaId } from './catalog';
 import { createGallery, galleryLayout, type GalleryDoor, type GalleryRoom } from './gallery';
+import { createGuard } from './guard';
 import { installRomeExhibit } from './rome';
 import type { Collider } from './scene';
-import { box, inkStroke, irregularCrown, materials as mat, mesh, outline, palette, shadowBlob, silhouette, toon } from './visual';
+import { box, irregularCrown, materials as mat, mesh, outline, palette, shadowBlob, silhouette, toon } from './visual';
 
 export type MuseumWorld = {
   scene: THREE.Scene;
@@ -100,69 +101,6 @@ function pyramid(parent: THREE.Object3D, x: number, z: number): void {
     const mullion = new THREE.Line(new THREE.BufferGeometry().setFromPoints([mid, apex]), new THREE.LineBasicMaterial({ color: 0x477f80, transparent: true, opacity: 0.55 }));
     parent.add(mullion);
   });
-}
-
-function guard(parent: THREE.Object3D): { arm: THREE.Group; paper: THREE.Mesh } {
-  const figure = new THREE.Group();
-  figure.position.set(3.7, 0, -0.65);
-  parent.add(figure);
-  shadowBlob(3.83, -0.48, 0.6, 0.34, parent);
-  const jacket = toon(0x486e82);
-  const jacketShade = toon(0x355569);
-  const trousers = toon(0x394e5d);
-  const skin = toon(0xe6c9a8);
-  for (const side of [-1, 1]) {
-    const leg = mesh(new THREE.CylinderGeometry(0.13, 0.17, 0.75, 6), trousers, [side * 0.19, 0.44, 0], figure);
-    leg.rotation.z = side * 0.035;
-    box(0.31, 0.15, 0.43, mat.ink, [side * 0.19, 0.075, 0.08], figure);
-  }
-  const coat = mesh(new THREE.CylinderGeometry(0.43, 0.34, 0.9, 6), jacket, [0, 1.25, 0], figure);
-  coat.rotation.y = Math.PI / 6;
-  silhouette(coat, 1.023);
-  box(0.16, 0.69, 0.035, jacketShade, [0, 1.21, 0.37], figure);
-  box(0.54, 0.12, 0.46, trousers, [0, 0.8, 0], figure);
-  box(0.53, 0.11, 0.38, jacketShade, [0, 1.08, 0.02], figure);
-  box(0.13, 0.07, 0.04, mat.gold, [0, 1.08, 0.25], figure);
-  box(0.22, 0.1, 0.045, mat.sand, [0.24, 1.48, 0.29], figure);
-  box(0.085, 0.14, 0.05, mat.gold, [-0.25, 1.43, 0.29], figure);
-  for (const y of [1.35, 1.18, 1.02]) {
-    mesh(new THREE.SphereGeometry(0.018, 6, 4), mat.gold, [0.075, y, 0.39], figure).castShadow = false;
-  }
-  const neck = mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.17, 6), skin, [0, 1.75, 0], figure);
-  neck.castShadow = false;
-  const head = mesh(new THREE.IcosahedronGeometry(0.27, 1), skin, [0, 1.99, 0.035], figure);
-  head.scale.set(0.9, 1.08, 0.86);
-  silhouette(head, 1.025);
-  for (const side of [-1, 1]) {
-    mesh(new THREE.SphereGeometry(0.055, 6, 4), skin, [side * 0.235, 2.0, 0.01], figure);
-    const eye = mesh(new THREE.SphereGeometry(0.014, 6, 4), mat.ink, [side * 0.095, 2.015, 0.264], figure);
-    eye.castShadow = false;
-    inkStroke([[side * 0.15, 2.08, 0.24], [side * 0.075, 2.095, 0.26]], figure, 0.72);
-  }
-  const nose = mesh(new THREE.TetrahedronGeometry(0.035), skin, [0, 1.95, 0.287], figure);
-  nose.castShadow = false;
-  inkStroke([[-0.06, 1.88, 0.255], [0, 1.87, 0.275], [0.06, 1.88, 0.255]], figure, 0.7);
-  const cap = mesh(new THREE.CylinderGeometry(0.29, 0.31, 0.19, 9), jacketShade, [0, 2.28, 0], figure);
-  cap.scale.z = 0.85;
-  box(0.6, 0.04, 0.34, jacketShade, [0, 2.19, 0.2], figure);
-  box(0.13, 0.045, 0.025, mat.gold, [0, 2.3, 0.276], figure);
-  let givingArm: THREE.Group | null = null;
-  let paper: THREE.Mesh | null = null;
-  for (const side of [-1, 1]) {
-    const arm = new THREE.Group();
-    arm.position.set(side * 0.42, 1.59, 0);
-    figure.add(arm);
-    const sleeve = mesh(new THREE.CylinderGeometry(0.125, 0.1, 0.68, 6), jacket, [side * 0.05, -0.32, 0], arm);
-    sleeve.rotation.z = side * 0.13;
-    box(0.23, 0.07, 0.23, jacketShade, [side * 0.09, -0.63, 0], arm);
-    mesh(new THREE.IcosahedronGeometry(0.105, 0), skin, [side * 0.09, -0.75, 0.015], arm);
-    if (side === -1) {
-      paper = box(0.34, 0.42, 0.026, mat.cream, [-0.09, -0.81, 0.16], arm);
-      paper.visible = false;
-      givingArm = arm;
-    }
-  }
-  return { arm: givingArm!, paper: paper! };
 }
 
 function marbleMaterial(): THREE.MeshToonMaterial {
@@ -317,7 +255,7 @@ export function createMuseumScene(): MuseumWorld {
   outline(mesh(new THREE.ExtrudeGeometry(pediment, { depth: 0.35, bevelEnabled: false }), mat.cream, [0, 0, -4.3], scene), 0.6);
   sign(scene, 'MUSEO DEL TIEMPO', [0, 4.77, -3.44], 3.35);
   const entranceGate = turnstiles(scene);
-  const attendant = guard(scene);
+  const attendant = createGuard(scene);
 
   // The original hall leads to the first room and later receives the returning route.
   box(17, 0.14, 18, marble, [0, 0.02, -12.4], scene).castShadow = false;
@@ -394,12 +332,10 @@ export function createMuseumScene(): MuseumWorld {
   }
   let entranceOpening = false;
   let entranceProgress = 0;
-  let handoffTime = 0;
-
   return {
     scene,
     colliders,
-    guard: new THREE.Vector3(3.7, 1.45, -0.65),
+    guard: attendant.interaction,
     rooms: gallery.rooms,
     doors: gallery.doors,
     exhibits,
@@ -409,31 +345,18 @@ export function createMuseumScene(): MuseumWorld {
     )) ?? null,
     openEntrance: () => {
       entranceOpening = true;
-      handoffTime = 0.001;
-      attendant.paper.visible = true;
+      attendant.handover();
     },
     openDoor: (door) => {
       if (!door.opening && door.progress === 0) door.opening = true;
     },
     update: (delta) => {
+      attendant.update(delta);
       if (entranceOpening && entranceProgress < 1) {
         entranceProgress = Math.min(1, entranceProgress + delta * 1.3);
         entranceGate.wings[0].rotation.y = entranceProgress * 1.35;
         entranceGate.wings[1].rotation.y = -entranceProgress * 1.35;
         if (entranceProgress === 1) colliders.splice(colliders.indexOf(doorBlock), 1);
-      }
-      if (handoffTime > 0) {
-        handoffTime += delta;
-        const raised = Math.min(handoffTime / 0.4, 1);
-        const lowered = Math.max(0, 1 - (handoffTime - 1.1) / 0.7);
-        attendant.arm.rotation.x = -1.05 * Math.min(raised, lowered);
-        if (handoffTime > 1.1) {
-          attendant.paper.visible = false;
-        }
-        if (handoffTime > 1.8) {
-          attendant.arm.rotation.x = 0;
-          handoffTime = 0;
-        }
       }
       gallery.update(delta);
       for (const door of gallery.doors) {
