@@ -1,6 +1,6 @@
 # Museo de viajes en el tiempo
 
-Proyecto de videojuego 3D en primera persona para navegador. El recorrido actual permite explorar el patio de un museo ficticio inspirado en el Louvre, recibir un panfleto, entrar al hall y visitar diez salas vacías en preparación. La Polaroid se probó en la etapa 4 y se integrará al recorrido histórico en una entrega posterior.
+Proyecto de videojuego 3D en primera persona para navegador. El recorrido actual permite explorar el patio de un museo ficticio inspirado en el Louvre, recibir un panfleto, entrar al hall y abrir la primera sala de un circuito en U. Las diez salas tienen lugar físico, pero las puertas posteriores esperan la finalización de su sala anterior. La Polaroid se probó en la etapa 4 y se integrará al recorrido histórico en una entrega posterior.
 
 ## Ejecutar el prototipo
 
@@ -11,11 +11,11 @@ npm install
 npm run dev
 ```
 
-Abrir la dirección local que muestra Vite y hacer clic en **Comenzar visita**. Usar **WASD** para caminar y el **mouse** para mirar. Acercarse al guardia junto a la entrada y pulsar **E** para recibir el panfleto; **M** lo despliega o guarda. Después se puede entrar al hall, seguir el corredor central y recorrer las diez salas. Sus números, colores y posiciones coinciden con el panfleto. La luz cálida señala la sala de Roma. **Escape** pausa; hacer clic en **Volver al recorrido** recupera el control del mouse.
+Abrir la dirección local que muestra Vite y hacer clic en **Comenzar visita**. Usar **WASD** para caminar y el **mouse** para mirar. Acercarse al guardia junto a la entrada y pulsar **E** para recibir el panfleto; **M** lo despliega o guarda. En el hall, acercarse a la puerta 01 y pulsar **E**: se abre y las luces de la sala parpadean antes de revelar Roma. La puerta hacia Egipto permanece cerrada hasta completar Roma. **Escape** pausa; hacer clic en **Volver al recorrido** recupera el control del mouse.
 
 Para revisar el estilo de la etapa 1 sin caminar, abrir `?view=far`, `?view=mid` o `?view=near` al final de la dirección local. En ese modo se puede orbitar con el mouse, acercar con la rueda y cambiar entre las tres vistas. `npm run typecheck` revisa tipos y `npm run build` genera la versión estática en `dist/`.
 
-El laboratorio temporal de la etapa 4 fue retirado de la experiencia pública. Las diez salas actuales son WIP: no tienen exhibiciones, fotografía ni viajes temporales. El modo de estudio conserva la fachada, la vegetación y el casco de gladiador de la etapa 1.
+El laboratorio temporal de la etapa 4 fue retirado de la experiencia pública. Las diez salas actuales son WIP: no tienen exhibiciones, fotografía ni viajes temporales. Como todavía no existe la finalización de Roma, la puerta 02 no se desbloquea en este prototipo. El modo de estudio conserva la fachada, la vegetación y el casco de gladiador de la etapa 1.
 
 [Revisión visual y capturas de la etapa 1](docs/Revision_etapa_1.md).
 [Revisión del recorrido de la etapa 2](docs/Revision_etapa_2.md).
@@ -29,4 +29,4 @@ El laboratorio temporal de la etapa 4 fue retirado de la experiencia pública. L
 - [Plan de desarrollo](docs/Plan_de_desarrollo.md): siete etapas independientes, entregables y criterios de aceptación.
 - [Arquitectura prevista](docs/Arquitectura_prevista.md): áreas reordenables, progresión, fotografía y persistencia.
 
-Las decisiones aclaradas en el plan —museo ficticio inspirado en el Louvre, salas WIP accesibles y salto de áreas incompletas— actualizan esos puntos de la especificación maestra. El resto de la especificación sigue vigente.
+Las decisiones aclaradas en el plan —museo ficticio inspirado en el Louvre y recorrido secuencial en U— actualizan esos puntos de la especificación maestra. El resto de la especificación sigue vigente.

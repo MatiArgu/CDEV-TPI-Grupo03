@@ -9,8 +9,8 @@ El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un
 ### Decisiones acordadas
 
 - El museo es ficticio, con exterior inspirado en el Louvre. Esto permite incluir las diez épocas elegidas sin presentar los objetos como piezas reales de sus colecciones.
-- Las diez salas tienen un lugar físico. Una sala WIP es un espacio vacío visitable, identificado por nombre y número; todavía no habilita el viaje temporal.
-- El orden se cambia en una sola lista de IDs. Cambian con ella la posición física, la numeración, el panfleto y la secuencia de activación. La progresión salta las áreas WIP.
+- Las diez salas tienen un lugar físico en un circuito en U. El hall abre la primera puerta; cada puerta posterior requiere completar la sala anterior. Las salas WIP siguen cerradas hasta desarrollarse.
+- El orden se cambia en una sola lista de IDs. Cambian con ella la posición física, la numeración y el panfleto. Si una época jugable se reordena detrás de salas WIP, hará falta una ruta de acceso alternativa antes de activar ese orden.
 - Orden inicial: Roma, Egipto, Grecia, Babilonia, Edad Media, Renacimiento, Japón feudal, París 1830, Titanic y llegada a la Luna.
 - La plataforma objetivo del MVP es escritorio, con teclado, mouse y navegador moderno. No se planifica una versión móvil en estas etapas.
 
@@ -52,9 +52,9 @@ El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un
 
 **Objetivo:** preparar el museo completo sin desarrollar ocho mundos prematuramente.
 
-**Trabajo:** construir diez módulos de sala compactos y visitables, con nombres, números y una identidad cromática básica. Instanciar cada área en el módulo que corresponda a la lista de orden. En esta etapa las diez salas siguen vacías e inactivas; el panfleto refleja su posición y estado. Retirar la escena temporal de prueba de la experiencia pública.
+**Trabajo:** construir diez módulos de sala amplios en un circuito en U, con nombres, números y una identidad cromática básica. Instanciar cada área en el módulo que corresponda a la lista de orden. La puerta inicial se abre al interactuar y enciende la primera sala con un breve parpadeo; las siguientes permanecen cerradas hasta completar la sala precedente. En esta etapa las diez salas siguen vacías e inactivas; el panfleto refleja su posición y estado. Retirar la escena temporal de prueba de la experiencia pública.
 
-**Aceptación:** las diez salas existen y se pueden recorrer. Cambiar la lista de orden mueve físicamente las salas y actualiza la señalización y el panfleto sin editar coordenadas de cada época. Las WIP no activan viajes ni impiden llegar a la siguiente época jugable.
+**Aceptación:** las diez salas existen en la U y el plano muestra la ida por el ala izquierda y el regreso por la derecha. Tras recibir el panfleto se puede abrir la puerta 01, entrar en la primera sala iluminada y ver la puerta 02 cerrada. Cambiar la lista de orden mueve la identidad, la señalización y el panfleto sin editar coordenadas de cada época. Las WIP no activan viajes.
 
 ### 6. Roma de principio a fin
 
@@ -62,7 +62,7 @@ El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un
 
 **Trabajo:** exhibición romana con casco de gladiador fotografiable; mundo acotado inspirado en el Coliseo durante una naumaquia congelada; ruta lineal con puntos de interés, ayuda sutil tras 20 segundos, interacción final, regreso, registro de Polaroid y casco en el panfleto. Compartir la lógica de transición y progreso con las futuras áreas.
 
-**Aceptación:** todo el ciclo funciona sin intervención de desarrollo. Al volver, Roma figura completada y el panfleto muestra 1/10. Como Egipto todavía es WIP en esta entrega, no se anuncia otra época jugable hasta la etapa 7.
+**Aceptación:** todo el ciclo funciona sin intervención de desarrollo. Al volver, Roma figura completada y el panfleto muestra 1/10. La puerta 02 espera la instalación de Egipto en la etapa 7.
 
 ### 7. Egipto y cierre del MVP
 
@@ -70,14 +70,14 @@ El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un
 
 **Trabajo:** exhibición del escarabajo; templo ceremonial egipcio pequeño con recorrido propio; reutilización de foto, validación, transición, ayuda y regreso. Completar audio ambiental, persistencia local, pantalla de inicio y pausa, conclusión discreta y opción de reiniciar partida.
 
-**Aceptación:** un jugador nuevo puede completar Roma y Egipto en secuencia, ver ambas fotos y artefactos en el panfleto y recibir el cierre 2/10. Puede seguir explorando las salas WIP o empezar de nuevo. Recargar el navegador conserva el progreso.
+**Aceptación:** un jugador nuevo puede completar Roma y Egipto en secuencia, ver ambas fotos y artefactos en el panfleto y recibir el cierre 2/10. Puede volver al hall por las puertas abiertas o empezar de nuevo; las otras ocho salas permanecen cerradas. Recargar el navegador conserva el progreso.
 
 ## Verificación transversal
 
 - **Visual:** revisar cada escenario nuevo contra la etapa 1: colores pastel, lectura de siluetas, contornos selectivos y sensación de tiempo detenido. Limitar el tamaño del escenario si hace falta para preservar la calidad.
 - **Foto:** probar artefacto centrado, en el borde, fuera del cuadro, parcialmente visible y completamente tapado; comparar cada captura con lo que se veía en el encuadre.
 - **Estado:** probar panfleto, cámara, pausa y transiciones en distintos órdenes para impedir acciones incompatibles o controles bloqueados.
-- **Progreso:** completar Roma y Egipto, recargar y reiniciar. Mover temporalmente Egipto al puesto 8: debe cambiar de sala y número, conservar sus datos por ID y seguir activándose después de Roma porque las áreas intermedias son WIP.
+- **Progreso:** completar Roma y Egipto, recargar y reiniciar. Mover temporalmente Egipto al puesto 8 debe cambiar de sala y número y conservar sus datos por ID. Antes de ofrecer ese orden al jugador, diseñar y probar un acceso que evite las salas WIP cerradas.
 - **Recorrido:** probar las siete entregas en el navegador, además de ejecutar las comprobaciones de compilación y tipos disponibles en cada etapa.
 
 Cada entrega se cierra con una demostración del recorrido correspondiente, una revisión de sus criterios y una lista breve de pendientes. Los problemas que rompan el flujo de esa entrega se corrigen antes de iniciar la siguiente.

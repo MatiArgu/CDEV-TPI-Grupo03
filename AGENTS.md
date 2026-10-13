@@ -6,7 +6,7 @@ Antes de trabajar, leer [CLAUDE.md](CLAUDE.md): sus principios de razonamiento, 
 
 ## Estado del repositorio y fuentes de verdad
 
-- El repositorio contiene documentación y un prototipo Three.js + TypeScript + Vite de las etapas 1 a 5. El recorrido actual llega a diez salas WIP; todavía no hay mundos históricos, progreso ni guardado. Los comandos disponibles están en [package.json](package.json).
+- El repositorio contiene documentación y un prototipo Three.js + TypeScript + Vite de las etapas 1 a 5. El recorrido actual abre la primera sala de un circuito en U de diez posiciones; todavía no hay mundos históricos, finalización de salas, progreso ni guardado. Los comandos disponibles están en [package.json](package.json).
 - [README.md](README.md) resume el proyecto. [docs/Proyecto_general.md](docs/Proyecto_general.md) define la experiencia, la jugabilidad y la dirección artística.
 - [docs/Plan_de_desarrollo.md](docs/Plan_de_desarrollo.md) divide el trabajo en siete entregas con criterios de aceptación. Sus decisiones aclaradas prevalecen sobre los puntos correspondientes de la especificación maestra. No implementar las siete entregas de una vez ni avanzar a la siguiente sin revisar la anterior.
 - [docs/Arquitectura_prevista.md](docs/Arquitectura_prevista.md) fija decisiones transversales. El catálogo y los módulos de sala ya existen; la integración histórica, el progreso y el guardado siguen previstos.
@@ -15,8 +15,8 @@ Antes de trabajar, leer [CLAUDE.md](CLAUDE.md): sus principios de razonamiento, 
 ## Alcance del MVP
 
 - Crear un videojuego 3D **jugable en navegador de escritorio**, en primera persona, basado en exploración, fotografía y viajes a momentos históricos congelados. No sustituir la interacción por un video o una maqueta.
-- El museo es ficticio, con exterior inspirado en el Louvre. Tiene diez salas físicas visitables y representadas en el panfleto. Solo Roma y Egipto tendrán exhibición y mundo histórico jugables en el MVP; las otras ocho serán espacios WIP sin viaje temporal.
-- Mantener la progresión Roma → Egipto para el orden inicial y saltar las salas WIP si se reordena el catálogo. La foto válida inicia el viaje; el área se completa al interactuar con el artefacto histórico y volver al museo.
+- El museo es ficticio, con exterior inspirado en el Louvre. Tiene diez posiciones de sala en un circuito en U, representadas en el panfleto. Solo Roma y Egipto tendrán exhibición y mundo histórico jugables en el MVP; las otras ocho permanecerán cerradas hasta desarrollarse.
+- Mantener la progresión Roma → Egipto para el orden inicial. El recorrido físico secuencial deja pendiente un acceso alternativo si una época jugable se reordena detrás de salas WIP cerradas. La foto válida inicia el viaje; el área se completa al interactuar con el artefacto histórico y volver al museo.
 - Preservar la mecánica central: la Polaroid captura lo que muestra el render, se revela y solo activa el viaje si el artefacto está visible dentro del encuadre, aunque esté en un borde. Una foto inválida también se revela y permite reintentar.
 - Mantener la estética ilustrada *Stylized Hand-Drawn Anime 3D*: geometría low-poly, colores pastel, materiales toon, contornos selectivos y efectos livianos. Priorizar la calidad de la escena y del revelado sobre el tamaño de los mundos.
 - Evitar combate, tercera persona, supervivencia, inventarios complejos y las ocho épocas adicionales durante este MVP.
