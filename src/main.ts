@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { areaCatalog } from './catalog';
+import { areaCatalog, areaOrder, availabilityCopy, availabilityOf } from './catalog';
 import { createMuseumScene } from './museum';
 import { createPamphlet } from './pamphlet';
 import { createPlayerControls } from './player';
@@ -131,14 +131,17 @@ try {
           app.dataset.room = room.id;
           if (!visitedRooms.has(room.id)) {
             visitedRooms.add(room.id);
-            showToast(`${String(room.number).padStart(2, '0')} · ${areaCatalog[room.id].name} — sala en preparación.`);
+            showToast(`${String(room.number).padStart(2, '0')} · ${areaCatalog[room.id].name} — ${availabilityCopy(areaCatalog[room.id].availability).description}.`);
           }
         } else if (position.y < -21.1 && position.y > -43.6 && Math.abs(position.x) < 8.3) {
           app.dataset.location = 'gallery';
           delete app.dataset.room;
           if (!enteredGallery) {
             enteredGallery = true;
-            showToast('Galerías 01—10. Todas las salas están abiertas y en preparación.');
+            const installed = areaOrder.filter((id) => availabilityOf(id) === 'playable').length;
+            showToast(installed > 0
+              ? `Galerías 01—10. ${installed} exhibición${installed === 1 ? '' : 'es'} instalada${installed === 1 ? '' : 's'}.`
+              : 'Galerías 01—10. Todas las salas están abiertas y en preparación.');
           }
         } else if (position.y < -4.8 && position.y > -21.1 && Math.abs(position.x) < 8.1) {
           app.dataset.location = 'hall';

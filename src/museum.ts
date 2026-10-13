@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createGallery, type GalleryRoom } from './gallery';
 import type { Collider } from './scene';
-import { box, irregularCrown, materials as mat, mesh, outline, palette, shadowBlob, silhouette } from './visual';
+import { box, inkStroke, irregularCrown, materials as mat, mesh, outline, palette, shadowBlob, silhouette } from './visual';
 
 export type MuseumWorld = {
   scene: THREE.Scene;
@@ -113,6 +113,14 @@ function guard(parent: THREE.Object3D): { arm: THREE.Group; paper: THREE.Mesh } 
   box(0.22, 0.11, 0.04, mat.coral, [0.22, 1.38, 0.2], figure);
   const head = mesh(new THREE.IcosahedronGeometry(0.28, 1), mat.sand, [0, 1.82, 0.03], figure);
   silhouette(head, 1.035);
+  for (const side of [-1, 1]) {
+    const eye = mesh(new THREE.SphereGeometry(0.019, 6, 4), mat.ink, [side * 0.1, 1.86, 0.298], figure);
+    eye.castShadow = false;
+    inkStroke([[side * 0.15, 1.96, 0.267], [side * 0.08, 1.975, 0.287]], figure, 0.9);
+  }
+  const nose = mesh(new THREE.TetrahedronGeometry(0.035), mat.sand, [0, 1.79, 0.322], figure);
+  nose.castShadow = false;
+  inkStroke([[-0.07, 1.735, 0.281], [0, 1.725, 0.299], [0.07, 1.735, 0.281]], figure, 0.82);
   box(0.62, 0.19, 0.56, mat.ink, [0, 2.12, 0.02], figure);
   box(0.75, 0.045, 0.4, mat.ink, [0, 2.02, 0.2], figure);
   let givingArm: THREE.Group | null = null;

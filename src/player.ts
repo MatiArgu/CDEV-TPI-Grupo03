@@ -123,6 +123,7 @@ export function createPlayerControls(
       return;
     }
     if (event.code === 'KeyM' && !event.repeat) {
+      // The pamphlet is keyboard-only; keeping Pointer Lock avoids an extra click to resume.
       if (mode === 'playing' && options.canOpenPamphlet()) setMode('pamphlet');
       else if (mode === 'pamphlet') setMode(document.pointerLockElement === canvas ? 'playing' : 'paused');
       return;

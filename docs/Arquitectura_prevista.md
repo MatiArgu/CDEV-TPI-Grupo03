@@ -24,7 +24,7 @@ Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotograf
 ## Salas, estados y progresión
 
 - En la etapa 3 solo existía el hall y un umbral cerrado hacia el futuro sector romano. La etapa 5 agrega un corredor con cinco pares de salas abiertas. Cada módulo recibe el ID situado en esa posición de `areaOrder`; su grupo local permite incorporar una exhibición sin fijarla a coordenadas globales.
-- Número de sala, señalización, posición en el panfleto y ubicación de la luz romana se calculan a partir de `areaOrder`. Mover `egipto` al octavo lugar actualizó su sala, letrero y panfleto en la prueba de la etapa 5. La luz de Egipto corresponde a su futura exhibición.
+- Número de sala, señalización, posición en el panfleto y ubicación de la luz romana se calculan a partir de `areaOrder`. El texto de disponibilidad de sala y panfleto se deriva del catálogo. Mover `egipto` al octavo lugar actualizó su sala, letrero y panfleto en la prueba de la etapa 5. La luz de Egipto corresponde a su futura exhibición.
 - **Disponibilidad** (`WIP` o jugable) y **progreso** (`locked`, `active`, `completed`) son conceptos distintos. Una sala WIP se puede visitar, pero no contiene viaje temporal y nunca se vuelve `active`.
 - Solo una época jugable incompleta está activa a la vez: la primera de `areaOrder` que no esté completada. Las WIP se saltan. Si no queda ninguna jugable incompleta, no hay área activa y se muestra la conclusión correspondiente al contenido disponible.
 - Una foto válida inicia el viaje, pero el área solo se marca como completada al interactuar con el artefacto en el mundo histórico y regresar. La foto y la representación del artefacto se añaden juntas al panfleto en ese momento.
@@ -39,7 +39,7 @@ Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotograf
 
 ## Estado de partida y controles
 
-La experiencia necesita estados explícitos para inicio, exploración del museo, revelado, transición, exploración histórica, regreso y cierre del MVP. Cámara equipada, panfleto abierto y pausa se gestionan como modos compatibles con esos estados. Durante el revelado y las transiciones se deshabilitan movimiento y disparo; al cerrar una interfaz se recupera Pointer Lock solo mediante la acción del jugador.
+La experiencia necesita estados explícitos para inicio, exploración del museo, revelado, transición, exploración histórica, regreso y cierre del MVP. Cámara equipada, panfleto abierto y pausa se gestionan como modos compatibles con esos estados. El panfleto actual se maneja solo con M y conserva Pointer Lock mientras bloquea movimiento y mirada; Escape abre la pausa y lo libera. Si el puntero fue liberado, volver a capturarlo requiere una acción del jugador. Durante el revelado y las transiciones se deshabilitan movimiento y disparo.
 
 El guardado local tendrá versión y usará IDs estables: panfleto recibido, áreas completadas y fotos válidas asociadas a cada área. Las capturas guardadas se reducirán de tamaño para no saturar el almacenamiento del navegador. El orden **no** se guardará en la partida: al recargar se toma el `areaOrder` actual y se reubican las áreas completadas en el panfleto. Reiniciar elimina el progreso guardado y comienza en el exterior.
 
