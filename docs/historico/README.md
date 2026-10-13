@@ -11,4 +11,4 @@ Estos documentos registran planes, exploraciones y revisiones de versiones anter
 | [Selección Kenney](Seleccion_Kenney.md) e [inventarios](Inventario_Kenney.csv) | Exploración original; [ZIP](Inventario_Kenney_zip.csv) |
 | [Barrido de extremo a extremo](Revision_end_to_end.md) | Resultados, medición y capturas del 13 de octubre de 2026 |
 
-Las capturas conservadas están en [docs/capturas](../capturas/). En la revisión visual Kenney se mencionan 34 capturas anteriores cuyos archivos no estaban versionados; sus referencias se marcaron como «captura no conservada» para evitar enlaces rotos.
+Las capturas no se incluyen en el repositorio. En la revisión visual Kenney se mencionan 34 capturas anteriores cuyos archivos ya no estaban en esa ruta; sus referencias se marcaron como «captura no conservada» para evitar enlaces rotos. El barrido de extremo a extremo también conserva el registro escrito de sus capturas.
