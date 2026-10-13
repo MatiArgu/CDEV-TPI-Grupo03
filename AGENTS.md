@@ -6,10 +6,10 @@ Antes de trabajar, leer [CLAUDE.md](CLAUDE.md): sus principios de razonamiento, 
 
 ## Estado del repositorio y fuentes de verdad
 
-- El repositorio contiene documentación y un prototipo Three.js + TypeScript + Vite de las etapas 1 a 5. El recorrido actual abre la primera sala de un circuito en U de diez posiciones; todavía no hay mundos históricos, finalización de salas, progreso ni guardado. Los comandos disponibles están en [package.json](package.json).
+- El repositorio contiene documentación y un prototipo Three.js + TypeScript + Vite de las etapas 1 a 6. Roma integra exhibición, fotografía, naumaquia, regreso y progreso en memoria. Egipto y el guardado siguen pendientes. La [renovación visual con Kenney](docs/Revision_visual_Kenney.md) incorpora modelos locales con licencias; las fábricas de escenas requieren cargar previamente los modelos mediante `loadModels()`. Los comandos disponibles están en [package.json](package.json).
 - [README.md](README.md) resume el proyecto. [docs/Proyecto_general.md](docs/Proyecto_general.md) define la experiencia, la jugabilidad y la dirección artística.
 - [docs/Plan_de_desarrollo.md](docs/Plan_de_desarrollo.md) divide el trabajo en siete entregas con criterios de aceptación. Sus decisiones aclaradas prevalecen sobre los puntos correspondientes de la especificación maestra. No implementar las siete entregas de una vez ni avanzar a la siguiente sin revisar la anterior.
-- [docs/Arquitectura_prevista.md](docs/Arquitectura_prevista.md) fija decisiones transversales. El catálogo y los módulos de sala ya existen; la integración histórica, el progreso y el guardado siguen previstos.
+- [docs/Arquitectura_prevista.md](docs/Arquitectura_prevista.md) fija decisiones transversales. El catálogo, los módulos de sala y el ciclo romano ya existen; Egipto y la persistencia siguen previstos.
 - Ante una contradicción nueva o un requisito decisivo que falte, explicitarla antes de implementar. No presentar características planificadas como si ya funcionaran.
 
 ## Alcance del MVP

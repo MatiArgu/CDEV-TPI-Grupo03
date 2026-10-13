@@ -1,5 +1,7 @@
 import * as THREE from 'three';
-import { box, inkStroke, irregularCrown, materials as mat, mesh, outline, shadowBlob, silhouette } from './visual';
+import { placeModel } from './assets';
+import { createRomanHelmet } from './helmet';
+import { box, inkStroke, materials as mat, mesh, outline, shadowBlob, silhouette } from './visual';
 
 export type Collider = { minX: number; maxX: number; minZ: number; maxZ: number };
 
@@ -42,73 +44,15 @@ function makeColumn(parent: THREE.Object3D, x: number, z: number): void {
 
 function makeTree(parent: THREE.Object3D, x: number, z: number, seed: number): void {
   shadowBlob(x + 0.34, z + 0.3, 1.8, 0.8, parent);
-  const trunk = mesh(new THREE.CylinderGeometry(0.16, 0.29, 2.6, 7), mat.darkGold, [x, 1.35, z], parent);
-  trunk.rotation.z = 0.065 * seed;
-  silhouette(trunk, 1.035);
-  const branches: Array<[number, number, number, number, THREE.Material]> = [
-    [-0.52, 3.22, 0.03, 1.22, mat.green],
-    [0.47, 3.38, -0.06, 1.12, mat.sage],
-    [0.02, 3.85, -0.1, 1.37, mat.mint],
-    [-0.13, 4.22, 0.25, 0.88, mat.green],
-  ];
-  for (const [dx, y, dz, radius, material] of branches) {
-    const crown = irregularCrown(radius, material, seed + y);
-    crown.position.set(x + dx, y, z + dz);
-    crown.scale.set(1.05, 0.8, 0.87);
-    parent.add(crown);
-  }
+  placeModel(seed > 0 ? 'oak' : 'slenderTree', parent, [x, 0.03, z], { height: 4.9, rotation: seed * 0.8 });
+  placeModel('leaves', parent, [x - 0.6, 0.04, z + 0.3], { height: 0.35 });
+  placeModel('rock', parent, [x + 0.5, 0.04, z + 0.55], { height: 0.23 });
 }
 
 function makePlanter(parent: THREE.Object3D, x: number, z: number): void {
-  const bowl = mesh(new THREE.CylinderGeometry(0.68, 0.46, 0.58, 9), mat.stone, [x, 0.38, z], parent);
-  silhouette(bowl, 1.025);
-  outline(bowl, 0.65);
-  mesh(new THREE.CylinderGeometry(0.66, 0.66, 0.045, 9), mat.darkGold, [x, 0.7, z], parent);
-  for (let i = 0; i < 5; i++) {
-    const angle = i * Math.PI * 2 / 5;
-    const leaf = irregularCrown(0.38 + (i % 2) * 0.07, i % 2 ? mat.sage : mat.green, i + x);
-    leaf.position.set(x + Math.sin(angle) * 0.33, 0.84 + (i % 3) * 0.1, z + Math.cos(angle) * 0.28);
-    leaf.scale.y = 0.75;
-    parent.add(leaf);
-  }
-  for (let i = 0; i < 3; i++) {
-    const flower = mesh(new THREE.IcosahedronGeometry(0.07, 0), mat.coral, [x - 0.23 + i * 0.21, 1.14 + (i % 2) * 0.09, z + 0.23], parent);
-    flower.castShadow = false;
-  }
-}
-
-function makeHelmet(parent: THREE.Object3D): void {
-  const artifact = new THREE.Group();
-  artifact.position.set(0, 1.44, 1.4);
-  parent.add(artifact);
-
-  const dome = mesh(new THREE.SphereGeometry(0.56, 12, 6, 0, Math.PI * 2, 0, Math.PI / 2), mat.gold, [0, 0.28, 0], artifact);
-  dome.scale.z = 0.86;
-  silhouette(dome, 1.036);
-  outline(dome, 0.85);
-  const brim = mesh(new THREE.TorusGeometry(0.55, 0.07, 5, 16), mat.darkGold, [0, 0.28, 0], artifact);
-  brim.rotation.x = Math.PI / 2;
-  outline(brim, 0.8);
-  const faceOpening = box(0.68, 0.38, 0.035, mat.ink, [0, -0.07, 0.46], artifact);
-  faceOpening.castShadow = false;
-  const brow = box(0.88, 0.11, 0.12, mat.gold, [0, 0.22, 0.48], artifact);
-  outline(brow, 0.8);
-  const frontGuard = box(0.13, 0.55, 0.1, mat.gold, [0, -0.14, 0.52], artifact);
-  frontGuard.rotation.x = -0.1;
-  outline(frontGuard, 0.85);
-  for (const side of [-1, 1]) {
-    const cheek = box(0.26, 0.5, 0.13, mat.gold, [side * 0.42, -0.18, 0.44], artifact);
-    cheek.rotation.z = side * 0.22;
-    outline(cheek, 0.85);
-    mesh(new THREE.SphereGeometry(0.06, 8, 5), mat.coral, [side * 0.48, 0.13, 0.32], artifact);
-  }
-  const crestBase = box(0.11, 0.13, 0.86, mat.darkGold, [0, 0.81, -0.04], artifact);
-  outline(crestBase, 0.78);
-  for (let i = 0; i < 7; i++) {
-    const feather = mesh(new THREE.ConeGeometry(0.13, 0.54 - Math.abs(i - 3) * 0.045, 4), mat.coral, [0, 1.11, -0.38 + i * 0.12], artifact);
-    feather.rotation.z = 0.1;
-    silhouette(feather, 1.04);
-  }
+  placeModel('pot', parent, [x, 0.08, z], { height: 0.56, width: 1.28 });
+  placeModel('bush', parent, [x, 0.48, z], { height: 0.6, width: 1.05 });
+  for (let i = 0; i < 3; i++) placeModel('flowers', parent, [x - 0.3 + i * 0.3, 0.52, z + 0.12], { height: 0.62 + i % 2 * 0.1 });
 }
 
 function makeArchitecture(parent: THREE.Object3D): void {
@@ -227,7 +171,7 @@ export function createStudyScene(): StudyWorld {
   outline(pedestalTop, 0.4);
   const plaque = box(0.6, 0.22, 0.025, mat.darkGold, [0, 0.78, 1.935], scene);
   plaque.castShadow = false;
-  makeHelmet(scene);
+  createRomanHelmet(scene, [0, 1.67, 1.4], { gold: mat.gold, dark: mat.darkGold, coral: mat.coral, ink: mat.ink });
 
   // These bounds match the solid parts of this temporary courtyard scene.
   const colliders: Collider[] = [

@@ -1,10 +1,11 @@
 import * as THREE from 'three';
+import { modelCollider, placeModel } from './assets';
 import type { AreaId } from './catalog';
 import { createGallery, galleryLayout, type GalleryDoor, type GalleryRoom } from './gallery';
 import { createGuard } from './guard';
 import { installRomeExhibit } from './rome';
 import type { Collider } from './scene';
-import { box, irregularCrown, materials as mat, mesh, outline, palette, shadowBlob, silhouette, toon } from './visual';
+import { box, materials as mat, mesh, outline, palette, shadowBlob, silhouette, toon } from './visual';
 
 export type MuseumWorld = {
   scene: THREE.Scene;
@@ -26,11 +27,12 @@ function sign(parent: THREE.Object3D, label: string, position: [number, number, 
   const context = canvas.getContext('2d')!;
   context.fillStyle = '#f0f2e5';
   context.fillRect(0, 0, canvas.width, canvas.height);
-  context.strokeStyle = '#354044';
-  context.lineWidth = 11;
-  context.strokeRect(7, 7, 754, 150);
+  context.strokeStyle = '#b59b70';
+  context.lineWidth = 2;
+  context.strokeRect(9, 9, 750, 146);
+  context.strokeRect(15, 15, 738, 134);
   context.fillStyle = '#354044';
-  context.font = 'bold 47px sans-serif';
+  context.font = '42px Georgia, serif';
   context.textAlign = 'center';
   context.textBaseline = 'middle';
   context.fillText(label, 384, 84);
@@ -46,22 +48,68 @@ function displayCase(parent: THREE.Object3D, x: number, z: number): void {
   const glass = mesh(new THREE.BoxGeometry(1.13, 0.88, 0.88), new THREE.MeshPhongMaterial({ color: 0xb4e9de, transparent: true, opacity: 0.24, depthWrite: false }), [x, 1.29, z], parent);
   glass.castShadow = false;
   outline(glass, 0.6);
-  mesh(new THREE.IcosahedronGeometry(0.18, 0), mat.coral, [x, 1.19, z], parent);
+  placeModel(x < 0 ? 'statue' : 'rowboat', parent, [x, 0.87, z], x < 0
+    ? { height: 0.62, color: 0xb4a17b }
+    : { width: 0.76, rotation: 0.3 });
 }
 
 function tree(parent: THREE.Object3D, x: number, z: number, seed: number): void {
   shadowBlob(x + 0.3, z + 0.3, 1.7, 0.8, parent);
-  const trunk = mesh(new THREE.CylinderGeometry(0.17, 0.3, 2.5, 7), mat.darkGold, [x, 1.3, z], parent);
-  silhouette(trunk, 1.03);
-  for (const [dx, y, dz, radius, material] of [
-    [-0.36, 3.0, 0.02, 1.05, mat.green],
-    [0.35, 3.36, -0.15, 1.1, mat.mint],
-    [0, 3.75, 0.16, 0.9, mat.sage],
-  ] as const) {
-    const crown = irregularCrown(radius, material, seed + y);
-    crown.position.set(x + dx, y, z + dz);
-    crown.scale.y = 0.82;
-    parent.add(crown);
+  placeModel(seed % 2 ? 'oak' : 'tree', parent, [x, 0.1, z], { height: 5.2 + seed * 0.12, rotation: seed * 1.3 });
+}
+
+function courtyardDetails(scene: THREE.Scene, colliders: Collider[]): void {
+  const soil = toon(0xb4bda0);
+  const bronze = toon(0x567573);
+  const glow = new THREE.MeshBasicMaterial({ color: 0xffedbf });
+  for (const side of [-1, 1]) {
+    for (const z of [2, 16]) {
+      const x = side * 13;
+      const planter = box(4.2, 0.25, 5.3, mat.sand, [x, 0.16, z], scene);
+      colliders.push(modelCollider(planter));
+      box(3.95, 0.04, 5.05, soil, [x, 0.3, z], scene);
+      for (let i = 0; i < 7; i++) {
+        const angle = i * Math.PI * 2 / 7;
+        const dx = Math.cos(angle) * 1.4;
+        const dz = Math.sin(angle) * 1.85;
+        placeModel(i % 2 ? 'bush' : 'smallBush', scene, [x + dx, 0.31, z + dz], { height: 0.5 + i % 3 * 0.08, rotation: angle });
+        placeModel(i % 2 ? 'flowers' : 'yellowFlowers', scene, [x + dx * 1.15, 0.31, z + dz * 1.12], { height: 0.35 });
+      }
+      const bench = placeModel('bench', scene, [side * 9.35, 0.1, z + 1], { height: 0.9, width: 2.45, rotation: -side * Math.PI / 2 });
+      colliders.push(modelCollider(bench));
+    }
+    for (const z of [0.5, 19.5]) {
+      const x = side * 7.8;
+      const foot = mesh(new THREE.CylinderGeometry(0.23, 0.32, 0.18, 8), bronze, [x, 0.17, z], scene);
+      colliders.push(modelCollider(foot));
+      mesh(new THREE.CylinderGeometry(0.06, 0.1, 2.8, 8), bronze, [x, 1.6, z], scene);
+      box(0.48, 0.1, 0.48, bronze, [x, 3.03, z], scene);
+      const lantern = box(0.33, 0.55, 0.33, glow, [x, 3.35, z], scene);
+      lantern.castShadow = false;
+      outline(lantern, 0.6);
+      mesh(new THREE.ConeGeometry(0.42, 0.3, 4), bronze, [x, 3.76, z], scene).rotation.y = Math.PI / 4;
+    }
+    const planter = placeModel('pot', scene, [side * 4.9, 0.1, -0.55], { height: 0.45, width: 1.25 });
+    colliders.push(modelCollider(planter));
+    placeModel('cypress', scene, [side * 4.9, 0.5, -0.55], { height: 2.15, width: 0.8 });
+  }
+}
+
+function upperFacade(scene: THREE.Scene): void {
+  const roof = toon(0x607b80);
+  for (const side of [-1, 1]) {
+    box(9.4, 2.55, 3.3, mat.cream, [side * 7.7, 6.72, -5], scene);
+    box(9.7, 0.18, 3.5, mat.sand, [side * 7.7, 8.04, -5], scene);
+    const mansard = mesh(new THREE.CylinderGeometry(0.7, 1, 1.4, 4), roof, [side * 7.7, 8.8, -5], scene);
+    mansard.rotation.y = Math.PI / 4;
+    mansard.scale.set(6.95, 1, 2.65);
+    outline(mansard, 0.25);
+    for (const x of [side * 4.45, side * 7.7, side * 10.9]) {
+      box(0.93, 1.68, 0.04, mat.door, [x, 6.64, -3.33], scene);
+      placeModel('archedWindow', scene, [x, 5.8, -3.28], { height: 1.8, width: 1.08 });
+      box(1.37, 0.1, 0.32, mat.sand, [x, 5.75, -3.18], scene);
+      box(0.16, 2.3, 0.16, mat.sand, [x - 0.85, 6.8, -3.29], scene);
+    }
   }
 }
 
@@ -100,6 +148,14 @@ function pyramid(parent: THREE.Object3D, x: number, z: number): void {
     const mid = corner.clone().add(next).multiplyScalar(0.5);
     const mullion = new THREE.Line(new THREE.BufferGeometry().setFromPoints([mid, apex]), new THREE.LineBasicMaterial({ color: 0x477f80, transparent: true, opacity: 0.55 }));
     parent.add(mullion);
+    const lattice: THREE.Vector3[] = [];
+    for (let row = 1; row < 7; row++) {
+      const t = row / 7;
+      lattice.push(corner.clone().lerp(apex, t), next.clone().lerp(apex, t));
+      lattice.push(corner.clone().lerp(next, t), corner.clone().lerp(apex, t));
+      lattice.push(next.clone().lerp(corner, t), next.clone().lerp(apex, t));
+    }
+    parent.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(lattice), new THREE.LineBasicMaterial({ color: 0x658c87, transparent: true, opacity: 0.4 })));
   });
 }
 
@@ -201,13 +257,14 @@ function turnstiles(parent: THREE.Object3D): { wings: THREE.Group[]; colliders: 
 
 export function createMuseumScene(): MuseumWorld {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x89d9cd);
-  scene.fog = new THREE.Fog(0x89d9cd, 40, 78);
-  scene.add(new THREE.AmbientLight(0xfff8ee, 0.88));
+  const decorationColliders: Collider[] = [];
+  scene.background = new THREE.Color(0xc5e1dc);
+  scene.fog = new THREE.Fog(0xc5e1dc, 48, 105);
+  scene.add(new THREE.HemisphereLight(0xfff7df, 0x819e99, 1.65));
   const sun = new THREE.DirectionalLight(0xffe7c8, 1.6);
   sun.position.set(-9, 16, 12);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(1024, 1024);
+  sun.shadow.mapSize.set(2048, 2048);
   sun.shadow.camera.left = -25;
   sun.shadow.camera.right = 25;
   sun.shadow.camera.top = 25;
@@ -231,6 +288,8 @@ export function createMuseumScene(): MuseumWorld {
   for (const [x, z, seed] of [[-13, 2, 1], [13, 2, 2], [-13, 16, 3], [13, 16, 4]] as const) {
     tree(scene, x, z, seed);
   }
+  courtyardDetails(scene, decorationColliders);
+  upperFacade(scene);
 
   // The open portal shows the hall from the courtyard; the central turnstile controls entry.
   for (const side of [-1, 1]) {
@@ -238,8 +297,9 @@ export function createMuseumScene(): MuseumWorld {
     silhouette(wall, 1.006);
     outline(wall, 0.28);
     for (const x of [side * 6.5, side * 9.7]) {
-      outline(box(1.2, 2.2, 0.07, mat.door, [x, 2.15, -3.48], scene), 0.65);
-      box(0.08, 2.1, 0.09, mat.sand, [x, 2.15, -3.42], scene);
+      box(1.22, 2.57, 0.04, mat.door, [x, 2.16, -3.49], scene);
+      placeModel('archedWindow', scene, [x, 0.85, -3.45], { height: 2.8, width: 1.45 });
+      box(1.7, 0.16, 0.4, mat.sand, [x, 0.79, -3.39], scene);
     }
     for (const x of [side * 3.3, side * 5.55]) column(scene, x, -3.1, 5.1);
   }
@@ -266,13 +326,20 @@ export function createMuseumScene(): MuseumWorld {
     for (const z of [-8, -13.2, -18.4]) {
       column(scene, side * (z === -18.4 ? 7 : 6.4), z, 5.42);
       if (z !== -18.4) {
-        outline(box(1.35, 0.73, 1.2, mat.sand, [side * 5.3, 0.46, z - 0.5], scene), 0.5);
-        mesh(new THREE.CylinderGeometry(0.2, 0.34, 0.38, 7), mat.stone, [side * 5.3, 1.02, z - 0.5], scene);
-        const bust = mesh(new THREE.IcosahedronGeometry(0.32, 1), mat.stone, [side * 5.3, 1.49, z - 0.5], scene);
-        silhouette(bust, 1.025);
+        outline(box(1.35, 0.22, 1.2, mat.sand, [side * 5.3, 0.22, z - 0.5], scene), 0.4);
+        placeModel('statue', scene, [side * 5.3, 0.34, z - 0.5], { height: 2.05, width: 1.05, color: 0xe7ddc4, rotation: -side * 0.3 });
+        sign(scene, z === -8 ? 'MEMORIA' : 'EL INSTANTE', [side * 5.3, 0.44, z + 0.13], 0.8);
       }
       outline(box(0.05, 2.2, 2.1, mat.door, [side * 8.19, 2.45, z], scene), 0.38);
+      placeModel('tallWindow', scene, [side * 8.12, 1.32, z], { height: 2.25, width: 1.6, rotation: -side * Math.PI / 2 });
     }
+    for (const z of [-10.7, -15.8]) {
+      const bench = placeModel('museumBench', scene, [side * 7.35, 0.1, z], { height: 0.9, width: 2.1, rotation: -side * Math.PI / 2 });
+      decorationColliders.push(modelCollider(bench));
+    }
+    const plant = placeModel('plant', scene, [side * 7.4, 0.1, -5.6], { height: 1.7 });
+    decorationColliders.push(modelCollider(plant, 0.13));
+    placeModel('smallPlant', scene, [side * 7.25, 0.1, -19.5], { height: 0.7 });
   }
   for (const z of [-8, -13.2, -18.4]) {
     const points = Array.from({ length: 15 }, (_, index) => {
@@ -289,8 +356,10 @@ export function createMuseumScene(): MuseumWorld {
   box(9, 0.23, 1.55, mat.sand, [0, 5.55, -4.25], scene);
   skylight(scene);
   for (const z of [-7, -12, -17]) {
-    const bulb = mesh(new THREE.IcosahedronGeometry(0.12, 0), mat.cream, [0, 5.03, z], scene);
+    mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.85, 5), mat.darkGold, [0, 5.6, z], scene);
+    const bulb = mesh(new THREE.CylinderGeometry(0.18, 0.32, 0.32, 8), new THREE.MeshBasicMaterial({ color: 0xffebc7 }), [0, 5.03, z], scene);
     bulb.castShadow = false;
+    outline(bulb, 0.35);
     const light = new THREE.PointLight(0xffecd1, 0.38, 9);
     light.position.set(0, 4.9, z);
     scene.add(light);
@@ -304,6 +373,7 @@ export function createMuseumScene(): MuseumWorld {
 
   const doorBlock = entranceGate.blocker;
   const colliders: Collider[] = [
+    ...decorationColliders,
     { minX: -12.5, maxX: -2.8, minZ: -4.4, maxZ: -3.48 },
     { minX: 2.8, maxX: 12.5, minZ: -4.4, maxZ: -3.48 },
     doorBlock,

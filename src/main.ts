@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { loadModels } from './assets';
 import { areaCatalog, areaOrder, availabilityCopy, availabilityOf, type AreaId } from './catalog';
 import { galleryLayout } from './gallery';
 import { createMuseumScene } from './museum';
@@ -25,6 +26,10 @@ const studyMode = requestedView !== null && requestedView in views;
 app.dataset.mode = studyMode ? 'study' : 'player';
 
 try {
+  const startButton = document.querySelector<HTMLButtonElement>('#menu-button')!;
+  startButton.disabled = true;
+  startButton.textContent = 'Preparando la visita…';
+  await loadModels();
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
   renderer.shadowMap.enabled = true;
@@ -315,6 +320,8 @@ try {
     updateScene(delta);
     renderer.render(scene, camera);
   });
+  startButton.disabled = false;
+  startButton.textContent = 'Comenzar visita ↗';
 } catch (cause) {
   error.hidden = false;
   error.textContent = `No se pudo iniciar la escena 3D: ${cause instanceof Error ? cause.message : String(cause)}`;

@@ -23,6 +23,10 @@ El laboratorio temporal de la etapa 4 fue retirado de la experiencia pública. R
 [Revisión de la Polaroid de la etapa 4](docs/Revision_etapa_4.md).
 [Revisión de las diez salas de la etapa 5](docs/Revision_etapa_5.md).
 [Revisión del ciclo romano de la etapa 6](docs/Revision_etapa_6.md).
+[Renovación visual con modelos Kenney y capturas](docs/Revision_visual_Kenney.md).
+[Inventario completo, selección y recomendaciones de assets](docs/Seleccion_Kenney.md).
+
+La renovación incorpora 28 modelos de cinco paquetes Kenney, con sus texturas y licencias CC0 en `public/assets/kenney/`. El juego carga esa selección local antes de habilitar la visita; no necesita acceder a la carpeta original de Windows. Los materiales mantienen el sombreado toon y la paleta del museo.
 
 ## Documentación
 

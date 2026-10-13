@@ -94,24 +94,6 @@ export function inkStroke(points: Array<[number, number, number]>, parent: THREE
   parent.add(line);
 }
 
-export function irregularCrown(radius: number, material: THREE.Material, seed: number): THREE.Mesh {
-  const geometry = new THREE.IcosahedronGeometry(radius, 1).toNonIndexed();
-  const positions = geometry.attributes.position;
-  for (let index = 0; index < positions.count; index++) {
-    const x = positions.getX(index);
-    const y = positions.getY(index);
-    const z = positions.getZ(index);
-    const wobble = 1 + 0.085 * Math.sin(x * 4.1 + seed) * Math.cos(z * 3.7 - seed);
-    positions.setXYZ(index, x * wobble, y * (1 + 0.055 * Math.sin(z * 5 + seed)), z * wobble);
-  }
-  geometry.computeVertexNormals();
-  const crown = new THREE.Mesh(geometry, material);
-  crown.castShadow = true;
-  crown.receiveShadow = true;
-  silhouette(crown, 1.018);
-  return crown;
-}
-
 export function shadowBlob(
   x: number,
   z: number,
