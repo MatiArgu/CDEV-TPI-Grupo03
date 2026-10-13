@@ -6,7 +6,9 @@ Tu objetivo es **desarrollar un videojuego 3D funcional y jugable en el navegado
 
 **IMPORTANTE:** No quiero un video, un tráiler, una animación predefinida ni una maqueta visual sin funcionalidad. Quiero un videojuego real, con movimiento en primera persona, escenarios 3D explorables, interacciones, objetivos, transiciones, progreso y una experiencia completa de principio a fin.
 
-El alcance inicial será un MVP con dos épocas históricas completamente jugables: Roma y Egipto.
+El museo tendrá cinco salas: Antiguo Egipto → Antigua Roma → Época Medieval → Japón Feudal → Llegada a la Luna. Las dos primeras ocupan el ala izquierda; Medieval es el salón largo transversal del fondo; Japón y Luna regresan por el ala derecha.
+
+**Estado actual:** todas las salas se pueden recorrer, pero solo Roma tiene viaje histórico. Las demás se señalizan como viajes en preparación. El próximo hito histórico sigue siendo Egipto; este documento describe también funciones futuras, y el [plan de desarrollo](Plan_de_desarrollo.md) distingue cada entrega. El progreso actual permanece en memoria.
 
 ---
 
@@ -90,7 +92,7 @@ El jugador visita el Museo del Louvre en París.
 
 Sin embargo, descubre que el museo tiene una característica extraordinaria: mediante una cámara fotográfica Polaroid puede ingresar físicamente a momentos históricos congelados en el tiempo.
 
-El objetivo es explorar diez áreas históricas del museo, viajar a sus respectivas épocas y recuperar simbólicamente un objeto específico de cada una.
+El objetivo es explorar cinco áreas históricas del museo, viajar a sus respectivas épocas y recuperar simbólicamente un objeto específico de cada una.
 
 Cada área tiene un artefacto asociado.
 
@@ -196,7 +198,7 @@ Cuando se toma una foto:
 
 **La fotografía debe corresponder a lo que el jugador realmente estaba viendo al disparar.**
 
-Para el MVP, implementar la captura visual mediante el render de Three.js y presentar el resultado como una Polaroid utilizando HTML/CSS o una solución equivalente.
+Para el MVP, implementar la captura visual mediante el render de Three.js y presentar el resultado como una Polaroid utilizando una fotografía 3D que sale de la cámara y se revela en la mano.
 
 No utilizar una imagen predeterminada que ignore lo que el jugador fotografió.
 
@@ -245,9 +247,9 @@ Características:
 
 Inicialmente, todas las áreas están oscuras.
 
-El jugador abre el panfleto y observa las diez áreas.
+El jugador abre el panfleto y observa las cinco áreas.
 
-Entonces, se ilumina la primera área disponible: **Roma Antigua**.
+Abrir cada puerta con E enciende su sala. Egipto ocupa la puerta 01; Roma y el único viaje disponible están en la 02.
 
 La iluminación debe dirigir naturalmente la atención del jugador.
 
@@ -259,21 +261,16 @@ El jugador puede caminar hacia el área iluminada.
 
 # 6. SISTEMA DE ÁREAS DEL MUSEO
 
-El museo contiene diez áreas.
+El museo contiene cinco áreas.
 
-El sistema debe diseñarse para incorporar nuevas épocas en el futuro, pero solamente las siguientes dos deben implementarse por completo:
-
-1. Roma Antigua.
-2. Egipto Antiguo.
-
-Las otras ocho estarán representadas en el mapa y podrán existir como entradas cerradas o inactivas, pero no necesitan escenarios desarrollados.
+Las cinco salas se pueden recorrer sin completar épocas. Por ahora solo Roma dispone de exhibición y viaje histórico. Egipto es el siguiente mundo previsto; Medieval, Japón y Luna permanecen en preparación. Las salas WIP no activan viajes.
 
 ## Estados de un área
 
 Cada área puede encontrarse en uno de estos estados:
 
-- `locked`: bloqueada y sin iluminar.
-- `active`: iluminada y accesible.
+- `locked`: viaje todavía no disponible por progresión (no bloquea la puerta).
+- `active`: viaje disponible.
 - `completed`: finalizada, con fotografía y artefacto registrados en el panfleto.
 
 Solamente puede existir una área activa por vez.
@@ -285,13 +282,13 @@ Al completar un área:
 3. Se registra la Polaroid obtenida.
 4. Se agrega una representación ilustrada del artefacto.
 5. Se apagan las luces de esa sección.
-6. Se ilumina la siguiente área.
+6. Se habilita el siguiente viaje implementado según `areaOrder`; las salas siguen siendo visitables.
 
-Mantener esta progresión secuencial.
+Mantener el orden entre viajes disponibles, independiente del acceso físico.
 
 ---
 
-# 7. ÁREA 1 — ROMA ANTIGUA
+# 7. SALA 02 — ANTIGUA ROMA
 
 ## A. Exhibición dentro del museo
 
@@ -433,7 +430,7 @@ Cuando el jugador toca el casco:
 5. Una pequeña ilustración del casco aparece junto a la fotografía.
 6. El área romana cambia a completada.
 7. Sus luces se apagan.
-8. Se ilumina la entrada de Egipto.
+8. Se puede continuar hacia Medieval y las demás salas o regresar al hall.
 
 No es necesario agregar el casco como objeto físico al inventario.
 
@@ -443,11 +440,11 @@ El jugador continúa con las mismas dos herramientas.
 
 ---
 
-# 11. ÁREA 2 — EGIPTO ANTIGUO
+# 11. SALA 01 — ANTIGUO EGIPTO (VIAJE PREVISTO)
 
 ## A. Exhibición del museo
 
-Crear una segunda sala, dedicada a Egipto.
+Instalar la exhibición de Egipto en la primera sala del recorrido.
 
 Elementos:
 
@@ -503,25 +500,25 @@ Al interactuar con el escarabajo, regresa al museo.
 
 # 12. FINALIZACIÓN DEL MVP
 
-Cuando el jugador vuelve de Egipto:
+Cuando el jugador completa los dos viajes previstos:
 
 - Se registra la segunda Polaroid en el panfleto.
 - Se agrega la ilustración del escarabajo.
 - Egipto aparece como completado.
 - Sus luces se apagan.
-- El mapa muestra dos de las diez áreas completadas.
+- El mapa muestra dos de las cinco áreas completadas.
 
-Las otras ocho áreas permanecen inactivas.
+Las otras tres áreas permanecen visitables sin viajes.
 
 Mostrar una conclusión breve y discreta, por ejemplo:
 
-"2 de 10 épocas descubiertas."
+"2 de 5 épocas descubiertas."
 
 "Tu viaje por la historia apenas comienza."
 
 Permitir que el jugador continúe explorando las zonas accesibles del museo o reinicie la experiencia.
 
-No implementar las ocho épocas restantes en esta primera versión.
+Los viajes de Medieval, Japón y Luna requieren entregas posteriores.
 
 ---
 
@@ -537,7 +534,7 @@ Utilizar solamente:
 - Indicaciones contextuales de interacción.
 - El encuadre de la cámara fotográfica.
 - La representación de la Polaroid.
-- El panfleto desplegable.
+- El panfleto físico con hojas articuladas y manos. Abrirlo baja la mirada y libera el cursor; M o clic lo guardan.
 - Una pantalla de inicio y un menú de pausa sencillos.
 
 Las indicaciones deben desaparecer cuando no sean necesarias.
@@ -685,32 +682,20 @@ El jugador debe entender la mecánica principalmente mediante las interacciones 
 
 El proyecto no se considera terminado si solamente muestra un museo 3D con controles de movimiento.
 
-La primera versión debe permitir completar realmente el siguiente recorrido:
+El siguiente recorrido es la aceptación del próximo hito histórico (Egipto + Roma). Hoy está implementado el ciclo de Roma; el viaje egipcio y la persistencia siguen pendientes:
 
-1. Iniciar el juego.
-2. Caminar por el exterior del Louvre.
-3. Acercarse al guardia e interactuar.
-4. Recibir el panfleto.
-5. Entrar al museo.
-6. Observar cómo se ilumina la sala romana.
-7. Caminar hasta la exhibición.
-8. Equipar la cámara.
-9. Fotografiar una escena que contenga el casco.
-10. Observar cómo se desarrolla la Polaroid.
-11. Aparecer en el Coliseo.
-12. Explorar el entorno congelado.
-13. Recibir ayuda visual si pasan 20 segundos.
-14. Encontrar e interactuar con el casco.
-15. Regresar al museo.
-16. Ver Roma marcada como completada en el panfleto.
-17. Observar cómo se apaga Roma y se ilumina Egipto.
-18. Entrar en la exhibición egipcia.
-19. Fotografiar una escena que contenga el escarabajo.
-20. Viajar al antiguo Egipto.
-21. Explorar el escenario y encontrar el escarabajo.
-22. Regresar al museo.
-23. Ver ambas épocas registradas en el panfleto.
-24. Finalizar la experiencia con dos de las diez áreas completadas.
+1. Iniciar el juego, recorrer el patio e interactuar con el guardia.
+2. Recibir el panfleto, levantarlo con las manos, leerlo y guardarlo recuperando el mouse.
+3. Entrar al hall y abrir la sala 01: Antiguo Egipto.
+4. Cuando su viaje esté instalado, fotografiar el escarabajo, viajar al templo y recogerlo.
+5. Regresar con el primer recuerdo registrado en el panfleto.
+6. Pasar a la sala 02: Antigua Roma y fotografiar el casco.
+7. Ver la foto salir de la cámara y revelarse en la mano; una foto inválida permite reintentar.
+8. Viajar al Coliseo y recorrer el escenario congelado; recibir ayuda discreta tras 20 segundos.
+9. Recoger el casco y regresar al museo.
+10. Ver las dos épocas completadas y sus recuerdos en el panfleto: 2/5.
+11. Continuar por la sala medieval transversal, Japón Feudal y Luna, hasta regresar al hall; sus viajes siguen en preparación.
+12. Al implementar el guardado, recargar y conservar el progreso por ID, o reiniciar la partida.
 
 Cada paso debe ser interactivo y funcional.
 

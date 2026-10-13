@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { loadModels } from './assets';
 import { areaCatalog, areaOrder, availabilityCopy, availabilityOf, type AreaId } from './catalog';
-import { galleryLayout, museumLayout } from './museumLayout';
+import { museumLayout } from './museumLayout';
 import { createMuseumScene } from './museum';
 import { createPamphlet } from './pamphlet';
 import { createPlayerControls } from './player';
@@ -88,15 +88,11 @@ try {
     scene.add(camera);
     const updateMuseum = (delta: number) => world.update(delta, app.dataset.playState === 'playing' ? camera : undefined);
     updateScene = updateMuseum;
-    const pamphletView = createPamphlet();
+    const pamphletView = createPamphlet(camera);
     const cameraModel = createCameraModel(camera);
-    const pamphlet = document.querySelector<HTMLElement>('#pamphlet')!;
     const toast = document.querySelector<HTMLElement>('#game-toast')!;
     const help = document.querySelector<HTMLElement>('#player-help')!;
     const viewfinder = document.querySelector<HTMLElement>('#photo-viewfinder')!;
-    const photoResult = document.querySelector<HTMLElement>('#photo-result')!;
-    const photoImage = document.querySelector<HTMLImageElement>('#photo-image')!;
-    const photoLabel = document.querySelector<HTMLElement>('#photo-result-label')!;
     const transition = document.querySelector<HTMLElement>('#time-transition')!;
     let hasPamphlet = false;
     let hasSeenMap = false;
@@ -118,37 +114,31 @@ try {
     }
 
     async function takePhoto(): Promise<void> {
+      toast.hidden = true;
       const active = areaOrder.find((id) => availabilityOf(id) === 'playable' && !completedAreas.has(id));
       const exhibit = active && world.exhibits.get(active);
       if (!active || !exhibit || history) {
         controls.finishCinematic(true);
         return;
       }
-      cameraModel.visible = false;
+      cameraModel.root.visible = false;
       renderer.render(scene, camera);
       const frame = getFrameBounds(renderer.domElement, viewfinder);
       const photo = captureFrame(renderer, viewfinder);
       const valid = artifactVisible(camera, exhibit.artifact, exhibit.photoSolids, frame);
-      cameraModel.visible = true;
+      cameraModel.root.visible = true;
       playShutter();
-      photoImage.src = photo;
-      photoLabel.textContent = `REVELANDO / ${String(world.rooms.find((room) => room.id === active)!.number).padStart(2, '0')}`;
-      photoResult.classList.remove('photo-developed');
-      photoResult.hidden = false;
-      requestAnimationFrame(() => photoResult.classList.add('photo-developed'));
-      await new Promise<void>((resolve) => window.setTimeout(resolve, 2600));
+      await cameraModel.develop(photo, `${areaCatalog[active].name.toUpperCase()} / ${String(world.rooms.find((room) => room.id === active)!.number).padStart(2, '0')}`);
       if (!valid) {
-        photoLabel.textContent = 'SIN ECO / VOLVÉ A INTENTARLO';
-        await new Promise<void>((resolve) => window.setTimeout(resolve, 650));
-        photoResult.hidden = true;
+        cameraModel.hidePrint();
+        showToast('Sin eco. Incluí el casco en la fotografía.');
         controls.finishCinematic(true);
         return;
       }
       acceptedPhoto = photo;
-      photoLabel.textContent = 'ECO ENCONTRADO / ROMA';
       controls.setCinematic('transition');
       await playTimeTransition(transition, () => {
-        photoResult.hidden = true;
+        cameraModel.hidePrint();
         scene.remove(camera);
         museumColliders = [...world.colliders];
         history = createRomeWorld();
@@ -189,7 +179,7 @@ try {
       controls.finishCinematic(false);
       controls.openPamphlet();
       help.textContent = 'WASD CAMINAR · SHIFT CORRER · M PANFLETO · E PUERTAS · ESC PAUSAR';
-      showToast('Roma completada: 1/10. Egipto se instalará en la próxima etapa.');
+      showToast(`Roma completada: ${completedAreas.size}/${areaOrder.length} recuerdos. Podés seguir recorriendo el museo.`);
     }
 
     const controls = createPlayerControls(camera, renderer.domElement, {
@@ -221,26 +211,10 @@ try {
           return toDoor.length() < 2.55 && gaze.dot(toDoor.normalize()) > 0.58;
         });
         if (!door) return null;
-        const required = door.required;
         const target = door.target;
-        const targetReady = !target || !required || availabilityOf(target) === 'playable';
-        const unlocked = (!required || completedAreas.has(required)) && targetReady;
         return {
-          label: unlocked
-            ? `Abrir ${target ? areaCatalog[target].name : 'regreso al hall'}`
-            : `Puerta cerrada · ${required && !completedAreas.has(required) ? `completá ${areaCatalog[required].name}` : 'sala en preparación'}`,
-          activate: () => {
-            if (unlocked) {
-              world.openDoor(door);
-              showToast(target
-                ? `${areaCatalog[target].name}: las luces vuelven a encenderse.`
-                : 'El recorrido vuelve al hall.');
-            } else {
-              showToast(required && !completedAreas.has(required)
-                ? `Primero tenés que completar ${areaCatalog[required].name}.`
-                : 'Esa sala todavía está en preparación.');
-            }
-          },
+          label: `Abrir ${target ? areaCatalog[target].name : 'regreso al hall'}`,
+          activate: () => { world.openDoor(door); },
         };
       },
       canOpenPamphlet: () => hasPamphlet,
@@ -250,12 +224,13 @@ try {
         return !!active && world.roomAt(new THREE.Vector2(camera.position.x, camera.position.z))?.id === active;
       },
       onCameraChange: (equipped) => {
-        cameraModel.visible = equipped;
+        cameraModel.setEquipped(equipped);
         app.dataset.mode = equipped ? 'photo' : 'player';
       },
       onShutter: () => { void takePhoto(); },
       onPamphletChange: (open) => {
-        pamphlet.hidden = !open;
+        pamphletView.setOpen(open);
+        if (open) toast.hidden = true;
         if (open && !hasSeenMap) {
           hasSeenMap = true;
           app.dataset.storyState = 'map-seen';
@@ -273,17 +248,11 @@ try {
           app.dataset.room = room.id;
           if (!visitedRooms.has(room.id)) {
             visitedRooms.add(room.id);
+            (room.root.userData.setLight as (strength: number) => void)(1);
             showToast(room.id === 'roma'
               ? 'Roma Antigua: observá el casco. Pulsá C para preparar la Polaroid.'
               : `${String(room.number).padStart(2, '0')} · ${areaCatalog[room.id].name} — ${availabilityCopy(areaCatalog[room.id].availability).description}.`);
           }
-        } else if (
-          position.y < galleryLayout.frontZ - galleryLayout.step * 4
-          && position.y > galleryLayout.frontZ - galleryLayout.step * 5
-          && Math.abs(position.x) < galleryLayout.innerX
-        ) {
-          app.dataset.location = 'gallery';
-          delete app.dataset.room;
         } else if (position.y < museumLayout.frontZ - 0.5 && position.y > museumLayout.hallBackZ && Math.abs(position.x) < museumLayout.halfWidth - 0.3) {
           app.dataset.location = 'hall';
           delete app.dataset.room;
@@ -298,6 +267,15 @@ try {
       },
     });
     updateControls = controls.update;
+    const updatePlayer = updateControls;
+    updateControls = (delta) => {
+      updatePlayer(delta);
+      const running = app.dataset.playState !== 'paused' && app.dataset.playState !== 'intro';
+      if (running) {
+        pamphletView.update(delta);
+        cameraModel.update(delta);
+      }
+    };
   }
 
   function resize(): void {
@@ -313,13 +291,27 @@ try {
   window.addEventListener('resize', resize);
   resize();
 
+  function renderFrame(): void {
+    renderer.render(scene, camera);
+    if (studyMode) return;
+    const background = scene.background;
+    scene.background = null;
+    renderer.autoClear = false;
+    renderer.clearDepth();
+    camera.layers.set(1);
+    renderer.render(scene, camera);
+    camera.layers.set(0);
+    renderer.autoClear = true;
+    scene.background = background;
+  }
+
   let previousTime = performance.now();
   renderer.setAnimationLoop((time) => {
     const delta = (time - previousTime) / 1000;
     previousTime = time;
     updateControls(delta);
     updateScene(delta);
-    renderer.render(scene, camera);
+    renderFrame();
   });
   startButton.disabled = false;
   startButton.textContent = 'Comenzar visita ↗';
