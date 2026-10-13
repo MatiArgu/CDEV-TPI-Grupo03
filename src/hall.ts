@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { modelCollider, placeModel, type ModelId } from './assets';
 import type { Collider } from './scene';
+import { galleryLayout, museumLayout } from './museumLayout';
 import { exhibition, exhibitSpot, stoneFloor } from './exhibition';
 import { box, materials as mat, mesh, outline, toon } from './visual';
 
@@ -85,131 +86,145 @@ function displayCase(scene: THREE.Scene, colliders: Collider[], x: number, z: nu
 }
 
 export function createHall(scene: THREE.Scene, colliders: Collider[]): void {
+  const { halfWidth, frontZ, hallBackZ, wallHeight, wallThickness, floorY } = museumLayout;
+  const depth = frontZ - hallBackZ;
+  const centerZ = (frontZ + hallBackZ) / 2;
+  const naveX = 5.4;
+  const bays = [-6.8, -10.8, -14.8];
   const wallColor = toon(exhibition.wall);
   const panelColor = toon(exhibition.panel);
-  const darkStone = toon(exhibition.panel);
   const bronze = toon(exhibition.bronze);
   const stone = toon(exhibition.stone);
   const ceiling = toon(exhibition.ceiling);
   const glow = new THREE.MeshBasicMaterial({ color: 0xffe7b5 });
-  const floor = (w: number, d: number, material: THREE.Material, x: number, z: number, y = 0.105) => {
+  const floor = (w: number, d: number, material: THREE.Material, x: number, z: number, y = 0.18) => {
     const tile = box(w, 0.012, d, material, [x, y, z], scene);
     tile.castShadow = false;
     return tile;
   };
-  box(17, 0.14, 18, darkStone, [0, 0.02, -12.4], scene).castShadow = false;
-  stoneFloor(scene, 16.7, 17.8, 0, -12.4, 0.105);
+  box(halfWidth * 2, 0.14, depth, panelColor, [0, 0.02, centerZ], scene).castShadow = false;
+  stoneFloor(scene, halfWidth * 2 - wallThickness, depth, 0, centerZ, floorY);
+  // The entrance facade has an interior finish, with the same clear portal as outside.
   for (const side of [-1, 1]) {
-    floor(0.22, 16.8, darkStone, side * 2.84, -12.15);
-    floor(0.035, 16.8, bronze, side * 2.99, -12.15);
-    floor(2.5, 0.25, darkStone, side * 4.12, -19.6);
-    for (const z of [-6.9, -9.4, -11.9, -14.4, -16.9, -19.4]) {
-      floor(4.7, 0.025, bronze, side * 5.7, z);
-      const diamond = floor(0.24, 0.24, darkStone, side * 2.84, z, 0.12);
-      diamond.rotation.y = Math.PI / 4;
-    }
-    const wall = box(0.56, 5.5, 18, wallColor, [side * 8.55, 2.75, -12.4], scene);
+    const span = halfWidth - 2.8;
+    const x = side * (2.8 + span / 2);
+    box(span, wallHeight, 0.07, wallColor, [x, wallHeight / 2, frontZ - 0.06], scene);
+    for (const y of [0.24, 1.2, 5.08]) box(span, 0.09, 0.1, bronze, [x, y, frontZ - 0.12], scene);
+    const plant = placeModel('plant', scene, [side * 3.65, 0.15, -5.25], { height: 1.7 });
+    colliders.push(modelCollider(plant, 0.1));
+  }
+  box(5.6, 1.07, 0.07, wallColor, [0, 4.865, frontZ - 0.06], scene);
+  // A clear nave leads to an open distribution bay aligned with both gallery doors.
+  for (const side of [-1, 1]) {
+    floor(0.045, 13.55, bronze, side * 2.8, -11.025);
+    floor(0.045, 2.9, bronze, side * galleryLayout.wingX, -20);
+    floor(2.3, 0.65, stone, side * galleryLayout.wingX, hallBackZ, floorY + 0.0175);
+  }
+  for (const z of [-17.9, -19.25]) floor(galleryLayout.wingX * 2 + 0.05, 0.045, bronze, 0, z);
+
+  const wallFace = halfWidth - wallThickness / 2;
+  for (const side of [-1, 1]) {
+    const wall = box(wallThickness, wallHeight, depth, wallColor, [side * halfWidth, wallHeight / 2, centerZ], scene);
     colliders.push(modelCollider(wall));
-    box(0.08, 1.0, 17.8, panelColor, [side * 8.23, 0.67, -12.4], scene);
-    for (const y of [0.18, 1.2, 4.92, 5.14]) box(0.17, 0.09, 17.8, y < 2 ? bronze : stone, [side * 8.17, y, -12.4], scene);
-    for (let z = -5; z > -21; z -= 1.5) box(0.12, 0.8, 0.06, stone, [side * 8.17, 0.67, z], scene);
-    for (const z of [-7.2, -12.4, -17.6]) {
-      box(0.04, 1.28, 0.9, mat.door, [side * 8.22, 4.17, z], scene);
-      placeModel('tallWindow', scene, [side * 8.16, 3.51, z], { height: 1.34, width: 1.03, rotation: -side * Math.PI / 2 });
+    box(0.08, 1.0, depth, panelColor, [side * (wallFace - 0.04), 0.67, centerZ], scene);
+    for (const y of [0.24, 1.2, 5.08]) box(0.12, 0.09, depth, bronze, [side * (wallFace - 0.1), y, centerZ], scene);
+    for (const z of bays) {
+      box(0.12, 0.8, 0.07, stone, [side * (wallFace - 0.1), 0.67, z], scene);
+      box(0.04, 1.28, 0.9, mat.door, [side * (wallFace - 0.04), 4.17, z], scene);
+      placeModel('tallWindow', scene, [side * (wallFace - 0.1), 3.51, z], { height: 1.34, width: 1.03, rotation: -side * Math.PI / 2 });
+      box(0.16, 0.45, 0.3, bronze, [side * (wallFace - 0.15), 2.85, z], scene);
+      box(0.26, 0.35, 0.32, glow, [side * (wallFace - 0.34), 3.03, z], scene).castShadow = false;
+      box(0.32, 0.05, 0.42, bronze, [side * (wallFace - 0.34), 3.23, z], scene);
     }
-    for (const [index, z] of [-10.8, -16.65].entries()) {
+    for (const [index, z] of [-8.8, -12.8].entries()) {
       const art = new THREE.Group();
-      art.position.set(side * 8.16, 0, z);
+      art.position.set(side * (wallFace - 0.12), 0, z);
       art.rotation.y = -side * Math.PI / 2;
       scene.add(art);
       const variant = index + (side > 0 ? 2 : 0);
       artwork(art, variant, ['LA MEMORIA', 'EL VIAJE', 'EL INSTANTE', 'EL HORIZONTE'][variant]);
-      const bench = placeModel('museumBench', scene, [side * 7.35, 0.1, z], { height: 0.8, width: 2.1, rotation: -side * Math.PI / 2 });
+      const bench = placeModel('museumBench', scene, [side * (wallFace - 0.95), 0.15, z], { height: 0.8, width: 2.1, rotation: -side * Math.PI / 2 });
       colliders.push(modelCollider(bench));
+      const id: ModelId = side < 0 ? (index === 0 ? 'statue' : 'pot') : (index === 0 ? 'rowboat' : 'column');
+      displayCase(scene, colliders, side * 9.45, z, id);
+      exhibitSpot(scene, side * 9.45, z, 5.08, 12, 2.15, true);
     }
-    for (const z of [-8.1, -13.95]) {
-      box(1.0, 0.72, 1.0, panelColor, [side * 7.25, 0.47, z], scene);
-      const cap = box(1.14, 0.1, 1.14, stone, [side * 7.25, 0.87, z], scene);
+    for (const z of bays.slice(0, 2)) {
+      const x = side * (wallFace - 1.15);
+      box(1, 0.72, 1, panelColor, [x, 0.51, z], scene);
+      const cap = box(1.14, 0.1, 1.14, stone, [x, 0.91, z], scene);
       colliders.push(modelCollider(cap));
-      placeModel('statue', scene, [side * 7.25, 0.93, z], { height: 1.82, width: 0.9, color: 0xc3b99f, rotation: -side * Math.PI / 2 });
+      placeModel('statue', scene, [x, 0.97, z], { height: 1.82, width: 0.9, color: 0xc3b99f, rotation: -side * Math.PI / 2 });
     }
-    for (const z of [-7.6, -13.1, -18.6]) {
-      const column = placeModel('column', scene, [side * 5.9, 0.1, z], { height: 4.04, width: 0.83, depth: 0.83, color: 0xa9a48f });
+    for (const z of bays) {
+      const column = placeModel('column', scene, [side * naveX, 0.15, z], { height: 5.03, width: 0.9, depth: 0.9, color: 0xa9a48f });
       colliders.push(modelCollider(column));
-      // Warm wall sconces add points of light without extra shadow maps.
-      box(0.16, 0.45, 0.3, bronze, [side * 8.1, 2.85, z], scene);
-      const lamp = box(0.26, 0.35, 0.32, glow, [side * 7.92, 3.03, z], scene);
-      lamp.castShadow = false;
-      box(0.32, 0.05, 0.42, bronze, [side * 7.92, 3.23, z], scene);
     }
-    const plant = placeModel('plant', scene, [side * 7.25, 0.1, -5.1], { height: 1.7 });
-    colliders.push(modelCollider(plant, 0.1));
-    box(4, 0.25, 18, ceiling, [side * 6.5, 5.5, -12.4], scene);
-    for (const z of [-7, -10, -13, -16, -19]) {
-      box(3.6, 0.1, 2.6, panelColor, [side * 6.5, 5.33, z], scene);
-      box(3.35, 0.035, 2.35, wallColor, [side * 6.5, 5.26, z], scene);
+    const aisleWidth = halfWidth - naveX + wallThickness / 2;
+    const aisleX = naveX + aisleWidth / 2;
+    box(aisleWidth, 0.2, depth, ceiling, [side * aisleX, wallHeight + 0.1, centerZ], scene);
+    box(0.28, 0.25, depth, stone, [side * naveX, 5.28, centerZ], scene);
+    for (const z of [-6.8, -10.8, -14.8, -18.8]) {
+      const cofferDepth = z === -18.8 ? 4.4 : 3.55;
+      box(aisleWidth - 0.45, 0.08, cofferDepth, panelColor, [side * aisleX, 5.35, z], scene);
+      box(aisleWidth - 0.65, 0.03, cofferDepth - 0.2, wallColor, [side * aisleX, 5.295, z], scene);
     }
   }
-  // A flush clock-rose inlay makes the central promenade legible without an obstacle.
-  for (const [radius, material, y] of [[1.72, bronze, 0.123], [1.64, darkStone, 0.126], [1.43, stone, 0.129]] as const) {
-    const disc = mesh(new THREE.CircleGeometry(radius, 64), material, [0, y, -12.2], scene);
+  for (const [radius, material, y] of [[1.72, bronze, 0.18], [1.64, panelColor, 0.183], [1.43, stone, 0.186]] as const) {
+    const disc = mesh(new THREE.CircleGeometry(radius, 64), material, [0, y, -11.6], scene);
     disc.rotation.x = -Math.PI / 2;
     disc.castShadow = false;
   }
   for (let i = 0; i < 12; i++) {
     const angle = i * Math.PI / 6;
-    const mark = floor(0.055, 0.2, bronze, Math.sin(angle) * 1.51, -12.2 + Math.cos(angle) * 1.51, 0.14);
+    const mark = floor(0.055, 0.2, bronze, Math.sin(angle) * 1.51, -11.6 + Math.cos(angle) * 1.51, 0.2);
     mark.rotation.y = angle;
   }
-  const needle = floor(0.16, 2.5, darkStone, 0, -12.2, 0.14);
-  needle.rotation.y = -Math.PI / 5;
-  for (const z of [-7.6, -13.1, -18.6]) {
+  floor(0.16, 2.5, panelColor, 0, -11.6, 0.2).rotation.y = -Math.PI / 5;
+  for (const z of bays) {
     const points = Array.from({ length: 21 }, (_, i) => {
-      const x = -5.9 + i * 11.8 / 20;
-      return new THREE.Vector3(x, 4.1 + 1.2 * (1 - (x / 5.9) ** 2), z);
+      const x = -naveX + i * naveX * 2 / 20;
+      return new THREE.Vector3(x, 5.18 + 0.87 * (1 - (x / naveX) ** 2), z);
     });
-    mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 32, 0.16, 6, false), stone, [0, 0, 0], scene);
+    // The first bay sits below the taller entrance pavilion's solid ceiling.
+    if (z < -8) mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 32, 0.14, 6, false), stone, [0, 0, 0], scene);
+    else box(naveX * 2, 0.25, 0.28, stone, [0, 5.28, z], scene);
   }
-  for (const [x, z, id] of [[-3.95, -9.9, 'statue'], [3.95, -9.9, 'rowboat'], [-3.95, -15.3, 'pot'], [3.95, -15.3, 'column']] as const) {
-    displayCase(scene, colliders, x, z, id);
-    exhibitSpot(scene, x, z, 5.08, 12, 2.15, true);
-  }
-  box(17, 1.6, 0.52, wallColor, [0, 4.7, -21.45], scene);
-  for (const y of [4.04, 5.34]) box(16.9, 0.1, 0.22, bronze, [0, y, -21.1], scene);
-  mesh(new THREE.CircleGeometry(1.03, 48), bronze, [0, 2.42, -21.25], scene);
-  mesh(new THREE.CircleGeometry(0.92, 48), stone, [0, 2.42, -21.22], scene);
-  mesh(new THREE.TorusGeometry(0.72, 0.025, 4, 48), darkStone, [0, 2.42, -21.19], scene);
+  // Gallery owns the continuous rear wall; the hall adds only its cornice and clock.
+  box(halfWidth * 2, 0.1, 0.14, bronze, [0, 5.08, hallBackZ + 0.21], scene);
+  for (const x of [-1.3, 1.3]) box(0.12, 3.5, 0.08, bronze, [x, 2.05, hallBackZ + 0.19], scene);
+  mesh(new THREE.CircleGeometry(1.03, 48), bronze, [0, 2.42, hallBackZ + 0.2], scene);
+  mesh(new THREE.CircleGeometry(0.92, 48), stone, [0, 2.42, hallBackZ + 0.23], scene);
+  mesh(new THREE.TorusGeometry(0.72, 0.025, 4, 48), panelColor, [0, 2.42, hallBackZ + 0.26], scene);
   for (let i = 0; i < 12; i++) {
     const a = i * Math.PI / 6;
-    const tick = box(0.04, 0.13, 0.02, bronze, [Math.sin(a) * 0.82, 2.42 + Math.cos(a) * 0.82, -21.17], scene);
+    const tick = box(0.04, 0.13, 0.02, bronze, [Math.sin(a) * 0.82, 2.42 + Math.cos(a) * 0.82, hallBackZ + 0.28], scene);
     tick.rotation.z = -a;
   }
-  const hand = box(0.055, 1.1, 0.035, darkStone, [0, 2.42, -21.14], scene);
-  hand.rotation.z = -0.55;
-  // The entry pavilion overlaps this bay: a solid ceiling hides its structural volumes.
-  box(9.1, 0.18, 4.6, ceiling, [0, 5.42, -5.7], scene);
-  vaultedCeiling(scene);
-  for (const z of [-7.2, -12.5, -17.8]) {
-    mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.9, 6), bronze, [0, 5.7, z], scene);
-    const lightGlass = mesh(new THREE.CylinderGeometry(0.32, 0.4, 0.42, 10), glow, [0, 5.05, z], scene);
-    lightGlass.castShadow = false;
+  box(0.055, 1.1, 0.035, panelColor, [0, 2.42, hallBackZ + 0.31], scene).rotation.z = -0.55;
+  box(naveX * 2, 0.2, frontZ + 8, ceiling, [0, wallHeight + 0.1, (frontZ - 8) / 2], scene);
+  vaultedCeiling(scene, naveX, hallBackZ);
+  for (const z of bays) {
+    const rodLength = z > -8 ? 0.25 : 1.1;
+    mesh(new THREE.CylinderGeometry(0.022, 0.022, rodLength, 6), bronze, [0, 5.25 + rodLength / 2, z], scene);
+    mesh(new THREE.CylinderGeometry(0.32, 0.4, 0.42, 10), glow, [0, 5.05, z], scene).castShadow = false;
     for (const y of [4.82, 5.28]) mesh(new THREE.CylinderGeometry(0.43, 0.43, 0.05, 10), bronze, [0, y, z], scene);
     const light = new THREE.PointLight(0xffe6bb, 6, 8, 1.5);
     light.position.set(0, 4.6, z);
     scene.add(light);
   }
 }
-function vaultedCeiling(parent: THREE.Object3D): void {
+function vaultedCeiling(parent: THREE.Object3D, halfWidth: number, backZ: number): void {
   const roofMaterial = toon(exhibition.ceiling);
   roofMaterial.side = THREE.DoubleSide;
-  const roofY = (x: number): number => 5.46 + 0.78 * (1 - (x / 4.5) ** 2);
+  const roofY = (x: number): number => 5.46 + 0.78 * (1 - (x / halfWidth) ** 2);
   for (let segment = 0; segment < 8; segment++) {
-    const x0 = -4.5 + segment * 1.125;
-    const x1 = x0 + 1.125;
+    const x0 = -halfWidth + segment * halfWidth / 4;
+    const x1 = x0 + halfWidth / 4;
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.Float32BufferAttribute([
       x0, roofY(x0), -8, x1, roofY(x1), -8,
-      x0, roofY(x0), -21.3, x1, roofY(x1), -21.3,
+      x0, roofY(x0), backZ, x1, roofY(x1), backZ,
     ], 3));
     geometry.setIndex([0, 2, 1, 1, 2, 3]);
     geometry.computeVertexNormals();
@@ -218,27 +233,27 @@ function vaultedCeiling(parent: THREE.Object3D): void {
     pane.receiveShadow = false;
   }
   for (let segment = 0; segment <= 8; segment++) {
-    const x = -4.5 + segment * 1.125;
-    const rib = box(0.065, 0.095, 13.3, mat.darkGold, [x, roofY(x) + 0.01, -14.65], parent);
+    const x = -halfWidth + segment * halfWidth / 4;
+    const rib = box(0.065, 0.095, -8 - backZ, mat.darkGold, [x, roofY(x) + 0.01, (-8 + backZ) / 2], parent);
     rib.castShadow = segment % 2 === 0;
   }
-  for (const z of [-8, -10.2, -12.4, -14.6, -16.8, -19, -21.2]) {
+  for (const z of [-8, -10.8, -14.8, backZ]) {
     const points = Array.from({ length: 17 }, (_, index) => {
-      const x = -4.5 + index * 0.5625;
+      const x = -halfWidth + index * halfWidth / 8;
       return new THREE.Vector3(x, roofY(x) - 0.025, z);
     });
     mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 24, 0.055, 5, false), mat.darkGold, [0, 0, 0], parent);
   }
   const end = new THREE.Shape();
-  end.moveTo(-4.5, 5.42);
-  end.lineTo(4.5, 5.42);
+  end.moveTo(-halfWidth, museumLayout.wallHeight);
+  end.lineTo(halfWidth, museumLayout.wallHeight);
   for (let i = 8; i >= 0; i--) {
-    const x = -4.5 + i * 1.125;
+    const x = -halfWidth + i * halfWidth / 4;
     end.lineTo(x, roofY(x));
   }
   end.closePath();
   const capMaterial = roofMaterial.clone();
   capMaterial.side = THREE.DoubleSide;
-  for (const z of [-8, -21.3]) mesh(new THREE.ShapeGeometry(end), capMaterial, [0, 0, z], parent);
+  for (const z of [-8, backZ]) mesh(new THREE.ShapeGeometry(end), capMaterial, [0, 0, z], parent);
 }
 

@@ -2,9 +2,10 @@ import * as THREE from 'three';
 import { modelCollider, placeModel } from './assets';
 import type { AreaId } from './catalog';
 import { createCourtyardArrival } from './courtyard';
-import { createGallery, galleryLayout, type GalleryDoor, type GalleryRoom } from './gallery';
+import { createGallery, type GalleryDoor, type GalleryRoom } from './gallery';
 import { createGuard } from './guard';
 import { createHall } from './hall';
+import { galleryLayout, museumLayout } from './museumLayout';
 import { installRomeExhibit } from './rome';
 import type { Collider } from './scene';
 import { box, hippedRoof, materials as mat, mesh, outline, palette, silhouette, toon } from './visual';
@@ -156,6 +157,33 @@ function upperFacade(scene: THREE.Scene): void {
   minuteHand.rotation.z = -Math.PI / 6;
   const hourHand = box(0.055, 0.35, 0.035, mat.ink, [-0.16, 7.12, -2.9], scene);
   hourHand.rotation.z = Math.PI / 3;
+}
+
+function museumEnvelope(scene: THREE.Scene): void {
+  const { halfWidth, frontZ, hallBackZ, backZ, wallHeight } = museumLayout;
+  const length = frontZ - backZ;
+  const centerZ = (frontZ + backZ) / 2;
+  const outsideX = halfWidth + 0.21;
+  const roof = toon(0x607b80);
+  for (const side of [-1, 1]) {
+    // Exterior masonry dresses the same walls that enclose the playable interior.
+    box(0.1, wallHeight, length, mat.cream, [side * outsideX, wallHeight / 2, centerZ], scene);
+    box(0.2, 0.45, length, mat.sand, [side * (outsideX + 0.03), 0.3, centerZ], scene);
+    box(0.3, 0.18, length + 0.2, mat.stone, [side * (outsideX + 0.04), 5.36, centerZ], scene);
+    for (let z = frontZ - 3.1; z > backZ; z -= galleryLayout.step / 2) {
+      box(0.17, 4.7, 0.27, mat.stone, [side * (outsideX + 0.05), 2.85, z], scene);
+    }
+    const wingWidth = (galleryLayout.wingX - galleryLayout.innerX) * 2;
+    hippedRoof(wingWidth + 0.6, 1.1, hallBackZ - backZ + 0.5, roof,
+      [side * galleryLayout.wingX, 5.61, (hallBackZ + backZ) / 2], scene);
+    box(0.15, 0.8, frontZ - hallBackZ, roof, [side * outsideX, 5.98, (frontZ + hallBackZ) / 2], scene);
+  }
+  box(halfWidth * 2 + 0.5, wallHeight, 0.1, mat.cream, [0, wallHeight / 2, backZ - 0.2], scene);
+  box(halfWidth * 2 + 0.7, 0.18, 0.3, mat.stone, [0, 5.36, backZ - 0.24], scene);
+  box(galleryLayout.innerX * 2, 0.12, galleryLayout.step, roof, [0, 5.66, backZ + galleryLayout.step / 2], scene);
+  box(halfWidth * 2 + 0.5, 0.8, 0.15, roof, [0, 5.98, hallBackZ - 0.21], scene);
+  hippedRoof(halfWidth * 2 + 0.8, 1.1, frontZ - hallBackZ + 0.5, roof,
+    [0, 6.38, (frontZ + hallBackZ) / 2], scene);
 }
 
 function column(parent: THREE.Object3D, x: number, z: number, height: number): void {
@@ -333,11 +361,13 @@ export function createMuseumScene(): MuseumWorld {
   createHall(scene, decorationColliders);
   sign(scene, 'GALERÍA DEL TIEMPO', [0, 4.7, -21.08], 4.4, true);
   const gallery = createGallery(scene);
+  museumEnvelope(scene);
   const romeExhibit = installRomeExhibit(gallery.rooms.find((room) => room.id === 'roma')!);
   const exhibits = new Map<AreaId, { artifact: THREE.Object3D; photoSolids: THREE.Object3D[] }>([
     ['roma', { artifact: romeExhibit.artifact, photoSolids: [...gallery.photoSolids, ...romeExhibit.photoSolids] }],
   ]);
-  sign(scene, 'REGRESO AL HALL', [galleryLayout.wingX, 3.45, -21.67], 2.5);
+  sign(scene, 'FIN DEL RECORRIDO', [galleryLayout.wingX, 3.45, galleryLayout.frontZ + 0.19], 2.55, true);
+  sign(scene, 'REGRESO AL HALL', [galleryLayout.wingX, 3.45, galleryLayout.frontZ - 0.22], 2.5, true).rotation.y = Math.PI;
 
   const doorBlock = entranceGate.blocker;
   const colliders: Collider[] = [
