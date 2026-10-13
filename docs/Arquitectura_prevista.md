@@ -1,10 +1,10 @@
 # Arquitectura prevista del MVP
 
-Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Por ahora solo existe el [estudio visual de la etapa 1](Revision_etapa_1.md); el catálogo, las salas, la fotografía y el progreso descritos aquí siguen previstos.
+Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md) y el [inicio en el museo](Revision_etapa_3.md). El catálogo y `areaOrder` ya alimentan el panfleto y el número del futuro sector romano; los módulos de sala, la fotografía y el progreso siguen previstos.
 
 ## Catálogo y orden de las áreas
 
-Cada época tendrá un `id` estable, independiente de su número y de la ubicación de su sala. El catálogo guardará nombre y artefacto; el contenido jugable se añadirá cuando se implemente la época. La lista `areaOrder` será la única fuente del orden.
+Cada época tiene un `id` estable, independiente de su número y de la ubicación de su futura sala. El catálogo guarda nombre y artefacto; el contenido jugable se añadirá cuando se implemente la época. La lista `areaOrder` es la única fuente del orden.
 
 | ID estable | Época | Artefacto | MVP |
 | --- | --- | --- | --- |
@@ -19,11 +19,11 @@ Cada época tendrá un `id` estable, independiente de su número y de la ubicaci
 | `titanic` | Titanic — 1912 | Reloj de bolsillo | WIP |
 | `luna` | Llegada a la Luna — 1969 | Insignia Apollo 11 | WIP |
 
-Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotografiable, un mundo histórico, puntos de aparición, ubicación del artefacto final y una ruta transitable para la ayuda. El catálogo debe comprobar que cada ID de `areaOrder` existe y aparece una sola vez. Roma y Egipto usarán el mismo contrato; no habrá una versión independiente de la mecánica para cada una.
+Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotografiable, un mundo histórico, puntos de aparición, ubicación del artefacto final y una ruta transitable para la ayuda. El catálogo comprueba que cada ID de `areaOrder` existe y aparece una sola vez. Roma y Egipto usarán el mismo contrato; no habrá una versión independiente de la mecánica para cada una.
 
 ## Salas, estados y progresión
 
-- El edificio ofrece diez módulos físicos fijos. Cada módulo recibe el contenido de la época situada en esa posición de `areaOrder`. La geometría de una exhibición se define respecto del origen local de su módulo; moverla no requiere editar coordenadas globales.
+- En la etapa 3 solo existe el hall y un umbral cerrado hacia el futuro sector romano. En la etapa 5, el edificio ofrecerá diez módulos físicos fijos. Cada módulo recibirá el contenido de la época situada en esa posición de `areaOrder`. La geometría de una exhibición se definirá respecto del origen local de su módulo; moverla no requerirá editar coordenadas globales.
 - Número de sala, señalización, posición en el panfleto y luz de área se calculan a partir del índice en `areaOrder`. Por ejemplo, mover `egipto` al octavo lugar debe bastar para actualizar los cuatro aspectos.
 - **Disponibilidad** (`WIP` o jugable) y **progreso** (`locked`, `active`, `completed`) son conceptos distintos. Una sala WIP se puede visitar, pero no contiene viaje temporal y nunca se vuelve `active`.
 - Solo una época jugable incompleta está activa a la vez: la primera de `areaOrder` que no esté completada. Las WIP se saltan. Si no queda ninguna jugable incompleta, no hay área activa y se muestra la conclusión correspondiente al contenido disponible.

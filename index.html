@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#89d9cd" />
-    <title>Museo de viajes en el tiempo · Recorrido de prueba</title>
+    <title>Museo de viajes en el tiempo · La llegada</title>
   </head>
   <body>
     <main id="app" data-mode="player">
-      <div id="scene" aria-label="Escena tridimensional de prueba del museo"></div>
+      <div id="scene" aria-label="Escena tridimensional del museo"></div>
       <div class="paper-grain" aria-hidden="true"></div>
       <header class="masthead">
         <div class="eyebrow"><span class="eyebrow-mark"></span> MUSEO DE VIAJES EN EL TIEMPO <span class="separator">/</span> ESTUDIO 01</div>
@@ -29,26 +29,38 @@
       <div class="hint">ARRASTRÁ PARA ORBITAR · RUEDA PARA ACERCAR</div>
       <div class="player-hud">
         <div class="crosshair" aria-hidden="true"></div>
-        <div id="interaction-prompt" class="interaction-prompt" hidden><kbd>E</kbd> Inspeccionar casco</div>
-        <div class="player-help">WASD CAMINAR · MOUSE MIRAR · E INSPECCIONAR · ESC PAUSAR</div>
+        <div id="interaction-prompt" class="interaction-prompt" hidden><kbd>E</kbd><span id="interaction-label"></span></div>
+        <div id="player-help" class="player-help">WASD CAMINAR · MOUSE MIRAR · E INTERACTUAR · ESC PAUSAR</div>
       </div>
+      <div id="game-toast" class="game-toast" role="status" hidden></div>
       <section id="game-menu" class="game-overlay" role="dialog" aria-labelledby="menu-title">
         <div class="game-card">
-          <span class="game-eyebrow">MUSEO DE VIAJES EN EL TIEMPO / ESTUDIO 02</span>
-          <h1 id="menu-title">Un paseo por<br />el museo.</h1>
-          <p id="menu-text">Recorré este patio de prueba en primera persona. Acercate al casco para inspeccionarlo.</p>
-          <button id="menu-button" class="game-button" type="button">Entrar al recorrido <span aria-hidden="true">↗</span></button>
-          <small>WASD para caminar · Mouse para mirar · Escape para pausar · Clic para volver</small>
+          <span class="game-eyebrow">MUSEO DE VIAJES EN EL TIEMPO / LA LLEGADA</span>
+          <h1 id="menu-title">La historia<br />te espera.</h1>
+          <p id="menu-text">Atravesá el patio y hablá con el guardia junto a la entrada. Él tiene algo para vos.</p>
+          <button id="menu-button" class="game-button" type="button">Comenzar visita <span aria-hidden="true">↗</span></button>
+          <small>WASD caminar · Mouse mirar · E interactuar · M panfleto · Escape pausar</small>
         </div>
       </section>
-      <section id="inspect-panel" class="game-overlay" role="dialog" aria-labelledby="inspect-title" hidden>
-        <div class="game-card inspect-card">
-          <span class="game-eyebrow">01 — PIEZA DE ESTUDIO</span>
-          <h2 id="inspect-title">Casco de gladiador</h2>
-          <p>Una pieza de prueba para observar la forma, la luz y los contornos del museo.</p>
-          <button id="close-inspect" class="game-button" type="button">Cerrar ficha <span aria-hidden="true">↗</span></button>
-          <small>Escape también cierra esta ficha.</small>
+      <section id="pamphlet" class="pamphlet-layer" role="dialog" aria-label="Panfleto desplegado del museo" hidden>
+        <div class="pamphlet-paper">
+          <div class="pamphlet-leaf pamphlet-map-leaf">
+            <span class="pamphlet-eyebrow">MUSEO DE VIAJES EN EL TIEMPO / PLANO DE VISITA</span>
+            <h2>Un museo fuera<br /><em>del tiempo.</em></h2>
+            <p class="pamphlet-intro">Cada número señala un lugar en el recorrido. El hall une las dos alas del museo.</p>
+            <div class="map-title"><span>PLANO GENERAL</span><span>10 ÁREAS</span></div>
+            <div id="pamphlet-map" class="pamphlet-map" aria-label="Mapa numerado de las diez áreas"></div>
+            <div class="map-entrance">↑ HALL <span>ENTRADA POR EL PATIO</span></div>
+          </div>
+          <div class="pamphlet-leaf pamphlet-index-leaf">
+            <span class="pamphlet-eyebrow">ÍNDICE / UNA ÉPOCA EN CADA PUERTA</span>
+            <h3>Diez momentos<br />por descubrir.</h3>
+            <ol id="pamphlet-index" class="pamphlet-index"></ol>
+            <p class="pamphlet-note">Las galerías aún están en preparación. Una luz cálida en el hall señala el futuro sector de Roma.</p>
+            <div class="pamphlet-stamp">EDICIÓN DE VISITA · 01 / 10</div>
+          </div>
         </div>
+        <div class="pamphlet-instruction">M CERRAR PANFLETO · ESC PAUSAR</div>
       </section>
       <div id="error" class="error" hidden></div>
     </main>

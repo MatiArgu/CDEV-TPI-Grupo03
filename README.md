@@ -1,6 +1,6 @@
 # Museo de viajes en el tiempo
 
-Proyecto de videojuego 3D en primera persona para navegador. Están implementadas la **etapa 1: motor visual** y la **etapa 2: movimiento** en una escena de prueba en Three.js. El museo y los viajes temporales llegan en etapas posteriores.
+Proyecto de videojuego 3D en primera persona para navegador. Las etapas 1 a 3 permiten recorrer el patio de un museo ficticio inspirado en el Louvre, recibir un panfleto y entrar al hall. Las salas históricas y los viajes temporales llegan en etapas posteriores.
 
 ## Ejecutar el prototipo
 
@@ -11,14 +11,15 @@ npm install
 npm run dev
 ```
 
-Abrir la dirección local que muestra Vite y hacer clic en **Entrar al recorrido**. Usar **WASD** para caminar, el **mouse** para mirar y **E** para inspeccionar el casco cuando aparezca la indicación. **Escape** pausa o cierra la ficha; hacer clic en **Volver al recorrido** recupera el control del mouse.
+Abrir la dirección local que muestra Vite y hacer clic en **Comenzar visita**. Usar **WASD** para caminar y el **mouse** para mirar. Acercarse al guardia junto a la entrada y pulsar **E** para recibir el panfleto; **M** lo despliega o guarda. Después se puede entrar al hall y seguir la luz cálida hacia el futuro sector romano. **Escape** pausa; hacer clic en **Volver al recorrido** recupera el control del mouse.
 
 Para revisar el estilo de la etapa 1 sin caminar, abrir `?view=far`, `?view=mid` o `?view=near` al final de la dirección local. En ese modo se puede orbitar con el mouse, acercar con la rueda y cambiar entre las tres vistas. `npm run typecheck` revisa tipos y `npm run build` genera la versión estática en `dist/`.
 
-La escena contiene una fachada ficticia, vegetación y un casco de gladiador de prueba. Todavía no hay fotografía, salas completas ni viajes temporales.
+El modo de estudio conserva la fachada, la vegetación y el casco de gladiador de la etapa 1. En el recorrido principal todavía no hay salas históricas, fotografía ni viajes temporales.
 
 [Revisión visual y capturas de la etapa 1](docs/Revision_etapa_1.md).
 [Revisión del recorrido de la etapa 2](docs/Revision_etapa_2.md).
+[Revisión del museo y la introducción de la etapa 3](docs/Revision_etapa_3.md).
 
 ## Documentación
 
