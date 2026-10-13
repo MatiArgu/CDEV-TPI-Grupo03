@@ -34,6 +34,7 @@ export function createPamphlet(camera: THREE.PerspectiveCamera) {
   });
 
   function redraw(): void {
+    const active = areaOrder.find((id) => availabilityOf(id) === 'playable' && !completed.has(id));
     for (const { canvas, texture, side } of pages) {
       const c = canvas.getContext('2d')!;
       c.fillStyle = '#efe5cd'; c.fillRect(0, 0, 1024, 1400);
@@ -76,32 +77,40 @@ export function createPamphlet(camera: THREE.PerspectiveCamera) {
           c.fillStyle = areaCatalog[id].accent; c.fillRect(78, y - 34, 68, 58);
           text(String(index + 1).padStart(2, '0'), 86, y + 6, 39);
           text(areaCatalog[id].name.replace(' · 1969', ''), 177, y, 44);
-          text(completed.has(id) ? 'RECUERDO RECUPERADO' : availabilityOf(id) === 'playable' ? 'VIAJE DISPONIBLE · POLAROID' : 'VISITABLE · VIAJE EN PREPARACIÓN', 177, y + 46, 27, '#766952');
+          text(completed.has(id) ? 'RECUERDO RECUPERADO' : id === active ? 'VIAJE DISPONIBLE · POLAROID' : availabilityOf(id) === 'playable' ? `PRIMERO SALA ${String(areaOrder.indexOf(active!) + 1).padStart(2, '0')}` : 'VISITABLE · VIAJE EN PREPARACIÓN', 177, y + 46, 27, '#766952');
           c.strokeStyle = '#c8bca1'; c.beginPath(); c.moveTo(80, y + 76); c.lineTo(930, y + 76); c.stroke();
         });
-        const memory = completed.entries().next().value;
-        if (memory) {
-          const [id, photo] = memory;
-          c.save(); c.translate(178, 1120); c.rotate(-0.06);
-          c.fillStyle = '#fff9e9'; c.fillRect(-92, -98, 224, 206);
-          c.drawImage(photo, -80, -86, 200, 150); c.restore();
-          text('RECUERDO DE ROMA', 360, 1070, 33);
-          text(areaCatalog[id].artifact, 360, 1120, 32);
-          text('✓ Recuperado', 360, 1170, 32);
-          c.save(); c.translate(873, 1100);
-          c.fillStyle = '#a78650'; c.beginPath(); c.arc(0, 0, 42, Math.PI, 0); c.lineTo(42, 38); c.lineTo(18, 38); c.lineTo(18, 5); c.lineTo(-18, 5); c.lineTo(-18, 38); c.lineTo(-42, 38); c.closePath(); c.fill();
-          c.fillStyle = '#ae6f53'; c.fillRect(-7, -65, 14, 48); c.restore();
+        const memories = areaOrder.filter((id) => completed.has(id));
+        if (memories.length) {
+          memories.forEach((id, index) => {
+            const y = 1040 + index * 115;
+            c.save(); c.translate(143, y + 18); c.rotate(-0.05);
+            c.fillStyle = '#fff9e9'; c.fillRect(-63, -51, 144, 111);
+            c.drawImage(completed.get(id)!, -56, -44, 130, 97.5); c.restore();
+            text(areaCatalog[id].name.toUpperCase(), 270, y, 32);
+            text(`✓ ${areaCatalog[id].artifact}`, 270, y + 47, 29);
+            c.save(); c.translate(873, y + 10); c.scale(0.64, 0.64);
+            if (id === 'egipto') {
+              c.fillStyle = '#8f7d50'; c.beginPath(); c.ellipse(0, 0, 60, 20, 0, 0, Math.PI * 2); c.fill();
+              c.fillStyle = '#477f7c'; c.beginPath(); c.ellipse(0, 0, 25, 38, 0, 0, Math.PI * 2); c.fill();
+              c.strokeStyle = '#d0b573'; c.lineWidth = 4; c.beginPath(); c.moveTo(0, -32); c.lineTo(0, 32); c.stroke();
+            } else {
+              c.fillStyle = '#a78650'; c.beginPath(); c.arc(0, 0, 42, Math.PI, 0); c.lineTo(42, 38); c.lineTo(18, 38); c.lineTo(18, 5); c.lineTo(-18, 5); c.lineTo(-18, 38); c.lineTo(-42, 38); c.closePath(); c.fill();
+              c.fillStyle = '#ae6f53'; c.fillRect(-7, -65, 14, 48);
+            }
+            c.restore();
+          });
         } else {
           text('Explorá las cinco salas.', 80, 1070, 40, '#33493e', true);
-          text('Fotografiá el casco de Roma para viajar.', 80, 1130, 33);
-          text('Las otras épocas siguen en preparación.', 80, 1180, 33);
+          text('Egipto y Roma te esperan al otro lado', 80, 1130, 33);
+          text('de la fotografía. Empezá por la sala 01.', 80, 1180, 33);
         }
-        text(`${completed.size} / ${areaOrder.length} RECUERDOS`, 80, 1260, 33);
+        text(`${completed.size} / ${areaOrder.length} RECUERDOS${!active ? " · VISITA COMPLETADA" : ""}`, 80, 1260, 28);
         text('M GUARDAR · CLIC VOLVER AL RECORRIDO', 80, 1320, 28);
       }
       texture.needsUpdate = true;
     }
-    description.textContent = `Panfleto: ${areaOrder.map((id, i) => `${i + 1}. ${areaCatalog[id].name}, ${completed.has(id) ? 'completada' : availabilityOf(id) === 'playable' ? 'viaje disponible' : 'visitable, viaje en preparación'}`).join('. ')}. ${completed.size}/${areaOrder.length} recuerdos. M o clic para guardar.`;
+    description.textContent = `Panfleto: ${areaOrder.map((id, i) => `${i + 1}. ${areaCatalog[id].name}, ${completed.has(id) ? 'completada' : id === active ? 'viaje disponible' : availabilityOf(id) === 'playable' ? 'viaje posterior al área activa' : 'visitable, viaje en preparación'}`).join('. ')}. ${completed.size}/${areaOrder.length} recuerdos. M o clic para guardar.`;
   }
   redraw();
   foreground(root);

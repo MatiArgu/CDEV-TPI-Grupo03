@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { modelCollider, placeModel, type ModelId } from './assets';
 import type { Collider } from './scene';
 import { galleryLayout, museumLayout } from './museumLayout';
-import { exhibition, exhibitSpot, stoneFloor } from './exhibition';
+import { exhibition, exhibitSpot, stoneFloor, museumWallMaterial } from './exhibition';
 import { box, materials as mat, mesh, outline, toon } from './visual';
 
 function artTexture(variant: number): THREE.CanvasTexture {
@@ -91,7 +91,7 @@ export function createHall(scene: THREE.Scene, colliders: Collider[]): void {
   const centerZ = (frontZ + hallBackZ) / 2;
   const naveX = 5.4;
   const bays = [-6.8, -10.8, -14.8];
-  const wallColor = toon(exhibition.wall);
+  const wallColor = museumWallMaterial();
   const panelColor = toon(exhibition.panel);
   const bronze = toon(exhibition.bronze);
   const stone = toon(exhibition.stone);

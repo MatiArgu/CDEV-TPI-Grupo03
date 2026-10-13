@@ -8,7 +8,7 @@ Tu objetivo es **desarrollar un videojuego 3D funcional y jugable en el navegado
 
 El museo tendrá cinco salas: Antiguo Egipto → Antigua Roma → Época Medieval → Japón Feudal → Llegada a la Luna. Las dos primeras ocupan el ala izquierda; Medieval es el salón largo transversal del fondo; Japón y Luna regresan por el ala derecha.
 
-**Estado actual:** todas las salas se pueden recorrer, pero solo Roma tiene viaje histórico. Las demás se señalizan como viajes en preparación. El próximo hito histórico sigue siendo Egipto; este documento describe también funciones futuras, y el [plan de desarrollo](Plan_de_desarrollo.md) distingue cada entrega. El progreso actual permanece en memoria.
+**Estado actual:** Egipto y Roma tienen exhibición y viaje histórico completos, con ayuda, recogida, regreso, fotos y guardado local. Las cinco salas se pueden recorrer; Medieval, Japón y Luna siguen sin viaje histórico. El [plan de desarrollo](Plan_de_desarrollo.md) distingue las entregas.
 
 ---
 
@@ -249,7 +249,7 @@ Inicialmente, todas las áreas están oscuras.
 
 El jugador abre el panfleto y observa las cinco áreas.
 
-Abrir cada puerta con E enciende su sala. Egipto ocupa la puerta 01; Roma y el único viaje disponible están en la 02.
+Abrir cada puerta con E enciende su sala. Egipto ocupa la puerta 01; Roma está en la 02. Los viajes se completan en el orden Egipto → Roma.
 
 La iluminación debe dirigir naturalmente la atención del jugador.
 
@@ -263,7 +263,7 @@ El jugador puede caminar hacia el área iluminada.
 
 El museo contiene cinco áreas.
 
-Las cinco salas se pueden recorrer sin completar épocas. Por ahora solo Roma dispone de exhibición y viaje histórico. Egipto es el siguiente mundo previsto; Medieval, Japón y Luna permanecen en preparación. Las salas WIP no activan viajes.
+Las cinco salas se pueden recorrer sin completar épocas. Egipto y Roma disponen de exhibición y viaje histórico; Medieval, Japón y Luna permanecen en preparación. Las salas WIP no activan viajes.
 
 ## Estados de un área
 
@@ -440,7 +440,7 @@ El jugador continúa con las mismas dos herramientas.
 
 ---
 
-# 11. SALA 01 — ANTIGUO EGIPTO (VIAJE PREVISTO)
+# 11. SALA 01 — ANTIGUO EGIPTO
 
 ## A. Exhibición del museo
 
@@ -682,12 +682,12 @@ El jugador debe entender la mecánica principalmente mediante las interacciones 
 
 El proyecto no se considera terminado si solamente muestra un museo 3D con controles de movimiento.
 
-El siguiente recorrido es la aceptación del próximo hito histórico (Egipto + Roma). Hoy está implementado el ciclo de Roma; el viaje egipcio y la persistencia siguen pendientes:
+El siguiente recorrido corresponde al hito Egipto + Roma implementado:
 
 1. Iniciar el juego, recorrer el patio e interactuar con el guardia.
 2. Recibir el panfleto, levantarlo con las manos, leerlo y guardarlo recuperando el mouse.
 3. Entrar al hall y abrir la sala 01: Antiguo Egipto.
-4. Cuando su viaje esté instalado, fotografiar el escarabajo, viajar al templo y recogerlo.
+4. Fotografiar el escarabajo, viajar al templo y recogerlo.
 5. Regresar con el primer recuerdo registrado en el panfleto.
 6. Pasar a la sala 02: Antigua Roma y fotografiar el casco.
 7. Ver la foto salir de la cámara y revelarse en la mano; una foto inválida permite reintentar.
@@ -695,7 +695,7 @@ El siguiente recorrido es la aceptación del próximo hito histórico (Egipto + 
 9. Recoger el casco y regresar al museo.
 10. Ver las dos épocas completadas y sus recuerdos en el panfleto: 2/5.
 11. Continuar por la sala medieval transversal, Japón Feudal y Luna, hasta regresar al hall; sus viajes siguen en preparación.
-12. Al implementar el guardado, recargar y conservar el progreso por ID, o reiniciar la partida.
+12. Recargar y conservar el progreso por ID, o reiniciar la partida.
 
 Cada paso debe ser interactivo y funcional.
 

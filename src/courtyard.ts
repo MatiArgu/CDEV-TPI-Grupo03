@@ -190,3 +190,24 @@ export function createCourtyardArrival(scene: THREE.Scene, colliders: Collider[]
     },
   };
 }
+
+/** One level for the plaza, with the route encoded in the paving itself. */
+export function courtyardPaving(scene: THREE.Scene): void {
+  box(34, 0.08, 28, toon(0xb8b3a2), [0, 0.015, 10], scene).castShadow = false;
+  const columns = 34; const rows = 28;
+  const tiles = new THREE.InstancedMesh(new THREE.BoxGeometry(0.975, 0.04, 0.975), toon(0xffffff), columns * rows);
+  tiles.name = 'pavimento-patio'; tiles.receiveShadow = true;
+  const tile = new THREE.Object3D(); const color = new THREE.Color();
+  for (let row = 0; row < rows; row++) for (let column = 0; column < columns; column++) {
+    const x = column - 16.5; const z = row - 3.5;
+    // A pale walkway from the station, passing to the right of the pyramid.
+    const route = (x > 0.5 && x < 5.5) || z < 3 || z > 20;
+    const border = (column === 17 || column === 22) && z >= 3 && z <= 20;
+    color.setHex(border ? 0xc4c7b4 : route ? 0xf0e7cf : 0xd6d4c4);
+    color.multiplyScalar(0.96 + ((row * 13 + column * 7) % 5) * 0.01);
+    tile.position.set(x, 0.05, z); tile.updateMatrix();
+    const index = row * columns + column;
+    tiles.setMatrixAt(index, tile.matrix); tiles.setColorAt(index, color);
+  }
+  scene.add(tiles);
+}

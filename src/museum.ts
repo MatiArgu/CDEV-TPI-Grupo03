@@ -1,11 +1,13 @@
 import * as THREE from 'three';
 import { modelCollider, placeModel } from './assets';
 import type { AreaId } from './catalog';
-import { createCourtyardArrival } from './courtyard';
+import { courtyardPaving, createCourtyardArrival } from './courtyard';
 import { createGallery, type GalleryDoor, type GalleryRoom } from './gallery';
 import { createGuard } from './guard';
 import { createHall } from './hall';
 import { galleryLayout, museumLayout } from './museumLayout';
+import { installEgyptExhibit } from './egypt';
+import { addLowPolySky } from './sky';
 import { installRomeExhibit } from './rome';
 import type { Collider } from './scene';
 import { box, hippedRoof, materials as mat, mesh, outline, palette, silhouette, toon } from './visual';
@@ -232,38 +234,6 @@ function pyramid(parent: THREE.Object3D, x: number, z: number): void {
   });
 }
 
-function marbleMaterial(): THREE.MeshToonMaterial {
-  const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = 512;
-  const context = canvas.getContext('2d')!;
-  context.fillStyle = '#f5eedf';
-  context.fillRect(0, 0, 512, 512);
-  for (let vein = 0; vein < 19; vein++) {
-    const start = (vein * 137) % 640 - 64;
-    const slope = 0.25 + (vein % 5) * 0.12;
-    context.beginPath();
-    for (let step = 0; step <= 12; step++) {
-      const y = step * 48 - 32;
-      const x = start + y * slope + Math.sin(step * 1.8 + vein * 2.7) * (6 + vein % 4);
-      if (step === 0) context.moveTo(x, y);
-      else context.lineTo(x, y);
-    }
-    context.strokeStyle = vein % 4 === 0 ? '#c5bdad' : '#d8d0c0';
-    context.lineWidth = vein % 4 === 0 ? 2.3 : 1.1;
-    context.globalAlpha = vein % 4 === 0 ? 0.5 : 0.38;
-    context.stroke();
-  }
-  context.globalAlpha = 1;
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(2, 3);
-  const material = toon(0xffffff);
-  material.map = texture;
-  material.needsUpdate = true;
-  return material;
-}
-
 function turnstiles(parent: THREE.Object3D): { wings: THREE.Group[]; colliders: Collider[]; blocker: Collider } {
   const metal = toon(0x879d9a);
   const metalTop = toon(0x526b70);
@@ -298,8 +268,8 @@ function turnstiles(parent: THREE.Object3D): { wings: THREE.Group[]; colliders: 
 export function createMuseumScene(): MuseumWorld {
   const scene = new THREE.Scene();
   const decorationColliders: Collider[] = [];
-  scene.background = new THREE.Color(0xc5e1dc);
-  scene.fog = new THREE.Fog(0xc5e1dc, 48, 105);
+  addLowPolySky(scene);
+  scene.fog = new THREE.Fog(0xd9e8dd, 60, 120);
   const daylight = new THREE.HemisphereLight(0xfff7df, 0x819e99, 1.65);
   scene.add(daylight);
   const sun = new THREE.DirectionalLight(0xffe7c8, 1.6);
@@ -318,8 +288,8 @@ export function createMuseumScene(): MuseumWorld {
   scene.onBeforeRender = (_renderer, _scene, camera) => {
     camera.getWorldPosition(eye);
     const indoors = THREE.MathUtils.smoothstep(-eye.z, 3.5, 8);
-    daylight.intensity = THREE.MathUtils.lerp(1.65, 0.25, indoors);
-    sun.intensity = THREE.MathUtils.lerp(1.6, 0.1, indoors);
+    daylight.intensity = THREE.MathUtils.lerp(1.5, 0.34, indoors);
+    sun.intensity = THREE.MathUtils.lerp(1.4, 0.1, indoors);
   };
 
   const galleryBack = museumLayout.backZ;
@@ -327,13 +297,7 @@ export function createMuseumScene(): MuseumWorld {
   const ground = mesh(new THREE.PlaneGeometry(groundSize, groundSize), mat.sage, [0, -0.02, 0], scene);
   ground.rotation.x = -Math.PI / 2;
   ground.castShadow = false;
-  box(34, 0.08, 34, mat.cream, [0, 0.02, 12], scene).castShadow = false;
-  for (const z of [2, 7, 12, 17, 22, 27]) {
-    box(32, 0.015, 0.055, mat.sand, [0, 0.07, z], scene).castShadow = false;
-  }
-  box(5.3, 0.018, 24, mat.stone, [2.2, 0.07, 9], scene).castShadow = false;
-  const marble = marbleMaterial();
-  box(8.2, 0.02, 8.3, marble, [0, 0.085, 0.45], scene).castShadow = false;
+  courtyardPaving(scene);
   pyramid(scene, -3, 8);
   courtyardDetails(scene, decorationColliders);
   const arrival = createCourtyardArrival(scene, decorationColliders);
@@ -363,7 +327,9 @@ export function createMuseumScene(): MuseumWorld {
   const gallery = createGallery(scene);
   museumEnvelope(scene);
   const romeExhibit = installRomeExhibit(gallery.rooms.find((room) => room.id === 'roma')!);
+  const egyptExhibit = installEgyptExhibit(gallery.rooms.find((room) => room.id === 'egipto')!);
   const exhibits = new Map<AreaId, { artifact: THREE.Object3D; photoSolids: THREE.Object3D[] }>([
+    ['egipto', { artifact: egyptExhibit.artifact, photoSolids: [...gallery.photoSolids, ...egyptExhibit.photoSolids] }],
     ['roma', { artifact: romeExhibit.artifact, photoSolids: [...gallery.photoSolids, ...romeExhibit.photoSolids] }],
   ]);
   sign(scene, 'FIN DEL RECORRIDO', [galleryLayout.wingX, 3.45, galleryLayout.frontZ + 0.19], 2.55, true);
@@ -380,7 +346,7 @@ export function createMuseumScene(): MuseumWorld {
   ];
   colliders.push(...entranceGate.colliders);
   colliders.push(...gallery.colliders);
-  colliders.push(...romeExhibit.colliders);
+  colliders.push(...romeExhibit.colliders, ...egyptExhibit.colliders);
   for (const side of [-1, 1]) {
     for (const x of [side * 3.3, side * 5.55]) {
       colliders.push({ minX: x - 0.45, maxX: x + 0.45, minZ: -3.56, maxZ: -2.67 });

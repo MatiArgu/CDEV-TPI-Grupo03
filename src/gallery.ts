@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { areaCatalog, areaOrder, availabilityCopy, type AreaId } from './catalog';
 import type { Collider } from './scene';
-import { exhibition, stoneFloor } from './exhibition';
+import { exhibition, stoneFloor, museumWallMaterial, wallPanels } from './exhibition';
 import { galleryLayout, museumLayout, roomSlots } from './museumLayout';
 import { box, inkStroke, mesh, outline, toon } from './visual';
 
@@ -80,7 +80,7 @@ export function createGallery(scene: THREE.Scene): {
   const colliders: Collider[] = [];
   const photoSolids: THREE.Object3D[] = [];
   const stone = toon(exhibition.panel);
-  const cream = toon(exhibition.wall);
+  const cream = museumWallMaterial();
   const trim = toon(exhibition.bronze);
   const doorMaterial = toon(exhibition.plinth);
   const dark = new THREE.Color(0x171d1a);
@@ -171,6 +171,7 @@ export function createGallery(scene: THREE.Scene): {
     root.userData.areaId = id;
     root.userData.roomNumber = index + 1;
     scene.add(root);
+    wallPanels(root, width, depth);
     const accent = new THREE.Color(areaCatalog[id].accent);
     const litSurface = new THREE.Color(exhibition.wall).lerp(accent, 0.035);
     const surface = new THREE.MeshBasicMaterial({ color: dark.clone() });
@@ -182,8 +183,6 @@ export function createGallery(scene: THREE.Scene): {
       box(0.07, 0.2, depth - 0.35, doorMaterial, [side * (width / 2 - 0.18), 0.26, 0], root);
       box(0.09, 0.13, depth - 0.35, trim, [side * (width / 2 - 0.18), 5.08, 0], root);
     }
-    const back = box(0.055, 2.6, depth - 0.35, surface, [left ? -width / 2 + 0.05 : width / 2 - 0.05, 1.58, 0], root);
-    back.castShadow = back.receiveShadow = false;
     const stripe = box(0.07, 0.11, depth - 0.4, trim, [left ? -width / 2 + 0.09 : width / 2 - 0.09, 2.96, 0], root);
     stripe.castShadow = stripe.receiveShadow = false;
     outline(stripe, 0.35);

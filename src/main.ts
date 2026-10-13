@@ -7,7 +7,11 @@ import { createMuseumScene } from './museum';
 import { createPamphlet } from './pamphlet';
 import { createPlayerControls } from './player';
 import { artifactVisible, captureFrame, createCameraModel, getFrameBounds, playShutter } from './photo';
-import { createRomeWorld, type RomeWorld } from './rome';
+import { createRomeWorld } from './rome';
+import { createEgyptWorld } from './egypt';
+import type { HistoricalWorld } from './history';
+import { loadProgress, photoForSave, resetProgress, saveProgress } from './progress';
+import { createAmbience } from './audio';
 import { createStudyScene } from './scene';
 import { playTimeTransition } from './timeTransition';
 
@@ -94,15 +98,44 @@ try {
     const help = document.querySelector<HTMLElement>('#player-help')!;
     const viewfinder = document.querySelector<HTMLElement>('#photo-viewfinder')!;
     const transition = document.querySelector<HTMLElement>('#time-transition')!;
-    let hasPamphlet = false;
+    const saved = await loadProgress();
+    let hasPamphlet = saved.hasPamphlet;
     let hasSeenMap = false;
     let enteredHall = false;
-    const completedAreas = new Set<AreaId>();
+    const completedAreas = new Set<AreaId>(Object.keys(saved.photos) as AreaId[]);
     const visitedRooms = new Set<string>();
-    let history: RomeWorld | null = null;
+    let history: HistoricalWorld | null = null;
     let acceptedPhoto: string | null = null;
     let museumColliders = [...world.colliders];
     let toastTimer = 0;
+    const ambient = createAmbience();
+    const soundButton = document.querySelector<HTMLButtonElement>('#sound-button')!;
+    document.querySelector('#menu-button')!.addEventListener('click', () => { void ambient.start().catch(() => {}); });
+    soundButton.addEventListener('click', () => {
+      const enabled = ambient.toggle(); soundButton.textContent = enabled ? 'Sonido: activado' : 'Sonido: silenciado';
+      soundButton.setAttribute('aria-pressed', String(enabled));
+      void ambient.start().catch(() => {});
+    });
+    document.querySelector('#restart-button')!.addEventListener('click', () => {
+      if (!window.confirm('¿Reiniciar la visita y borrar las fotos y recuerdos guardados?')) return;
+      if (resetProgress()) location.reload();
+      else showToast('No se pudo borrar el guardado del navegador.');
+    });
+    if (hasPamphlet) {
+      world.openEntrance();
+      for (const door of world.doors) if (door.target && completedAreas.has(door.target)) world.openDoor(door);
+      for (let i = 0; i < 40; i++) world.update(0.1);
+      for (const id of completedAreas) {
+        pamphletView.complete(id, saved.photos[id]!);
+        const room = world.rooms.find((item) => item.id === id)!;
+        room.root.userData.setLight(0); visitedRooms.add(id);
+      }
+      document.querySelector('#menu-text')!.textContent = 'Tu panfleto y tus recuerdos están guardados. Continuá la visita desde el hall.';
+    }
+    function persist(): boolean {
+      saved.hasPamphlet = hasPamphlet;
+      return saveProgress(saved);
+    }
     const toGuard = new THREE.Vector3();
     const toDoor = new THREE.Vector3();
 
@@ -127,21 +160,21 @@ try {
       const photo = captureFrame(renderer, viewfinder);
       const valid = artifactVisible(camera, exhibit.artifact, exhibit.photoSolids, frame);
       cameraModel.root.visible = true;
-      playShutter();
+      if (ambient.enabled()) playShutter();
       await cameraModel.develop(photo, `${areaCatalog[active].name.toUpperCase()} / ${String(world.rooms.find((room) => room.id === active)!.number).padStart(2, '0')}`);
       if (!valid) {
         cameraModel.hidePrint();
-        showToast('Sin eco. Incluí el casco en la fotografía.');
+        showToast(`Sin eco. Incluí ${areaCatalog[active].artifact.toLowerCase()} en la fotografía.`);
         controls.finishCinematic(true);
         return;
       }
-      acceptedPhoto = photo;
+      acceptedPhoto = await photoForSave(photo);
       controls.setCinematic('transition');
       await playTimeTransition(transition, () => {
         cameraModel.hidePrint();
         scene.remove(camera);
         museumColliders = [...world.colliders];
-        history = createRomeWorld();
+        history = active === 'egipto' ? createEgyptWorld() : createRomeWorld();
         scene = history.scene;
         scene.add(camera);
         world.colliders.splice(0, world.colliders.length, ...history.colliders);
@@ -150,17 +183,18 @@ try {
           if (app.dataset.playState !== 'playing' || !history) return;
           const hadHelp = history.helpActive();
           history.update(delta);
-          if (!hadHelp && history.helpActive()) showToast('Un rastro tenue recorre la pasarela hacia el casco.');
+          if (!hadHelp && history.helpActive()) showToast(history.id === 'egipto' ? 'Un rastro de luz recorre el templo hacia el altar.' : 'Un rastro tenue recorre la pasarela hacia el casco.');
         };
       });
       controls.finishCinematic(false);
       help.textContent = 'WASD CAMINAR · SHIFT CORRER · E RECOGER · M PANFLETO · ESC PAUSAR';
-      showToast('El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
+      showToast(active === 'egipto' ? 'El tiempo se detuvo en el templo. Buscá el escarabajo del sol.' : 'El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
     }
 
-    async function finishRome(): Promise<void> {
+    async function finishHistory(): Promise<void> {
       if (!history || !acceptedPhoto) return;
       const completedId = history.id;
+      let stored = true;
       controls.setCinematic('transition');
       await playTimeTransition(transition, () => {
         scene.remove(camera);
@@ -170,6 +204,8 @@ try {
         scene.add(camera);
         world.colliders.splice(0, world.colliders.length, ...museumColliders);
         completedAreas.add(completedId);
+        saved.photos[completedId] = acceptedPhoto!;
+        stored = persist();
         pamphletView.complete(completedId, acceptedPhoto!);
         const room = world.rooms.find((item) => item.id === completedId)!;
         (room.root.userData.setLight as (strength: number) => void)(0);
@@ -179,17 +215,18 @@ try {
       controls.finishCinematic(false);
       controls.openPamphlet();
       help.textContent = 'WASD CAMINAR · SHIFT CORRER · M PANFLETO · E PUERTAS · ESC PAUSAR';
-      showToast(`Roma completada: ${completedAreas.size}/${areaOrder.length} recuerdos. Podés seguir recorriendo el museo.`);
+      const next = areaOrder.find((id) => availabilityOf(id) === 'playable' && !completedAreas.has(id));
+      showToast(!stored ? 'Recuerdo recuperado. El navegador no pudo guardarlo: se conservará solo durante esta visita.' : next ? `${areaCatalog[completedId].name}: recuerdo recuperado. El próximo viaje está en ${areaCatalog[next].name}.` : 'Dos viajes, dos recuerdos. La visita continúa: podés recorrer las cinco salas.');
     }
 
     const controls = createPlayerControls(camera, renderer.domElement, {
       colliders: world.colliders,
-      start: world.spawn,
+      start: hasPamphlet ? new THREE.Vector2(0, -17.8) : world.spawn,
       findInteraction: (position, gaze) => {
         if (history) {
           const toArtifact = history.artifact.clone().sub(new THREE.Vector3(position.x, 1.7, position.y));
           if (Math.hypot(toArtifact.x, toArtifact.z) > 2.9 || gaze.dot(toArtifact.normalize()) < 0.38) return null;
-          return { label: 'Recoger casco de gladiador', activate: () => { void finishRome(); } };
+          return { label: `Recoger ${areaCatalog[history.id].artifact.toLowerCase()}`, activate: () => { void finishHistory(); } };
         }
         if (!hasPamphlet) {
           toGuard.set(world.guard.x - position.x, world.guard.y - 1.7, world.guard.z - position.y);
@@ -200,8 +237,9 @@ try {
               hasPamphlet = true;
               app.dataset.storyState = 'pamphlet-received';
               world.openEntrance();
+              const stored = persist();
               help.textContent = 'WASD CAMINAR · SHIFT CORRER · C POLAROID · M PANFLETO · E PUERTAS · ESC PAUSAR';
-              showToast('El guardia te entregó el panfleto. Pulsá M para desplegarlo.');
+              showToast(stored ? 'El guardia te entregó el panfleto. Pulsá M para desplegarlo.' : 'Pulsá M para abrir el panfleto. El navegador no pudo guardar esta visita.');
             },
           };
         }
@@ -238,7 +276,7 @@ try {
       },
       onPositionChange: (position) => {
         if (history) {
-          app.dataset.location = 'roma-history';
+          app.dataset.location = `${history.id}-history`;
           delete app.dataset.room;
           return;
         }
@@ -249,8 +287,8 @@ try {
           if (!visitedRooms.has(room.id)) {
             visitedRooms.add(room.id);
             (room.root.userData.setLight as (strength: number) => void)(1);
-            showToast(room.id === 'roma'
-              ? 'Roma Antigua: observá el casco. Pulsá C para preparar la Polaroid.'
+            showToast(availabilityOf(room.id) === 'playable'
+              ? `${areaCatalog[room.id].name}: ${areaOrder.find((id) => availabilityOf(id) === 'playable' && !completedAreas.has(id)) === room.id ? 'pulsá C para fotografiar el artefacto.' : 'el panfleto indica tu próximo viaje.'}`
               : `${String(room.number).padStart(2, '0')} · ${areaCatalog[room.id].name} — ${availabilityCopy(areaCatalog[room.id].availability).description}.`);
           }
         } else if (position.y < museumLayout.frontZ - 0.5 && position.y > museumLayout.hallBackZ && Math.abs(position.x) < museumLayout.halfWidth - 0.3) {
@@ -271,6 +309,7 @@ try {
     updateControls = (delta) => {
       updatePlayer(delta);
       const running = app.dataset.playState !== 'paused' && app.dataset.playState !== 'intro';
+      ambient.update(app.dataset.location ?? 'exterior', !running);
       if (running) {
         pamphletView.update(delta);
         cameraModel.update(delta);
