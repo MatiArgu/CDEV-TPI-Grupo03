@@ -15,11 +15,11 @@ Antes de trabajar, leer [CLAUDE.md](CLAUDE.md): sus principios de razonamiento, 
 ## Alcance del MVP
 
 - Crear un videojuego 3D **jugable en navegador de escritorio**, en primera persona, basado en exploración, fotografía y viajes a momentos históricos congelados. No sustituir la interacción por un video o una maqueta.
-- El museo es ficticio, con exterior inspirado en el Louvre. Tiene diez posiciones de sala en un circuito en U, representadas en el panfleto. Solo Roma y Egipto tendrán exhibición y mundo histórico jugables en el MVP; las otras ocho permanecerán cerradas hasta desarrollarse.
-- Mantener la progresión Roma → Egipto para el orden inicial. El recorrido físico secuencial deja pendiente un acceso alternativo si una época jugable se reordena detrás de salas WIP cerradas. La foto válida inicia el viaje; el área se completa al interactuar con el artefacto histórico y volver al museo.
+- El museo es ficticio, con exterior inspirado en el Louvre. Tiene cinco salas en U: Egipto y Roma a la izquierda; Medieval en el salón transversal; Japón Feudal y Luna de regreso por la derecha. Todas se pueden recorrer. Roma es el único viaje implementado; las otras cuatro épocas se identifican como viajes en preparación.
+- Mantener el orden Egipto → Roma → Medieval → Japón → Luna. Las puertas se abren con E sin exigir completar una época; la disponibilidad WIP impide viajar, pero no caminar por la sala. La foto válida inicia el viaje; el área se completa al interactuar con el artefacto histórico y volver al museo.
 - Preservar la mecánica central: la Polaroid captura lo que muestra el render, se revela y solo activa el viaje si el artefacto está visible dentro del encuadre, aunque esté en un borde. Una foto inválida también se revela y permite reintentar.
 - Mantener la estética ilustrada *Stylized Hand-Drawn Anime 3D*: geometría low-poly, colores pastel, materiales toon, contornos selectivos y efectos livianos. Priorizar la calidad de la escena y del revelado sobre el tamaño de los mundos.
-- Evitar combate, tercera persona, supervivencia, inventarios complejos y las ocho épocas adicionales durante este MVP.
+- Evitar combate, tercera persona, supervivencia, inventarios complejos y mundos adicionales durante esta revisión de interfaz y distribución.
 
 ## Implementación cuando corresponda a la etapa
 

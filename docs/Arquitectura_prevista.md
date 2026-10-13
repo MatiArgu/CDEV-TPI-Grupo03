@@ -1,34 +1,29 @@
 # Arquitectura prevista del MVP
 
-Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md), el [inicio en el museo](Revision_etapa_3.md), una [prueba aislada de la Polaroid](Revision_etapa_4.md), las [diez salas del circuito en U](Revision_etapa_5.md) y el [ciclo romano](Revision_etapa_6.md). El laboratorio temporal de fotografía ya fue retirado. El catálogo y `areaOrder` alimentan la ubicación física, la señalización y el panfleto. Roma integra captura, viaje y progreso; Egipto y la persistencia siguen previstos para la etapa 7.
+Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md), el [inicio en el museo](Revision_etapa_3.md), una [prueba aislada de la Polaroid](Revision_etapa_4.md), el [circuito original de la etapa 5](Revision_etapa_5.md), ahora reducido a cinco salas visitables y el [ciclo romano](Revision_etapa_6.md). El laboratorio temporal de fotografía ya fue retirado. El catálogo y `areaOrder` alimentan la ubicación física, la señalización y el panfleto. Roma integra captura, viaje y progreso; Egipto y la persistencia siguen previstos para la etapa 7.
 
 ## Catálogo y orden de las áreas
 
-Cada época tiene un `id` estable, independiente de su número y de la ubicación de su sala. El catálogo guarda nombre, artefacto previsto, color y disponibilidad. Roma tiene disponibilidad `playable`; las otras nueve áreas, incluido Egipto, siguen `wip` en la etapa 6. La lista `areaOrder` es la única fuente del orden.
+Cada época tiene un `id` estable, independiente de su número y de la ubicación de su sala. El catálogo guarda nombre, artefacto previsto, color y disponibilidad. Roma tiene disponibilidad `playable`; las otras cuatro áreas, incluido Egipto, siguen `wip` en la etapa 6. La lista `areaOrder` es la única fuente del orden.
 
 | ID estable | Época | Artefacto | MVP |
 | --- | --- | --- | --- |
-| `roma` | Roma Antigua | Casco de gladiador | Jugable |
-| `egipto` | Egipto Antiguo | Escarabajo egipcio | Previsto en etapa 7 |
-| `grecia` | Grecia Antigua | Corona de laurel | WIP |
-| `babilonia` | Mesopotamia — Babilonia | Tablilla cuneiforme | WIP |
+| `egipto` | Antiguo Egipto | Escarabajo egipcio | Visitable; viaje previsto en etapa 7 |
+| `roma` | Antigua Roma | Casco de gladiador | Jugable |
 | `medieval` | Edad Media — Castillo medieval | Llave antigua | WIP |
-| `renacimiento` | Renacimiento Italiano | Compás de artista | WIP |
 | `japon` | Japón Feudal | Máscara de samurái | WIP |
-| `paris_1830` | Revolución de Julio — París, 1830 | Escarapela tricolor | WIP |
-| `titanic` | Titanic — 1912 | Reloj de bolsillo | WIP |
 | `luna` | Llegada a la Luna — 1969 | Insignia Apollo 11 | WIP |
 
 Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotografiable, un mundo histórico, puntos de aparición, ubicación del artefacto final y una ruta transitable para la ayuda. El catálogo comprueba que cada ID de `areaOrder` existe y aparece una sola vez. Roma y Egipto usarán el mismo contrato; no habrá una versión independiente de la mecánica para cada una.
 
 ## Salas, estados y progresión
 
-Las medidas físicas compartidas viven en [museumLayout.ts](../src/museumLayout.ts): ancho exterior, límites del hall, paso y centros de las alas, altura de muros y nivel de suelo. Hall, galería, envolvente exterior y detección de ubicación utilizan esas referencias. Las salas mantienen 10,8 × 16 unidades; el hall ocupa el ancho completo del edificio y conecta sus dos pasillos laterales con las puertas del circuito.
+Las medidas físicas compartidas viven en [museumLayout.ts](../src/museumLayout.ts). `roomSlots` define dos posiciones de 10,8 × 16 a la izquierda, una galería transversal de 24,9 × 10 al fondo y otras dos de 10,8 × 16 de regreso por la derecha. Roma conserva su tamaño, exhibición y luz cálida. Hall, envolvente, colisiones, ubicación del jugador y mapa utilizan esas referencias.
 
-- En la etapa 3 solo existía el hall y un umbral cerrado hacia el futuro sector romano. La etapa 5 ubica diez módulos en una U: cinco de ida, un cruce al fondo y cinco de regreso. Cada módulo recibe el ID situado en esa posición de `areaOrder`; su grupo local permite incorporar una exhibición sin fijarla a coordenadas globales. La primera puerta se abre con E y enciende la sala con un breve parpadeo. Las posteriores requieren la finalización de la sala precedente.
-- Número de sala, señalización y posición en el panfleto se calculan a partir de `areaOrder`. El texto de disponibilidad de sala y panfleto se deriva del catálogo. Una prueba anterior movió `egipto` al octavo lugar y actualizó sala, letrero y panfleto, pero ese orden ya no es recorrible con las puertas WIP cerradas. Necesita un acceso alternativo antes de usarse en el juego.
-- **Disponibilidad** (`WIP` o jugable) y **progreso** (`locked`, `active`, `completed`) son conceptos distintos. Una sala WIP tiene posición física y señalización, pero permanece cerrada y nunca se vuelve `active`.
-- Solo una época jugable incompleta está activa a la vez: la primera de `areaOrder` que no esté completada. En la etapa 6 esa época es Roma; al instalar Egipto en la etapa 7, ambas quedarán contiguas en el orden inicial. La conclusión del MVP cuando no quede ninguna jugable incompleta sigue prevista para la etapa 7.
+- `areaOrder` asigna las épocas a esas posiciones: Egipto → Roma → Medieval → Japón Feudal → Luna. También determina números y letreros.
+- Todas las puertas se abren con E; las luces se encienden con un breve parpadeo. Las épocas pendientes son visitables y no bloquean el acceso a Roma.
+- **Disponibilidad** (`wip` o `playable`) indica si existe el viaje; **progreso** indica si fue completado. Caminar por una WIP no la activa ni la completa.
+- Solo una época jugable incompleta está activa a la vez: la primera disponible de `areaOrder`. Actualmente es Roma; cuando se implemente Egipto, será Egipto y luego Roma.
 - Una foto válida inicia el viaje, pero el área solo se marca como completada al interactuar con el artefacto en el mundo histórico y regresar. La foto y la representación del artefacto se añaden juntas al panfleto en ese momento.
 - En la etapa 6 el progreso de Roma y su foto permanecen en memoria durante la sesión; el guardado local por ID se implementará en la etapa 7.
 
@@ -38,11 +33,12 @@ Las medidas físicas compartidas viven en [museumLayout.ts](../src/museumLayout.
 - La validación proyecta el artefacto al encuadre y comprueba visibilidad con rayos frente a la geometría sólida. No exige que esté centrado. La misma función sirve para casco, escarabajo y futuras áreas.
 - Una foto inválida produce su Polaroid, termina el revelado y devuelve el control sin avanzar. Una válida muestra el revelado y después carga el mundo de la época activa.
 - Museo y mundo histórico comparten los sistemas de jugador, interacción y presentación. Al entrar en un mundo se inicia el contador de 20 segundos; si aún no se recogió el artefacto, se muestra una guía tenue a lo largo de una ruta transitable. Al salir se detiene y se retira esa guía.
-- Mantener escenas y recursos separados para cargar el mundo activo y liberar el anterior. Esto evita que las diez salas obliguen a mantener varios escenarios históricos en memoria.
+- Mantener escenas y recursos separados para cargar el mundo activo y liberar el anterior. Esto evita que las cinco salas obliguen a mantener varios escenarios históricos en memoria.
 
 ## Estado de partida y controles
 
-La experiencia necesita estados explícitos para inicio, exploración del museo, revelado, transición, exploración histórica, regreso y cierre del MVP. Cámara equipada, panfleto abierto y pausa se gestionan como modos compatibles con esos estados. El panfleto actual se maneja solo con M y conserva Pointer Lock mientras bloquea movimiento y mirada; Escape abre la pausa y lo libera. Si el puntero fue liberado, volver a capturarlo requiere una acción del jugador. Durante el revelado y las transiciones se deshabilitan movimiento y disparo.
+La experiencia necesita estados explícitos para inicio, exploración del museo, revelado, transición, exploración histórica, regreso y cierre del MVP. Cámara equipada, panfleto abierto y pausa se gestionan como modos compatibles con esos estados. El panfleto es papel 3D con dos hojas articuladas, manos y mirada inclinada; M lo abre y libera Pointer Lock sin pausar. M o un clic solicitan nuevamente el bloqueo y lo guardan. Escape abre la pausa. La cámara tiene animación de equipar, retroceso, expulsión de papel y revelado en la mano; el revelado se detiene durante la pausa. Los objetos sostenidos se dibujan en una segunda pasada de profundidad para evitar que vidrios o paredes los atraviesen, y se excluyen de la captura. El resultado usa la misma región del render que la validación. Durante revelado y transición se bloquean movimiento, nuevos disparos y panfleto.
+
 
 Shift acelera el movimiento en exploración del museo y de Roma. La carrera se detiene al soltar la tecla y no queda retenida al abrir el panfleto, pausar o iniciar una transición.
 
@@ -50,7 +46,7 @@ El guardado local tendrá versión y usará IDs estables: panfleto recibido, ár
 
 ## Pruebas de arquitectura obligatorias
 
-1. Reordenar `egipto` del puesto 2 al 8 cambiando solo `areaOrder`: sala, letrero y panfleto se actualizan. El acceso jugable queda pendiente de una ruta que evite las salas WIP cerradas; no ofrecer ese orden hasta resolverlo.
+1. Intercambiar `egipto` y `luna` cambiando solo `areaOrder`: sala, letrero y panfleto se actualizan y todo el circuito sigue siendo recorrible.
 2. Guardar Roma completada, cambiar el orden y recargar: la foto y el artefacto siguen asociados a `roma`.
 3. Fotografiar un artefacto visible en un extremo del encuadre; repetir con el artefacto detrás de una pared: solo el primer disparo permite viajar.
 4. Completar el artefacto histórico antes y después de los 20 segundos: la guía aparece únicamente en el segundo caso y nunca atraviesa paredes.

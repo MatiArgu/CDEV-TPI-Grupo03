@@ -1,84 +1,129 @@
-import { areaCatalog, areaOrder, areaNumber, availabilityCopy, availabilityOf } from './catalog';
+import * as THREE from 'three';
+import { areaCatalog, areaOrder, availabilityOf, type AreaId } from './catalog';
+import { holdingHand, foreground } from './held';
+import { roomSlots } from './museumLayout';
 
-export function createPamphlet(): { complete: (id: keyof typeof areaCatalog, photo: string) => void } {
-  const map = document.querySelector<HTMLElement>('#pamphlet-map')!;
-  const index = document.querySelector<HTMLElement>('#pamphlet-index')!;
-  const note = document.querySelector<HTMLElement>('#pamphlet-note')!;
-  const collection = document.querySelector<HTMLElement>('#pamphlet-collection')!;
-
-  for (let row = 0; row < 5; row++) {
-    for (const side of ['left', 'right'] as const) {
-      const id = areaOrder[side === 'left' ? row : 9 - row];
-      const node = document.createElement('div');
-      node.className = `map-room map-room-${side}`;
-      node.dataset.areaId = id;
-      node.dataset.availability = areaCatalog[id].availability;
-      const status = availabilityCopy(areaCatalog[id].availability);
-      node.dataset.status = status.badge;
-      node.style.setProperty('--area-accent', areaCatalog[id].accent);
-      node.textContent = String(areaNumber(id)).padStart(2, '0');
-      node.setAttribute('aria-label', `${areaNumber(id)}: ${areaCatalog[id].name}, ${status.description}`);
-      node.style.gridRow = String(row + 1);
-      map.append(node);
-    }
-  }
-  const courtyard = document.createElement('span');
-  courtyard.className = 'map-courtyard';
-  courtyard.textContent = 'PATIO';
-  courtyard.setAttribute('aria-hidden', 'true');
-  map.append(courtyard);
-
-  areaOrder.forEach((id) => {
-    const availability = availabilityCopy(areaCatalog[id].availability);
-    const item = document.createElement('li');
-    item.dataset.areaId = id;
-    item.dataset.availability = areaCatalog[id].availability;
-    item.style.setProperty('--area-accent', areaCatalog[id].accent);
-    const number = document.createElement('span');
-    number.textContent = String(areaNumber(id)).padStart(2, '0');
-    const name = document.createElement('span');
-    name.textContent = areaCatalog[id].name;
-    const status = document.createElement('span');
-    status.className = 'pamphlet-status';
-    status.textContent = availability.badge;
-    status.setAttribute('aria-label', availability.description);
-    item.append(number, name, status);
-    index.append(item);
+export function createPamphlet(camera: THREE.PerspectiveCamera) {
+  const root = new THREE.Group();
+  root.name = 'panfleto-en-las-manos';
+  camera.add(root);
+  const completed = new Map<AreaId, HTMLImageElement>();
+  const description = document.querySelector<HTMLElement>('#held-description')!;
+  let open = false;
+  let amount = 0;
+  let time = 0;
+  const pages = [-1, 1].map((side) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024; canvas.height = 1400;
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 4;
+    const hinge = new THREE.Group();
+    root.add(hinge);
+    const paper = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.90, 0.004), new THREE.MeshBasicMaterial({ color: 0xd2c7ad }));
+    paper.position.x = side * 0.33;
+    hinge.add(paper);
+    const face = new THREE.Mesh(new THREE.PlaneGeometry(0.66, 0.90), new THREE.MeshBasicMaterial({ map: texture }));
+    face.position.set(side * 0.33, 0, 0.0025);
+    hinge.add(face);
+    const hand = holdingHand(side as -1 | 1);
+    hand.position.set(side * 0.63, -0.27, 0.028);
+    hand.rotation.z = -side * 0.16;
+    hinge.add(hand);
+    return { canvas, texture, hinge, side };
   });
 
-  const installed = areaOrder.filter((id) => availabilityOf(id) === 'playable').length;
-  if (installed > 0) note.textContent = `${installed} exhibición${installed === 1 ? '' : 'es'} instalada${installed === 1 ? '' : 's'}. Abrí cada puerta al completar la sala anterior; las áreas WIP permanecen cerradas.`;
-
-  return { complete: (id, photo) => {
-    const mapRoom = map.querySelector<HTMLElement>(`[data-area-id="${id}"]`)!;
-    const indexItem = index.querySelector<HTMLElement>(`[data-area-id="${id}"]`)!;
-    mapRoom.dataset.progress = 'completed';
-    mapRoom.dataset.status = 'HECHA';
-    mapRoom.setAttribute('aria-label', `${areaNumber(id)}: ${areaCatalog[id].name}, completada`);
-    const thumb = document.createElement('img');
-    thumb.className = 'map-photo-thumb';
-    thumb.src = photo;
-    thumb.alt = `Fotografía de ${areaCatalog[id].artifact}`;
-    mapRoom.append(thumb);
-    indexItem.dataset.progress = 'completed';
-    const badge = indexItem.querySelector<HTMLElement>('.pamphlet-status')!;
-    badge.textContent = 'HECHA';
-    badge.setAttribute('aria-label', 'Área completada');
-
-    collection.hidden = false;
-    const memory = document.createElement('div');
-    memory.className = 'pamphlet-memory';
-    const picture = document.createElement('img');
-    picture.src = photo;
-    picture.alt = `Polaroid de ${areaCatalog[id].name}`;
-    const detail = document.createElement('div');
-    if (id === 'roma') detail.innerHTML = '<svg viewBox="0 0 48 42" aria-hidden="true"><path d="M9 22C9 9 16 4 24 4s15 5 15 18l-3 12H12L9 22Zm7-2h16m-19 5h22M24 5v-3m-4 32v5h8v-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    const label = document.createElement('span');
-    label.textContent = `${String(areaNumber(id)).padStart(2, '0')} · ${areaCatalog[id].artifact.toUpperCase()}`;
-    detail.append(label);
-    memory.append(picture, detail);
-    collection.append(memory);
-    const count = index.querySelectorAll('[data-progress="completed"]').length;
-    note.textContent = `${count}/10 salas completadas. Las áreas en preparación siguen cerradas.`;
-  } };
+  function redraw(): void {
+    for (const { canvas, texture, side } of pages) {
+      const c = canvas.getContext('2d')!;
+      c.fillStyle = '#efe5cd'; c.fillRect(0, 0, 1024, 1400);
+      const shade = c.createLinearGradient(0, 0, 1024, 0);
+      shade.addColorStop(side < 0 ? 0 : 1, '#fff8e800');
+      shade.addColorStop(side < 0 ? 1 : 0, '#75624938');
+      c.fillStyle = shade; c.fillRect(0, 0, 1024, 1400);
+      c.strokeStyle = '#b5a88d'; c.lineWidth = 2; c.strokeRect(38, 38, 948, 1324);
+      const text = (value: string, x: number, y: number, size = 34, color = '#354a43', serif = false) => {
+        c.fillStyle = color; c.font = `${serif ? '' : '500 '}${size}px ${serif ? 'Georgia' : 'sans-serif'}`;
+        c.fillText(value, x, y);
+      };
+      text('MUSEO DE VIAJES EN EL TIEMPO', 80, 115, 32);
+      if (side < 0) {
+        text('Cinco puertas.', 80, 229, 83, '#33493e', true);
+        text('Un viaje en el tiempo.', 80, 310, 65, '#33493e', true);
+        text('PLANO DE VISITA', 80, 406, 32);
+        // Same physical positions and proportions as the gallery, north at the top.
+        const scale = 19;
+        const left = 512;
+        const top = 475;
+        const back = Math.min(...roomSlots.map((slot) => slot.z - slot.depth / 2));
+        areaOrder.forEach((id, index) => {
+          const slot = roomSlots[index];
+          const x = left + (slot.x - slot.width / 2) * scale;
+          const y = top + (slot.z - slot.depth / 2 - back) * scale;
+          const w = slot.width * scale; const h = slot.depth * scale;
+          c.fillStyle = areaCatalog[id].accent; c.fillRect(x + 4, y + 4, w - 8, h - 8);
+          c.strokeStyle = '#657367'; c.strokeRect(x + 4, y + 4, w - 8, h - 8);
+          text(String(index + 1).padStart(2, '0'), x + w / 2 - 27, y + h / 2 + 14, 52);
+          if (completed.has(id)) text('✓', x + w - 47, y + h - 25, 42);
+        });
+        // Direction arrows follow Egypt → Rome → bridge → Japan → Moon.
+        text('↑', 181, 1060, 65); text('→', 481, 650, 65); text('↓', 790, 1060, 65);
+        text('HALL / ENTRADA Y REGRESO', 208, 1320, 31);
+      } else {
+        text('Tu recorrido', 80, 235, 85, '#33493e', true);
+        areaOrder.forEach((id, index) => {
+          const y = 345 + index * 128;
+          c.fillStyle = areaCatalog[id].accent; c.fillRect(78, y - 34, 68, 58);
+          text(String(index + 1).padStart(2, '0'), 86, y + 6, 39);
+          text(areaCatalog[id].name.replace(' · 1969', ''), 177, y, 44);
+          text(completed.has(id) ? 'RECUERDO RECUPERADO' : availabilityOf(id) === 'playable' ? 'VIAJE DISPONIBLE · POLAROID' : 'VISITABLE · VIAJE EN PREPARACIÓN', 177, y + 46, 27, '#766952');
+          c.strokeStyle = '#c8bca1'; c.beginPath(); c.moveTo(80, y + 76); c.lineTo(930, y + 76); c.stroke();
+        });
+        const memory = completed.entries().next().value;
+        if (memory) {
+          const [id, photo] = memory;
+          c.save(); c.translate(178, 1120); c.rotate(-0.06);
+          c.fillStyle = '#fff9e9'; c.fillRect(-92, -98, 224, 206);
+          c.drawImage(photo, -80, -86, 200, 150); c.restore();
+          text('RECUERDO DE ROMA', 360, 1070, 33);
+          text(areaCatalog[id].artifact, 360, 1120, 32);
+          text('✓ Recuperado', 360, 1170, 32);
+          c.save(); c.translate(873, 1100);
+          c.fillStyle = '#a78650'; c.beginPath(); c.arc(0, 0, 42, Math.PI, 0); c.lineTo(42, 38); c.lineTo(18, 38); c.lineTo(18, 5); c.lineTo(-18, 5); c.lineTo(-18, 38); c.lineTo(-42, 38); c.closePath(); c.fill();
+          c.fillStyle = '#ae6f53'; c.fillRect(-7, -65, 14, 48); c.restore();
+        } else {
+          text('Explorá las cinco salas.', 80, 1070, 40, '#33493e', true);
+          text('Fotografiá el casco de Roma para viajar.', 80, 1130, 33);
+          text('Las otras épocas siguen en preparación.', 80, 1180, 33);
+        }
+        text(`${completed.size} / ${areaOrder.length} RECUERDOS`, 80, 1260, 33);
+        text('M GUARDAR · CLIC VOLVER AL RECORRIDO', 80, 1320, 28);
+      }
+      texture.needsUpdate = true;
+    }
+    description.textContent = `Panfleto: ${areaOrder.map((id, i) => `${i + 1}. ${areaCatalog[id].name}, ${completed.has(id) ? 'completada' : availabilityOf(id) === 'playable' ? 'viaje disponible' : 'visitable, viaje en preparación'}`).join('. ')}. ${completed.size}/${areaOrder.length} recuerdos. M o clic para guardar.`;
+  }
+  redraw();
+  foreground(root);
+  root.visible = false;
+  return {
+    root,
+    setOpen(value: boolean) { open = value; description.hidden = !value; },
+    update(delta: number) {
+      const dt = Math.min(delta, 0.05);
+      time += dt;
+      amount = THREE.MathUtils.damp(amount, open ? 1 : 0, 7, dt);
+      root.visible = amount > 0.005;
+      const fit = Math.min(1, camera.aspect / 1.45);
+      root.scale.setScalar(fit);
+      root.position.set(0, -0.045 - (1 - amount) * 1.05, -1.04);
+      root.rotation.set(-0.07 - (1 - amount) * 0.55, 0, -0.012 + Math.sin(time * 1.2) * 0.003);
+      pages.forEach(({ hinge, side }) => { hinge.rotation.y = -side * (0.045 + (1 - amount) * 1.48); });
+    },
+    complete(id: AreaId, photo: string) {
+      const image = new Image();
+      image.onload = () => { completed.set(id, image); redraw(); };
+      image.src = photo;
+    },
+  };
 }

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { areaCatalog, areaOrder, availabilityCopy, type AreaId } from './catalog';
 import type { Collider } from './scene';
 import { exhibition, stoneFloor } from './exhibition';
-import { galleryLayout, museumLayout } from './museumLayout';
+import { galleryLayout, museumLayout, roomSlots } from './museumLayout';
 import { box, inkStroke, mesh, outline, toon } from './visual';
 
 export type GalleryRoom = {
@@ -10,6 +10,8 @@ export type GalleryRoom = {
   number: number;
   root: THREE.Group;
   center: THREE.Vector2;
+  width: number;
+  depth: number;
 };
 
 export type GalleryDoor = {
@@ -26,8 +28,7 @@ export type GalleryDoor = {
 };
 
 const { frontZ, step, wingX, innerX } = galleryLayout;
-const firstZ = frontZ - step / 2;
-const backZ = frontZ - step * 5;
+const backZ = museumLayout.backZ;
 const wingWidth = (wingX - innerX) * 2;
 const outerX = museumLayout.halfWidth;
 
@@ -94,6 +95,10 @@ export function createGallery(scene: THREE.Scene): {
   function portal(axis: 'x' | 'z', x: number, z: number, target: AreaId | null, required: AreaId | null, closed = true): void {
     const span = axis === 'z' ? wingWidth : step;
     const opening = 2.3;
+    const threshold = axis === 'z'
+      ? box(opening + 0.1, 0.08, 0.6, stone, [x, 0.125, z], scene)
+      : box(0.6, 0.08, opening + 0.1, stone, [x, 0.125, z], scene);
+    threshold.castShadow = false;
     const piece = (span - opening) / 2;
     for (const side of [-1, 1]) {
       const offset = side * (opening + piece) / 2;
@@ -140,28 +145,27 @@ export function createGallery(scene: THREE.Scene): {
     }
   }
 
-  // Five rooms descend the left wing; five return along the right wing.
+  // Two longitudinal rooms on each wing, joined by one transverse gallery.
+  const bridgeFront = frontZ - step * 2;
   for (const side of [-1, 1] as const) {
     const x = side * wingX;
-    box(wingWidth + 0.2, 0.14, step * 5 + 0.2, stone, [x, 0.02, (frontZ + backZ) / 2], scene).castShadow = false;
-    box(wingWidth + 0.2, 0.2, step * 5 + 0.2, cream, [x, 5.5, (frontZ + backZ) / 2], scene);
-    wall(museumLayout.wallThickness, step * 5 + 0.2, side * outerX, (frontZ + backZ) / 2);
-    wall(0.28, step * 4, side * innerX, frontZ - step * 2);
-    for (let boundary = 1; boundary < 5; boundary++) {
-      const targetIndex = side < 0 ? boundary : 10 - boundary;
-      portal('z', x, frontZ - boundary * step, areaOrder[targetIndex], areaOrder[targetIndex - 1]);
-    }
+    box(wingWidth + 0.2, 0.14, step * 2, stone, [x, 0.02, frontZ - step], scene).castShadow = false;
+    box(wingWidth + 0.2, 0.2, step * 2, cream, [x, 5.5, frontZ - step], scene);
+    wall(museumLayout.wallThickness, frontZ - backZ + 0.2, side * outerX, (frontZ + backZ) / 2);
+    wall(0.28, step * 2, side * innerX, frontZ - step);
+    const targetIndex = side < 0 ? 1 : 4;
+    portal('z', x, frontZ - step, areaOrder[targetIndex], null);
+    portal('z', x, bridgeFront, areaOrder[side < 0 ? 2 : 3], null);
   }
   wall(innerX * 2, 0.28, 0, frontZ);
+  wall(innerX * 2, 0.28, 0, bridgeFront);
   wall(outerX * 2, 0.28, 0, backZ);
-  box(innerX * 2, 0.14, step, stone, [0, 0.02, firstZ - step * 4], scene).castShadow = false;
-  box(innerX * 2, 0.2, step, trim, [0, 5.5, firstZ - step * 4], scene);
+  box(outerX * 2, 0.14, galleryLayout.bridgeDepth, stone, [0, 0.02, (bridgeFront + backZ) / 2], scene).castShadow = false;
+  box(outerX * 2, 0.2, galleryLayout.bridgeDepth, cream, [0, 5.5, (bridgeFront + backZ) / 2], scene);
 
   areaOrder.forEach((id, index) => {
-    const left = index < 5;
-    const row = left ? index : 9 - index;
-    const x = left ? -wingX : wingX;
-    const z = firstZ - row * step;
+    const { x, z, width, depth } = roomSlots[index];
+    const left = x <= 0;
     const root = new THREE.Group();
     root.position.set(x, 0, z);
     root.userData.areaId = id;
@@ -170,46 +174,53 @@ export function createGallery(scene: THREE.Scene): {
     const accent = new THREE.Color(areaCatalog[id].accent);
     const litSurface = new THREE.Color(exhibition.wall).lerp(accent, 0.035);
     const surface = new THREE.MeshBasicMaterial({ color: dark.clone() });
-    const floor = box(wingWidth - 0.16, 0.014, step - 0.24, surface, [0, 0.12, 0], root);
+    const floor = box(width - 0.16, 0.014, depth - 0.24, surface, [0, 0.12, 0], root);
     floor.castShadow = floor.receiveShadow = false;
-    stoneFloor(root, wingWidth - 0.2, step - 0.28, 0, 0, museumLayout.floorY);
+    stoneFloor(root, width - 0.2, depth - 0.28, 0, 0, museumLayout.floorY);
     for (const side of [-1, 1]) {
-      box(0.045, 0.014, step - 0.35, trim, [side * (wingWidth / 2 - 0.31), 0.17, 0], root).castShadow = false;
-      box(0.07, 0.2, step - 0.35, doorMaterial, [side * (wingWidth / 2 - 0.18), 0.26, 0], root);
-      box(0.09, 0.13, step - 0.35, trim, [side * (wingWidth / 2 - 0.18), 5.08, 0], root);
+      box(0.045, 0.014, depth - 0.35, trim, [side * (width / 2 - 0.31), 0.17, 0], root).castShadow = false;
+      box(0.07, 0.2, depth - 0.35, doorMaterial, [side * (width / 2 - 0.18), 0.26, 0], root);
+      box(0.09, 0.13, depth - 0.35, trim, [side * (width / 2 - 0.18), 5.08, 0], root);
     }
-    const back = box(0.055, 2.6, step - 0.35, surface, [left ? -wingWidth / 2 + 0.05 : wingWidth / 2 - 0.05, 1.58, 0], root);
+    const back = box(0.055, 2.6, depth - 0.35, surface, [left ? -width / 2 + 0.05 : width / 2 - 0.05, 1.58, 0], root);
     back.castShadow = back.receiveShadow = false;
-    const stripe = box(0.07, 0.11, step - 0.4, trim, [left ? -wingWidth / 2 + 0.09 : wingWidth / 2 - 0.09, 2.96, 0], root);
+    const stripe = box(0.07, 0.11, depth - 0.4, trim, [left ? -width / 2 + 0.09 : width / 2 - 0.09, 2.96, 0], root);
     stripe.castShadow = stripe.receiveShadow = false;
     outline(stripe, 0.35);
-    const wallX = left ? -wingWidth / 2 + 0.1 : wingWidth / 2 - 0.1;
-    inkStroke([[wallX, 0.51, -step / 2 + 0.45], [wallX, 0.55, -0.6], [wallX, 0.52, step / 2 - 0.45]], root, 0.35);
+    const wallX = left ? -width / 2 + 0.1 : width / 2 - 0.1;
+    inkStroke([[wallX, 0.51, -depth / 2 + 0.45], [wallX, 0.55, -0.6], [wallX, 0.52, depth / 2 - 0.45]], root, 0.35);
     const lamp = mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.06, 16), new THREE.MeshBasicMaterial({ color: dark.clone() }), [0, 5.31, 3.5], root);
     lamp.castShadow = false;
     const light = new THREE.PointLight(0xffedce, 0, 9);
     light.visible = false;
     light.position.set(0, 4.5, 3.5);
     root.add(light);
+    const bridgeLights: THREE.PointLight[] = [];
+    if (index === 2) for (const side of [-1, 1]) {
+      const extra = new THREE.PointLight(0xffedce, 0, 12);
+      extra.position.set(side * 7.5, 4.5, 0);
+      root.add(extra);
+      bridgeLights.push(extra);
+      mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.06, 16), new THREE.MeshBasicMaterial({ color: 0xe0c99c }), [side * 7.5, 5.31, 0], root);
+    }
     const insideSign = mesh(new THREE.PlaneGeometry(3.3, 1.03),
       new THREE.MeshBasicMaterial({ map: roomSign(id, index + 1), side: THREE.DoubleSide }),
-      [left ? -wingWidth / 2 + 0.3 : wingWidth / 2 - 0.3, 3.82, 0], root);
+      [left ? -width / 2 + 0.3 : width / 2 - 0.3, 3.82, 0], root);
     insideSign.rotation.y = left ? Math.PI / 2 : -Math.PI / 2;
     insideSign.visible = false;
-    rooms.push({ id, number: index + 1, root, center: new THREE.Vector2(x, z) });
+    rooms.push({ id, number: index + 1, root, center: new THREE.Vector2(x, z), width, depth });
     root.userData.setLight = (strength: number) => {
       surface.color.copy(dark).lerp(litSurface, strength);
       (lamp.material as THREE.MeshBasicMaterial).color.copy(dark).lerp(new THREE.Color(0xfff0c8), strength);
       light.intensity = strength * 5;
+      bridgeLights.forEach((item) => { item.intensity = strength * 9; });
       if (strength > 0) light.visible = true;
       insideSign.visible = strength > 0.08;
     };
   });
 
   portal('z', -wingX, frontZ, areaOrder[0], null);
-  portal('z', wingX, frontZ, null, areaOrder[9]);
-  portal('x', -innerX, firstZ - step * 4, areaOrder[5], areaOrder[4]);
-  portal('x', innerX, firstZ - step * 4, null, null, false);
+  portal('z', wingX, frontZ, null, null);
   for (const door of doors) {
     if (door.target) door.room = rooms.find((room) => room.id === door.target)!;
   }

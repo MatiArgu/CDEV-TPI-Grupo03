@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { foreground, holdingHand } from './held';
 
 type FrameBounds = { left: number; right: number; top: number; bottom: number };
 
@@ -88,9 +89,10 @@ export function artifactVisible(
   return false;
 }
 
-export function createCameraModel(camera: THREE.PerspectiveCamera): THREE.Group {
+export function createCameraModel(camera: THREE.PerspectiveCamera) {
   const rig = new THREE.Group();
-  rig.position.set(1.1, -0.93, -1.5);
+  rig.name = 'polaroid-en-las-manos';
+  rig.position.set(0.43, -0.43, -0.85);
   rig.scale.setScalar(0.72);
   rig.rotation.set(-0.12, -0.12, -0.08);
   const body = new THREE.Mesh(new RoundedBoxGeometry(0.61, 0.43, 0.25, 2, 0.035), new THREE.MeshBasicMaterial({ color: 0xf0f2e5 }));
@@ -128,9 +130,101 @@ export function createCameraModel(camera: THREE.PerspectiveCamera): THREE.Group 
   }
   const strap = new THREE.Mesh(new THREE.TorusGeometry(0.13, 0.013, 5, 16), new THREE.MeshBasicMaterial({ color: 0x5c746e }));
   strap.position.set(0.36, -0.2, 0.03); strap.scale.y = 1.65; rig.add(strap);
-  rig.visible = false;
-  camera.add(rig);
-  return rig;
+  // Both hands travel with the camera; a second left hand takes the ejected print.
+  const leftHand = holdingHand(-1);
+  leftHand.position.set(-0.32, -0.16, 0.12);
+  leftHand.rotation.z = -0.15;
+  const rightHand = holdingHand(1);
+  rightHand.position.set(0.33, -0.11, 0.12);
+  rightHand.rotation.z = 0.12;
+  rig.add(leftHand, rightHand);
+  const button = new THREE.Mesh(new THREE.CylinderGeometry(0.043, 0.043, 0.025, 12), new THREE.MeshBasicMaterial({ color: 0xbd604b }));
+  button.position.set(0.22, 0.29, 0);
+  rig.add(button);
+  const instructionCanvas = document.createElement('canvas');
+  instructionCanvas.width = 1024; instructionCanvas.height = 128;
+  const ink = instructionCanvas.getContext('2d')!;
+  ink.fillStyle = '#354044'; ink.fillRect(0, 0, 1024, 128);
+  ink.fillStyle = '#f0e2bd'; ink.font = '56px sans-serif'; ink.textAlign = 'center';
+  ink.fillText('CLIC FOTO   /   C GUARDAR', 512, 80);
+  const instructions = new THREE.CanvasTexture(instructionCanvas); instructions.colorSpace = THREE.SRGBColorSpace;
+  const plate = new THREE.Mesh(new THREE.PlaneGeometry(0.48, 0.06), new THREE.MeshBasicMaterial({ map: instructions }));
+  plate.position.set(0, -0.32, 0.193); rig.add(plate);
+
+  const print = new THREE.Group();
+  print.name = 'fotografia-en-revelado';
+  const paper = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.46, 0.004), new THREE.MeshBasicMaterial({ color: 0xf2e8d2 }));
+  print.add(paper);
+  const backing = new THREE.Mesh(new THREE.PlaneGeometry(0.426, 0.3195), new THREE.MeshBasicMaterial({ color: 0x738477 }));
+  backing.position.set(0, 0.038, 0.003); print.add(backing);
+  const imageMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0 });
+  const image = new THREE.Mesh(new THREE.PlaneGeometry(0.426, 0.3195), imageMaterial);
+  image.position.set(0, 0.038, 0.004); print.add(image);
+  const captionCanvas = document.createElement('canvas'); captionCanvas.width = 1024; captionCanvas.height = 160;
+  const captionTexture = new THREE.CanvasTexture(captionCanvas); captionTexture.colorSpace = THREE.SRGBColorSpace;
+  const caption = new THREE.Mesh(new THREE.PlaneGeometry(0.426, 0.066), new THREE.MeshBasicMaterial({ map: captionTexture }));
+  caption.position.set(0, -0.174, 0.003); print.add(caption);
+  const printHand = holdingHand(-1);
+  printHand.position.set(-0.245, -0.14, 0.025); print.add(printHand);
+  foreground(rig); foreground(print);
+  // Transparent emulsion is drawn after the opaque paper, before the hands.
+  image.renderOrder = 90;
+  printHand.traverse((part) => { part.renderOrder = 100; });
+  rig.visible = print.visible = false;
+  camera.add(rig, print);
+  let equipped = false;
+  let lift = 0;
+  let time = 0;
+  let developing = false;
+  let elapsed = 0;
+  let finish: (() => void) | null = null;
+  const ejectStart = new THREE.Vector3();
+  const heldPosition = new THREE.Vector3();
+  return {
+    root: rig,
+    print,
+    setEquipped(value: boolean) { equipped = value; },
+    hidePrint() { developing = false; print.visible = false; },
+    async develop(dataUrl: string, label: string): Promise<void> {
+      const texture = await new THREE.TextureLoader().loadAsync(dataUrl);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      imageMaterial.map?.dispose();
+      imageMaterial.map = texture; imageMaterial.opacity = 0; imageMaterial.needsUpdate = true;
+      const c = captionCanvas.getContext('2d')!;
+      c.fillStyle = '#f2e8d2'; c.fillRect(0, 0, 1024, 160);
+      c.fillStyle = '#44564b'; c.font = '38px sans-serif'; c.fillText(label, 25, 92);
+      captionTexture.needsUpdate = true;
+      elapsed = 0; developing = true; print.visible = true;
+      return new Promise<void>((resolve) => { finish = resolve; });
+    },
+    update(delta: number) {
+      const dt = Math.min(delta, 0.05);
+      time += dt;
+      lift = THREE.MathUtils.damp(lift, equipped ? 1 : 0, 10, dt);
+      rig.visible = lift > 0.005;
+      const fit = Math.min(1, camera.aspect / 1.5);
+      rig.scale.setScalar(0.72 * fit);
+      const recoil = developing ? Math.max(0, 1 - elapsed / 0.22) : 0;
+      const takePrint = developing ? THREE.MathUtils.smoothstep(elapsed, 0.75, 1.5) : 0;
+      rig.position.set(0.55 * fit, -0.28 - (1 - lift) * 0.8 - takePrint * 0.25, -0.95 + recoil * 0.05);
+      rig.rotation.set(-0.12 + recoil * 0.14, -0.12, -0.045 + Math.sin(time * 1.8) * 0.006);
+      button.position.y = 0.29 - recoil * 0.025;
+      leftHand.visible = takePrint < 0.2;
+      if (!developing) return;
+      elapsed += dt;
+      print.visible = true;
+      const eject = THREE.MathUtils.smoothstep(elapsed, 0.08, 0.85);
+      print.scale.set(fit, fit * Math.max(0.01, eject), fit);
+      ejectStart.set(0, -0.23 - 0.32 * eject, 0.23).multiplyScalar(0.72 * fit).applyEuler(rig.rotation).add(rig.position);
+      heldPosition.set(-0.16 * fit, -0.035, -0.75);
+      print.position.copy(ejectStart).lerp(heldPosition, takePrint);
+      print.rotation.set(-0.14 + (1 - takePrint) * 0.3, takePrint * 0.05, -0.05 - (1 - takePrint) * 0.1);
+      printHand.visible = takePrint > 0.4;
+      imageMaterial.opacity = THREE.MathUtils.smoothstep(elapsed, 0.9, 2.9);
+      imageMaterial.color.setScalar(0.55 + 0.45 * imageMaterial.opacity);
+      if (elapsed >= 3.25 && finish) { const done = finish; finish = null; done(); }
+    },
+  };
 }
 
 let audioContext: AudioContext | null = null;

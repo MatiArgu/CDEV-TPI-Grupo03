@@ -160,3 +160,29 @@ La automatización usa Chrome con SwiftShader. Para comprobar el recorrido compl
 La navegación y la lógica del recorrido se verificaron en navegador, pero queda por medir la fluidez en un escritorio con aceleración gráfica real. Como referencia de complejidad, la vista amplia del patio registró aproximadamente 23.400 triángulos y 830 llamadas de dibujo, y la vista frontal de Roma unos 21.900 triángulos y 169 llamadas; estas cifras no son una medición de FPS.
 
 Persistencia, reinicio y ciclo egipcio corresponden a la etapa 7. La prueba de guardado por ID no aplica todavía. El acceso a una época jugable colocada detrás de puertas WIP sigue siendo una decisión pendiente del recorrido.
+
+## Panfleto físico, Polaroid y circuito de cinco salas
+
+Revisión del 13 de octubre de 2026. Sustituye la planta anterior de diez salas y sus puertas bloqueadas por progreso:
+
+- Orden: Antiguo Egipto → Antigua Roma → Época Medieval → Japón Feudal → Llegada a la Luna. Dos salas a la izquierda, una galería transversal al fondo y dos de regreso por la derecha. Todas son visitables; solo Roma permite viajar.
+- Roma conserva 10,8 × 16 unidades, casco a escala 0,55 y la iluminación de la revisión anterior. La sala medieval conecta las alas con una superficie de 24,9 × 10. Muros, techos, mapa, ubicación del jugador y umbrales comparten la nueva planta.
+- El panfleto es papel 3D con hojas articuladas y manos. M levanta el papel y baja la mirada; libera el cursor sin abrir la pausa. M o clic lo guardan y recuperan Pointer Lock. Se puede abrir también desde la cámara, guardándola primero.
+- La Polaroid tiene manos, subida/bajada, retroceso, botón y ranura. Expulsa una impresión que se levanta con la mano izquierda y aparece gradualmente durante el revelado. La pausa detiene esta animación. Se libera la textura anterior al reemplazarla por otra fotografía.
+- Se retiraron los paneles 2D del panfleto y del revelado, los rótulos del visor y la ayuda permanente. Se mantienen encuadre, interacción contextual, avisos breves y menú de pausa. Los controles de fotografía están impresos en la cámara.
+- Los objetos sostenidos se renderizan después del entorno con profundidad propia: las paredes y los vidrios ya no atraviesan el papel. La captura conserva el render real del encuadre y excluye las manos y la cámara.
+
+### Verificación
+
+- `npm run typecheck`, `npm run build` y `git diff --check`: correctos. Vite mantiene el aviso de bundle mayor de 500 kB.
+- Chrome de escritorio: guardia → abrir/cerrar panfleto con cursor libre → Egipto → Roma → Medieval → Japón → Luna → hall; todas las puertas y colisiones permitieron completar el circuito.
+- Fotos inválida y válida, pausa durante el revelado, bloqueo de movimiento y panfleto durante la foto, viaje romano, ayuda tras 20 segundos, recogida y regreso: correctos. El panfleto guarda foto y casco por ID y muestra 1/5 durante la sesión.
+- Validación de fotografía: artefacto centrado, en un borde y parcialmente visible aceptados; totalmente oculto y fuera del encuadre rechazados.
+- 108 comprobaciones de techo y 108 de suelo entre hall y salas, más umbrales: sin huecos. Intercambiar Egipto y Luna actualizó sala, número y panfleto manteniendo cinco posiciones.
+- Revisión visual de los objetos sostenidos y las cinco salas realizada con Chrome/SwiftShader; rendimiento en GPU real no medido. Las cuatro exhibiciones pendientes, sus mundos históricos y la persistencia siguen sin implementarse.
+
+![Polaroid sostenida con las manos](capturas/polaroid-en-manos.png)
+
+![Fotografía real durante el revelado en la mano](capturas/polaroid-revelado-fisico.png)
+
+![Panfleto físico con el recorrido nuevo y el recuerdo de Roma](capturas/panfleto-fisico-cinco-salas.png)

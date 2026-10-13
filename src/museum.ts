@@ -180,7 +180,7 @@ function museumEnvelope(scene: THREE.Scene): void {
   }
   box(halfWidth * 2 + 0.5, wallHeight, 0.1, mat.cream, [0, wallHeight / 2, backZ - 0.2], scene);
   box(halfWidth * 2 + 0.7, 0.18, 0.3, mat.stone, [0, 5.36, backZ - 0.24], scene);
-  box(galleryLayout.innerX * 2, 0.12, galleryLayout.step, roof, [0, 5.66, backZ + galleryLayout.step / 2], scene);
+  box(galleryLayout.innerX * 2, 0.12, galleryLayout.bridgeDepth, roof, [0, 5.66, backZ + galleryLayout.bridgeDepth / 2], scene);
   box(halfWidth * 2 + 0.5, 0.8, 0.15, roof, [0, 5.98, hallBackZ - 0.21], scene);
   hippedRoof(halfWidth * 2 + 0.8, 1.1, frontZ - hallBackZ + 0.5, roof,
     [0, 6.38, (frontZ + hallBackZ) / 2], scene);
@@ -322,7 +322,7 @@ export function createMuseumScene(): MuseumWorld {
     sun.intensity = THREE.MathUtils.lerp(1.6, 0.1, indoors);
   };
 
-  const galleryBack = galleryLayout.frontZ - galleryLayout.step * 5;
+  const galleryBack = museumLayout.backZ;
   const groundSize = Math.max(110, 2 * (Math.abs(galleryBack) + 10));
   const ground = mesh(new THREE.PlaneGeometry(groundSize, groundSize), mat.sage, [0, -0.02, 0], scene);
   ground.rotation.x = -Math.PI / 2;
@@ -397,8 +397,8 @@ export function createMuseumScene(): MuseumWorld {
     doors: gallery.doors,
     exhibits,
     roomAt: (position) => gallery.rooms.find((room) => (
-      Math.abs(position.y - room.center.y) < galleryLayout.step / 2 - 0.1
-      && Math.abs(position.x - room.center.x) < galleryLayout.wingX - galleryLayout.innerX - 0.1
+      Math.abs(position.y - room.center.y) < room.depth / 2 - 0.1
+      && Math.abs(position.x - room.center.x) < room.width / 2 - 0.1
     )) ?? null,
     openEntrance: () => {
       entranceOpening = true;

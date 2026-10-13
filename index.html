@@ -36,17 +36,9 @@
       <div id="photo-hud" class="photo-hud" aria-hidden="true">
         <div class="camera-frame">
           <div id="photo-viewfinder" class="photo-viewfinder"></div>
-          <span class="camera-frame-label">POLAROID / VISOR 01</span>
-          <span class="camera-frame-count">● LISTA PARA CAPTURAR</span>
         </div>
-        <div class="photo-instruction">CLIC DISPARAR · C GUARDAR CÁMARA</div>
       </div>
-      <section id="photo-result" class="photo-result" aria-label="Fotografía en revelado" hidden>
-        <div class="polaroid-print">
-          <div class="polaroid-image-wrap"><img id="photo-image" alt="Fotografía tomada desde el visor" /></div>
-              <div class="polaroid-caption"><span id="photo-result-label">REVELANDO / 00</span><span>MUSEO DEL TIEMPO</span></div>
-        </div>
-      </section>
+      <div id="held-description" class="sr-only" role="status" hidden></div>
       <div id="time-transition" class="time-transition" aria-hidden="true" hidden><span>UN INSTANTE FUERA DEL TIEMPO</span></div>
       <div id="game-toast" class="game-toast" role="status" hidden></div>
       <section id="game-menu" class="game-overlay" role="dialog" aria-labelledby="menu-title">
@@ -55,29 +47,8 @@
           <h1 id="menu-title">La historia<br />te espera.</h1>
           <p id="menu-text">Acabás de bajar del tren. El museo te espera al otro lado de la plaza. Acercate al guardia: él tiene algo para vos.</p>
           <button id="menu-button" class="game-button" type="button">Comenzar visita <span aria-hidden="true">↗</span></button>
-          <small>WASD caminar · Shift correr · Mouse mirar · E interactuar · M panfleto · Escape pausar</small>
+          <small>WASD caminar · Shift correr · Mouse mirar · E interactuar · M panfleto · C Polaroid · Clic fotografiar · Escape pausar</small>
         </div>
-      </section>
-      <section id="pamphlet" class="pamphlet-layer" role="dialog" aria-label="Panfleto desplegado del museo" hidden>
-        <div class="pamphlet-paper">
-          <div class="pamphlet-leaf pamphlet-map-leaf">
-            <span class="pamphlet-eyebrow">MUSEO DE VIAJES EN EL TIEMPO / PLANO DE VISITA</span>
-            <h2>Un museo fuera<br /><em>del tiempo.</em></h2>
-            <p class="pamphlet-intro">Empezá por la puerta 01. El recorrido baja por un ala, cruza al fondo y vuelve por la otra.</p>
-            <div class="map-title"><span>PLANO GENERAL</span><span>10 ÁREAS</span></div>
-            <div id="pamphlet-map" class="pamphlet-map" aria-label="Mapa numerado de las diez áreas"></div>
-            <div class="map-entrance">↑ INICIO · HALL <span>REGRESO · HALL ↑</span></div>
-            <div id="pamphlet-collection" class="pamphlet-collection" hidden></div>
-          </div>
-          <div class="pamphlet-leaf pamphlet-index-leaf">
-            <span class="pamphlet-eyebrow">ÍNDICE / UNA ÉPOCA EN CADA PUERTA</span>
-            <h3>Diez momentos<br />por descubrir.</h3>
-            <ol id="pamphlet-index" class="pamphlet-index"></ol>
-            <p id="pamphlet-note" class="pamphlet-note">Abrí la primera puerta con E. Las siguientes se desbloquean al completar la sala anterior.</p>
-            <div class="pamphlet-stamp">PLANO DE VISITA · 10 SALAS</div>
-          </div>
-        </div>
-        <div class="pamphlet-instruction">M CERRAR PANFLETO · ESC PAUSAR</div>
       </section>
       <div id="error" class="error" hidden></div>
     </main>

@@ -50,6 +50,8 @@ export function createPlayerControls(
   let mode: Mode = 'intro';
   let yaw = 0;
   let pitch = 0;
+  let heldLook = 0;
+  let cameraReadyAt = 0;
   let bobPhase = 0;
   let bobOffset = 0;
   let cameraEquipped = false;
@@ -94,8 +96,8 @@ export function createPlayerControls(
 
   menuButton.addEventListener('click', requestControl);
   canvas.addEventListener('click', () => {
-    if (mode === 'paused') void requestControl();
-    else if (mode === 'camera' && document.pointerLockElement === canvas) {
+    if (mode === 'paused' || mode === 'pamphlet') void requestControl();
+    else if (mode === 'camera' && performance.now() >= cameraReadyAt && document.pointerLockElement === canvas) {
       cinematic = 'revealing';
       setMode('revealing');
       options.onShutter?.();
@@ -103,7 +105,7 @@ export function createPlayerControls(
   });
   document.addEventListener('pointerlockchange', () => {
     if (document.pointerLockElement === canvas) setMode(cinematic ?? (cameraEquipped ? 'camera' : 'playing'));
-    else if (mode !== 'intro' && mode !== 'paused') setMode('paused');
+    else if (mode !== 'intro' && mode !== 'paused' && mode !== 'pamphlet') setMode('paused');
   });
   document.addEventListener('pointerlockerror', () => {
     if (mode !== 'playing') menuText.textContent = 'No se pudo capturar el mouse. Hacé clic para intentarlo de nuevo.';
@@ -121,14 +123,14 @@ export function createPlayerControls(
     }
     if (event.code === 'KeyC' && !event.repeat && options.onCameraChange && (mode === 'playing' || mode === 'camera') && (cameraEquipped || options.canEquipCamera?.() !== false)) {
       cameraEquipped = !cameraEquipped;
+      cameraReadyAt = performance.now() + 450;
       options.onCameraChange(cameraEquipped);
       setMode(cameraEquipped ? 'camera' : 'playing');
       return;
     }
     if (event.code === 'KeyM' && !event.repeat) {
-      // The pamphlet is keyboard-only; keeping Pointer Lock avoids an extra click to resume.
-      if (mode === 'playing' && options.canOpenPamphlet()) setMode('pamphlet');
-      else if (mode === 'pamphlet') setMode(document.pointerLockElement === canvas ? 'playing' : 'paused');
+      if ((mode === 'playing' || mode === 'camera') && options.canOpenPamphlet()) openPamphlet();
+      else if (mode === 'pamphlet') void requestControl();
       return;
     }
     if (mode !== 'playing' && mode !== 'camera') return;
@@ -148,6 +150,13 @@ export function createPlayerControls(
     pressed.clear();
     if (mode !== 'intro' && mode !== 'paused') pause();
   });
+
+  function openPamphlet(): void {
+    if ((mode !== 'playing' && mode !== 'camera') || !options.canOpenPamphlet()) return;
+    if (cameraEquipped) { cameraEquipped = false; options.onCameraChange?.(false); }
+    setMode('pamphlet');
+    if (document.pointerLockElement === canvas) document.exitPointerLock();
+  }
 
   function blocked(x: number, z: number): boolean {
     return options.colliders.some(({ minX, maxX, minZ, maxZ }) => {
@@ -178,12 +187,14 @@ export function createPlayerControls(
           moving = true;
         }
       }
-      camera.rotation.set(pitch, yaw, 0);
+      camera.rotation.set(pitch + heldLook, yaw, 0);
       camera.getWorldDirection(gaze);
       interaction = mode === 'playing' ? options.findInteraction(position, gaze) : null;
       prompt.hidden = !interaction;
       if (interaction) promptLabel.textContent = interaction.label;
     }
+    heldLook = THREE.MathUtils.damp(heldLook, mode === 'pamphlet' ? -0.48 - pitch : 0, 7, step);
+    camera.rotation.set(pitch + heldLook, yaw, 0);
     if (moving) bobPhase += step * 10;
     const targetBob = moving ? Math.sin(bobPhase) * 0.025 : 0;
     bobOffset = THREE.MathUtils.lerp(bobOffset, targetBob, Math.min(step * 14, 1));
@@ -205,13 +216,12 @@ export function createPlayerControls(
       }
       if (mode === 'revealing' || mode === 'transition') setMode(equipped ? 'camera' : 'playing');
     },
-    openPamphlet: () => {
-      if (mode === 'playing' && options.canOpenPamphlet()) setMode('pamphlet');
-    },
+    openPamphlet,
     teleport: (start) => {
       position.copy(start);
       yaw = 0;
       pitch = 0;
+      heldLook = 0;
       bobOffset = 0;
       camera.position.set(position.x, eyeHeight, position.y);
       camera.rotation.set(0, 0, 0);
