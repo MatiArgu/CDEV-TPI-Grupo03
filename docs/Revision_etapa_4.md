@@ -1,6 +1,6 @@
 # Revisión de la etapa 4 — Polaroid
 
-La mecánica de fotografía se prueba en `?photo-test`, un laboratorio temporal separado del recorrido principal. El cristal de ensayo y el eco temporal son recursos de prueba, no áreas del catálogo ni contenido histórico definitivo.
+Esta revisión documenta la prueba de la etapa 4, realizada en un laboratorio temporal separado del recorrido principal. Al completar la etapa 5 se retiró la ruta `?photo-test` y su escena: los pasos siguientes son un registro histórico de esa verificación, no instrucciones para la versión actual. El cristal de ensayo y el eco temporal no eran áreas del catálogo ni contenido histórico definitivo.
 
 ## Recorrido de prueba
 

@@ -1,19 +1,19 @@
 export const areaCatalog = {
-  roma: { name: 'Roma Antigua', artifact: 'Casco de gladiador' },
-  egipto: { name: 'Egipto Antiguo', artifact: 'Escarabajo egipcio' },
-  grecia: { name: 'Grecia Antigua', artifact: 'Corona de laurel' },
-  babilonia: { name: 'Mesopotamia · Babilonia', artifact: 'Tablilla cuneiforme' },
-  medieval: { name: 'Edad Media · Castillo medieval', artifact: 'Llave antigua' },
-  renacimiento: { name: 'Renacimiento Italiano', artifact: 'Compás de artista' },
-  japon: { name: 'Japón Feudal', artifact: 'Máscara de samurái' },
-  paris_1830: { name: 'Revolución de Julio · París, 1830', artifact: 'Escarapela tricolor' },
-  titanic: { name: 'Titanic · 1912', artifact: 'Reloj de bolsillo' },
-  luna: { name: 'Llegada a la Luna · 1969', artifact: 'Insignia Apollo 11' },
+  roma: { name: 'Roma Antigua', artifact: 'Casco de gladiador', accent: '#e9a077', availability: 'wip' },
+  egipto: { name: 'Egipto Antiguo', artifact: 'Escarabajo egipcio', accent: '#e4c989', availability: 'wip' },
+  grecia: { name: 'Grecia Antigua', artifact: 'Corona de laurel', accent: '#a9d8d0', availability: 'wip' },
+  babilonia: { name: 'Mesopotamia · Babilonia', artifact: 'Tablilla cuneiforme', accent: '#c3bbd8', availability: 'wip' },
+  medieval: { name: 'Edad Media · Castillo medieval', artifact: 'Llave antigua', accent: '#b7c7ab', availability: 'wip' },
+  renacimiento: { name: 'Renacimiento Italiano', artifact: 'Compás de artista', accent: '#e8b9ac', availability: 'wip' },
+  japon: { name: 'Japón Feudal', artifact: 'Máscara de samurái', accent: '#dcb9be', availability: 'wip' },
+  paris_1830: { name: 'Revolución de Julio · París, 1830', artifact: 'Escarapela tricolor', accent: '#a8c6da', availability: 'wip' },
+  titanic: { name: 'Titanic · 1912', artifact: 'Reloj de bolsillo', accent: '#adc8ce', availability: 'wip' },
+  luna: { name: 'Llegada a la Luna · 1969', artifact: 'Insignia Apollo 11', accent: '#cbc7e0', availability: 'wip' },
 } as const;
 
 export type AreaId = keyof typeof areaCatalog;
 
-// The index determines map position and room number. Later stages will use it for room placement.
+// The index determines the physical slot, room number and map position.
 export const areaOrder: AreaId[] = [
   'roma', 'egipto', 'grecia', 'babilonia', 'medieval',
   'renacimiento', 'japon', 'paris_1830', 'titanic', 'luna',
