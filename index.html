@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#e7ead8" />
-    <title>Museo de viajes en el tiempo · Estudio visual</title>
+    <meta name="theme-color" content="#89d9cd" />
+    <title>Museo de viajes en el tiempo · Recorrido de prueba</title>
   </head>
   <body>
-    <main id="app">
+    <main id="app" data-mode="player">
       <div id="scene" aria-label="Escena tridimensional de prueba del museo"></div>
       <div class="paper-grain" aria-hidden="true"></div>
       <header class="masthead">
@@ -27,6 +27,29 @@
         <button type="button" data-view="near" aria-pressed="false"><span>03</span> Cerca</button>
       </nav>
       <div class="hint">ARRASTRÁ PARA ORBITAR · RUEDA PARA ACERCAR</div>
+      <div class="player-hud">
+        <div class="crosshair" aria-hidden="true"></div>
+        <div id="interaction-prompt" class="interaction-prompt" hidden><kbd>E</kbd> Inspeccionar casco</div>
+        <div class="player-help">WASD CAMINAR · MOUSE MIRAR · E INSPECCIONAR · ESC PAUSAR</div>
+      </div>
+      <section id="game-menu" class="game-overlay" role="dialog" aria-labelledby="menu-title">
+        <div class="game-card">
+          <span class="game-eyebrow">MUSEO DE VIAJES EN EL TIEMPO / ESTUDIO 02</span>
+          <h1 id="menu-title">Un paseo por<br />el museo.</h1>
+          <p id="menu-text">Recorré este patio de prueba en primera persona. Acercate al casco para inspeccionarlo.</p>
+          <button id="menu-button" class="game-button" type="button">Entrar al recorrido <span aria-hidden="true">↗</span></button>
+          <small>WASD para caminar · Mouse para mirar · Escape para pausar · Clic para volver</small>
+        </div>
+      </section>
+      <section id="inspect-panel" class="game-overlay" role="dialog" aria-labelledby="inspect-title" hidden>
+        <div class="game-card inspect-card">
+          <span class="game-eyebrow">01 — PIEZA DE ESTUDIO</span>
+          <h2 id="inspect-title">Casco de gladiador</h2>
+          <p>Una pieza de prueba para observar la forma, la luz y los contornos del museo.</p>
+          <button id="close-inspect" class="game-button" type="button">Cerrar ficha <span aria-hidden="true">↗</span></button>
+          <small>Escape también cierra esta ficha.</small>
+        </div>
+      </section>
       <div id="error" class="error" hidden></div>
     </main>
     <script type="module" src="/src/main.ts"></script>

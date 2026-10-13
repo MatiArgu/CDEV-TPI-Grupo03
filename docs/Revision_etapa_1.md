@@ -20,4 +20,4 @@ La revisión tomó como guía las dos imágenes aportadas por el equipo: cielo t
 
 - **Aspecto ilustrado:** las tres capturas muestran geometría low-poly irregular, colores pastel más planos, contornos oscuros y lectura separada de la pieza principal. El papel granulado es una capa liviana de CSS.
 - **Revisión en navegador:** se abrió la escena en Chrome sin interfaz a 1440 × 900 y se generaron las tres capturas desde la escena real. También se verificó que el botón «Cerca» mueve la cámara y actualiza el estado del selector. La comprobación de tipos y la compilación se ejecutan con los comandos del README.
-- **Fluidez en el equipo de desarrollo:** pendiente de confirmar en un navegador con aceleración gráfica real; las capturas automatizadas usaron renderizado por software. La aprobación de la dirección visual también queda para la revisión del equipo antes de iniciar la etapa 2.
+- **Fluidez en el equipo de desarrollo:** pendiente de confirmar en un navegador con aceleración gráfica real; las capturas automatizadas usaron renderizado por software. La dirección visual fue aceptada para avanzar a la etapa 2.

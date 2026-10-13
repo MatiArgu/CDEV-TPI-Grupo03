@@ -16,6 +16,11 @@ h1 em { color: #4eaa76; font-style: normal; }
 .masthead p { font-size: 11px; line-height: 1.5; margin: 0; color: #536c67; max-width: 260px; }
 #app[data-view="mid"] .masthead h1, #app[data-view="mid"] .masthead p,
 #app[data-view="near"] .masthead h1, #app[data-view="near"] .masthead p { display: none; }
+#app[data-mode="player"] .masthead, #app[data-mode="player"] .specimen-label,
+#app[data-mode="player"] .view-controls, #app[data-mode="player"] .hint { display: none; }
+#app[data-mode="study"] .player-hud, #app[data-mode="study"] .game-overlay { display: none; }
+#app[data-mode="player"]:not([data-play-state="playing"]) .player-hud { display: none; }
+[hidden] { display: none !important; }
 .specimen-label { position: absolute; top: clamp(30px, 5vh, 65px); right: clamp(27px, 5.5vw, 90px); display: flex; flex-direction: column; align-items: flex-end; gap: 6px; text-align: right; color: #536c67; padding: 13px 16px; border: 1.5px solid #354044; background: #f0f2e5ed; box-shadow: 3px 3px 0 #35404450; transform: rotate(.5deg); pointer-events: none; }
 .specimen-label::before { display: none; }
 .specimen-label strong { color: #354044; font: 700 17px/1.1 'DM Sans', sans-serif; }
@@ -29,6 +34,21 @@ h1 em { color: #4eaa76; font-style: normal; }
 .view-controls button:focus-visible { outline: 2px solid #e58362; outline-offset: 3px; }
 .hint { position: absolute; right: clamp(27px, 5.5vw, 90px); bottom: clamp(38px, 6vh, 72px); color: #354044; }
 .error { position: absolute; inset: auto 20px 20px; padding: 14px 18px; background: #f7f1e6; border: 1px solid #e58362; border-radius: 8px; font-size: 14px; }
+.player-hud { position: absolute; inset: 0; pointer-events: none; }
+.crosshair { position: absolute; top: 50%; left: 50%; width: 4px; height: 4px; border-radius: 50%; transform: translate(-50%, -50%); background: #f0f2e5; box-shadow: 0 0 0 1.5px #354044a6; }
+.interaction-prompt { position: absolute; top: calc(50% + 30px); left: 50%; transform: translateX(-50%); padding: 8px 12px; border: 1px solid #354044; background: #f0f2e5ee; color: #354044; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.interaction-prompt kbd { display: inline-block; margin-right: 7px; padding: 2px 5px; border: 1px solid #354044; background: #e98569; font: inherit; }
+.player-help { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); color: #354044; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-align: center; white-space: nowrap; text-shadow: 0 1px #f0f2e5; }
+.game-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: flex-start; padding: clamp(28px, 8vw, 130px); background: #3540445c; }
+.game-card { width: min(440px, 100%); padding: 32px 35px; border: 2px solid #354044; background: #f0f2e5; box-shadow: 7px 7px 0 #354044a8; }
+.game-eyebrow { color: #5d786f; font-size: 10px; font-weight: 700; letter-spacing: .15em; }
+.game-card h1, .game-card h2 { margin: 20px 0 16px; font: 700 clamp(34px, 4vw, 53px)/1.02 'DM Sans', sans-serif; letter-spacing: -.065em; text-transform: uppercase; }
+.game-card h2 { font-size: clamp(30px, 3vw, 40px); }
+.game-card p { max-width: 330px; margin: 0 0 25px; color: #536c67; font-size: 14px; line-height: 1.6; }
+.game-button { display: flex; align-items: center; justify-content: space-between; gap: 22px; width: 100%; padding: 13px 15px; border: 1.5px solid #354044; background: #e98569; color: #354044; font: 700 14px 'DM Sans', sans-serif; text-align: left; cursor: pointer; }
+.game-button:hover { background: #f0a084; }
+.game-button:focus-visible { outline: 2px solid #354044; outline-offset: 4px; }
+.game-card small { display: block; margin-top: 17px; color: #5d786f; font-size: 11px; line-height: 1.5; }
 @media (max-width: 760px) {
   .masthead { top: 22px; left: 22px; width: min(290px, 65vw); }
   h1 { margin-top: 14px; font-size: 36px; }

@@ -1,6 +1,14 @@
 import * as THREE from 'three';
 import { box, inkStroke, irregularCrown, materials as mat, mesh, outline, shadowBlob, silhouette } from './visual';
 
+export type Collider = { minX: number; maxX: number; minZ: number; maxZ: number };
+
+export type StudyWorld = {
+  scene: THREE.Scene;
+  colliders: Collider[];
+  exhibit: THREE.Vector3;
+};
+
 function archShape(radius: number, baseY: number): THREE.Shape {
   const shape = new THREE.Shape();
   shape.moveTo(-radius, 0);
@@ -164,7 +172,7 @@ function makeArchitecture(parent: THREE.Object3D): void {
   }
 }
 
-export function createStudyScene(): THREE.Scene {
+export function createStudyScene(): StudyWorld {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x89d9cd);
   scene.fog = new THREE.Fog(0x89d9cd, 23, 49);
@@ -221,5 +229,17 @@ export function createStudyScene(): THREE.Scene {
   plaque.castShadow = false;
   makeHelmet(scene);
 
-  return scene;
+  // These bounds match the solid parts of this temporary courtyard scene.
+  const colliders: Collider[] = [
+    { minX: -5.7, maxX: 5.7, minZ: -4.4, maxZ: -2.7 }, // facade and closed entrance
+    { minX: -0.83, maxX: 0.83, minZ: 0.72, maxZ: 2.08 }, // exhibit pedestal
+    { minX: -3.9, maxX: -2.54, minZ: 0.35, maxZ: 1.71 },
+    { minX: 2.54, maxX: 3.9, minZ: 0.35, maxZ: 1.71 },
+    { minX: -6.54, maxX: -5.96, minZ: -0.59, maxZ: -0.01 },
+    { minX: 5.91, maxX: 6.49, minZ: -1.09, maxZ: -0.51 },
+    { minX: -5.58, maxX: -4.86, minZ: 2.07, maxZ: 2.85 },
+    { minX: 4.86, maxX: 5.58, minZ: 2.07, maxZ: 2.85 },
+  ];
+
+  return { scene, colliders, exhibit: new THREE.Vector3(0, 1.83, 1.4) };
 }

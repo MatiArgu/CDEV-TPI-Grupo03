@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { createPlayerControls } from './player';
 import { createStudyScene } from './scene';
 import './style.css';
 
@@ -14,8 +15,8 @@ const views = {
 } as const;
 type View = keyof typeof views;
 const requestedView = new URLSearchParams(location.search).get('view');
-const initialView: View = requestedView && requestedView in views ? requestedView as View : 'far';
-app.dataset.view = initialView;
+const studyMode = requestedView !== null && requestedView in views;
+app.dataset.mode = studyMode ? 'study' : 'player';
 
 try {
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
@@ -25,30 +26,51 @@ try {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.append(renderer.domElement);
 
-  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 60);
-  camera.position.copy(views[initialView].position);
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.copy(views[initialView].target);
-  controls.enableDamping = true;
-  controls.enablePan = false;
-  controls.minDistance = 2.7;
-  controls.maxDistance = 21;
-  controls.maxPolarAngle = Math.PI * 0.46;
-  controls.update();
+  const camera = new THREE.PerspectiveCamera(studyMode ? 45 : 68, 1, 0.1, 60);
+  const world = createStudyScene();
+  let updateControls: (delta: number) => void;
 
-  const scene = createStudyScene();
-  let destination: View | null = null;
-  const buttons = [...document.querySelectorAll<HTMLButtonElement>('button[data-view]')];
-  buttons.forEach((button) => {
-    const view = button.dataset.view as View;
-    button.setAttribute('aria-pressed', String(view === initialView));
-    button.addEventListener('click', () => {
-      destination = view;
-      app.dataset.view = view;
-      buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+  if (studyMode) {
+    const initialView = requestedView as View;
+    app.dataset.view = initialView;
+    camera.position.copy(views[initialView].position);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.copy(views[initialView].target);
+    controls.enableDamping = true;
+    controls.enablePan = false;
+    controls.minDistance = 2.7;
+    controls.maxDistance = 21;
+    controls.maxPolarAngle = Math.PI * 0.46;
+    controls.update();
+
+    let destination: View | null = null;
+    const buttons = [...document.querySelectorAll<HTMLButtonElement>('button[data-view]')];
+    buttons.forEach((button) => {
+      const view = button.dataset.view as View;
+      button.setAttribute('aria-pressed', String(view === initialView));
+      button.addEventListener('click', () => {
+        destination = view;
+        app.dataset.view = view;
+        buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      });
     });
-  });
-  controls.addEventListener('start', () => { destination = null; });
+    controls.addEventListener('start', () => { destination = null; });
+    updateControls = () => {
+      if (destination) {
+        const next = views[destination];
+        camera.position.lerp(next.position, 0.075);
+        controls.target.lerp(next.target, 0.075);
+        if (camera.position.distanceTo(next.position) < 0.02 && controls.target.distanceTo(next.target) < 0.02) {
+          camera.position.copy(next.position);
+          controls.target.copy(next.target);
+          destination = null;
+        }
+      }
+      controls.update();
+    };
+  } else {
+    updateControls = createPlayerControls(camera, renderer.domElement, world.colliders, world.exhibit);
+  }
 
   function resize(): void {
     const width = container.clientWidth;
@@ -60,19 +82,12 @@ try {
   window.addEventListener('resize', resize);
   resize();
 
-  renderer.setAnimationLoop(() => {
-    if (destination) {
-      const next = views[destination];
-      camera.position.lerp(next.position, 0.075);
-      controls.target.lerp(next.target, 0.075);
-      if (camera.position.distanceTo(next.position) < 0.02 && controls.target.distanceTo(next.target) < 0.02) {
-        camera.position.copy(next.position);
-        controls.target.copy(next.target);
-        destination = null;
-      }
-    }
-    controls.update();
-    renderer.render(scene, camera);
+  let previousTime = performance.now();
+  renderer.setAnimationLoop((time) => {
+    const delta = (time - previousTime) / 1000;
+    previousTime = time;
+    updateControls(delta);
+    renderer.render(world.scene, camera);
   });
 } catch (cause) {
   error.hidden = false;

@@ -1,8 +1,8 @@
 # Museo de viajes en el tiempo
 
-Proyecto de videojuego 3D en primera persona para navegador. Está implementada la **etapa 1: motor visual** como una escena de prueba en Three.js. El recorrido jugable comienza en etapas posteriores.
+Proyecto de videojuego 3D en primera persona para navegador. Están implementadas la **etapa 1: motor visual** y la **etapa 2: movimiento** en una escena de prueba en Three.js. El museo y los viajes temporales llegan en etapas posteriores.
 
-## Ejecutar el estudio visual
+## Ejecutar el prototipo
 
 Requiere Node.js 20.19 o posterior y npm.
 
@@ -11,11 +11,14 @@ npm install
 npm run dev
 ```
 
-Abrir la dirección local que muestra Vite. Los botones **Lejos**, **Medio** y **Cerca** cambian la distancia de inspección; también se puede orbitar con el mouse y acercar con la rueda. `npm run typecheck` revisa tipos y `npm run build` genera la versión estática en `dist/`.
+Abrir la dirección local que muestra Vite y hacer clic en **Entrar al recorrido**. Usar **WASD** para caminar, el **mouse** para mirar y **E** para inspeccionar el casco cuando aparezca la indicación. **Escape** pausa o cierra la ficha; hacer clic en **Volver al recorrido** recupera el control del mouse.
 
-La escena contiene una fachada ficticia, vegetación y un casco de gladiador de prueba. Todavía no hay movimiento en primera persona, fotografía, salas ni viajes temporales.
+Para revisar el estilo de la etapa 1 sin caminar, abrir `?view=far`, `?view=mid` o `?view=near` al final de la dirección local. En ese modo se puede orbitar con el mouse, acercar con la rueda y cambiar entre las tres vistas. `npm run typecheck` revisa tipos y `npm run build` genera la versión estática en `dist/`.
+
+La escena contiene una fachada ficticia, vegetación y un casco de gladiador de prueba. Todavía no hay fotografía, salas completas ni viajes temporales.
 
 [Revisión visual y capturas de la etapa 1](docs/Revision_etapa_1.md).
+[Revisión del recorrido de la etapa 2](docs/Revision_etapa_2.md).
 
 ## Documentación
 
