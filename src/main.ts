@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { areaCatalog } from './catalog';
 import { createMuseumScene } from './museum';
 import { createPamphlet } from './pamphlet';
 import { createPlayerControls } from './player';
-import { createPhotoDemo } from './photoDemo';
 import { createStudyScene } from './scene';
 import './style.css';
 
@@ -19,11 +19,10 @@ const views = {
 type View = keyof typeof views;
 const requestedView = new URLSearchParams(location.search).get('view');
 const studyMode = requestedView !== null && requestedView in views;
-const photoTestMode = !studyMode && new URLSearchParams(location.search).has('photo-test');
-app.dataset.mode = studyMode ? 'study' : photoTestMode ? 'photo' : 'player';
+app.dataset.mode = studyMode ? 'study' : 'player';
 
 try {
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: photoTestMode });
+  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -34,13 +33,8 @@ try {
   let scene: THREE.Scene;
   let updateControls: (delta: number) => void;
   let updateScene: (delta: number) => void = () => {};
-  let afterRender: () => void = () => {};
 
-  if (photoTestMode) {
-    const demo = createPhotoDemo(renderer, camera, app, (next) => { scene = next; });
-    updateControls = demo.update;
-    afterRender = demo.afterRender;
-  } else if (studyMode) {
+  if (studyMode) {
     const world = createStudyScene();
     scene = world.scene;
     const initialView = requestedView as View;
@@ -91,6 +85,8 @@ try {
     let hasPamphlet = false;
     let hasSeenMap = false;
     let enteredHall = false;
+    let enteredGallery = false;
+    const visitedRooms = new Set<string>();
     let toastTimer = 0;
     const toGuard = new THREE.Vector3();
 
@@ -129,14 +125,31 @@ try {
         }
       },
       onPositionChange: (position) => {
-        if (position.y < -4.8 && position.y > -21.1 && Math.abs(position.x) < 8.1) {
+        const room = world.roomAt(position);
+        if (room) {
+          app.dataset.location = 'room';
+          app.dataset.room = room.id;
+          if (!visitedRooms.has(room.id)) {
+            visitedRooms.add(room.id);
+            showToast(`${String(room.number).padStart(2, '0')} · ${areaCatalog[room.id].name} — sala en preparación.`);
+          }
+        } else if (position.y < -21.1 && position.y > -43.6 && Math.abs(position.x) < 8.3) {
+          app.dataset.location = 'gallery';
+          delete app.dataset.room;
+          if (!enteredGallery) {
+            enteredGallery = true;
+            showToast('Galerías 01—10. Todas las salas están abiertas y en preparación.');
+          }
+        } else if (position.y < -4.8 && position.y > -21.1 && Math.abs(position.x) < 8.1) {
           app.dataset.location = 'hall';
+          delete app.dataset.room;
           if (!enteredHall) {
             enteredHall = true;
-            showToast(hasSeenMap ? 'La luz cálida señala el futuro sector de Roma.' : 'Entraste al hall. Abrí el panfleto con M.');
+            showToast(hasSeenMap ? 'La luz cálida señala la sala de Roma.' : 'Entraste al hall. Abrí el panfleto con M.');
           }
         } else {
           app.dataset.location = 'exterior';
+          delete app.dataset.room;
         }
       },
     }).update;
@@ -159,7 +172,6 @@ try {
     updateControls(delta);
     updateScene(delta);
     renderer.render(scene, camera);
-    afterRender();
   });
 } catch (cause) {
   error.hidden = false;

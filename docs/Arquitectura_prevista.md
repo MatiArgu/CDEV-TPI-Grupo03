@@ -1,10 +1,10 @@
 # Arquitectura prevista del MVP
 
-Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md), el [inicio en el museo](Revision_etapa_3.md) y una [prueba aislada de la Polaroid](Revision_etapa_4.md). El catálogo y `areaOrder` ya alimentan el panfleto y el número del futuro sector romano; la integración de la fotografía en las salas, los mundos históricos y el progreso siguen previstos.
+Este documento fija las decisiones de implementación que atraviesan varias etapas del [plan de desarrollo](Plan_de_desarrollo.md). La [especificación maestra](Proyecto_general.md) conserva el detalle de jugabilidad y arte. Ya existen el [estudio visual](Revision_etapa_1.md), el [movimiento](Revision_etapa_2.md), el [inicio en el museo](Revision_etapa_3.md), una [prueba aislada de la Polaroid](Revision_etapa_4.md) y las [diez salas WIP](Revision_etapa_5.md). El laboratorio temporal de fotografía ya fue retirado. El catálogo y `areaOrder` alimentan la ubicación física, la señalización y el panfleto; la integración de la fotografía en las salas, los mundos históricos y el progreso siguen previstos.
 
 ## Catálogo y orden de las áreas
 
-Cada época tiene un `id` estable, independiente de su número y de la ubicación de su futura sala. El catálogo guarda nombre y artefacto; el contenido jugable se añadirá cuando se implemente la época. La lista `areaOrder` es la única fuente del orden.
+Cada época tiene un `id` estable, independiente de su número y de la ubicación de su sala. El catálogo guarda nombre, artefacto previsto, color y disponibilidad. En la etapa 5 todas tienen disponibilidad `wip`; el contenido jugable se añadirá cuando se implemente cada época. La lista `areaOrder` es la única fuente del orden.
 
 | ID estable | Época | Artefacto | MVP |
 | --- | --- | --- | --- |
@@ -23,8 +23,8 @@ Un área pasa a ser jugable cuando aporta una exhibición con artefacto fotograf
 
 ## Salas, estados y progresión
 
-- En la etapa 3 solo existe el hall y un umbral cerrado hacia el futuro sector romano. En la etapa 5, el edificio ofrecerá diez módulos físicos fijos. Cada módulo recibirá el contenido de la época situada en esa posición de `areaOrder`. La geometría de una exhibición se definirá respecto del origen local de su módulo; moverla no requerirá editar coordenadas globales.
-- Número de sala, señalización, posición en el panfleto y luz de área se calculan a partir del índice en `areaOrder`. Por ejemplo, mover `egipto` al octavo lugar debe bastar para actualizar los cuatro aspectos.
+- En la etapa 3 solo existía el hall y un umbral cerrado hacia el futuro sector romano. La etapa 5 agrega un corredor con cinco pares de salas abiertas. Cada módulo recibe el ID situado en esa posición de `areaOrder`; su grupo local permite incorporar una exhibición sin fijarla a coordenadas globales.
+- Número de sala, señalización, posición en el panfleto y ubicación de la luz romana se calculan a partir de `areaOrder`. Mover `egipto` al octavo lugar actualizó su sala, letrero y panfleto en la prueba de la etapa 5. La luz de Egipto corresponde a su futura exhibición.
 - **Disponibilidad** (`WIP` o jugable) y **progreso** (`locked`, `active`, `completed`) son conceptos distintos. Una sala WIP se puede visitar, pero no contiene viaje temporal y nunca se vuelve `active`.
 - Solo una época jugable incompleta está activa a la vez: la primera de `areaOrder` que no esté completada. Las WIP se saltan. Si no queda ninguna jugable incompleta, no hay área activa y se muestra la conclusión correspondiente al contenido disponible.
 - Una foto válida inicia el viaje, pero el área solo se marca como completada al interactuar con el artefacto en el mundo histórico y regresar. La foto y la representación del artefacto se añaden juntas al panfleto en ese momento.

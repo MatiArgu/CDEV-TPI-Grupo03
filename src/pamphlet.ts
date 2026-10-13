@@ -8,9 +8,12 @@ export function createPamphlet(): void {
     for (const offset of [0, 1]) {
       const id = areaOrder[row * 2 + offset];
       const node = document.createElement('div');
-      node.className = `map-room${id === 'roma' ? ' map-room-rome' : ''}`;
+      node.className = 'map-room';
+      node.dataset.areaId = id;
+      node.dataset.availability = areaCatalog[id].availability;
+      node.style.setProperty('--area-accent', areaCatalog[id].accent);
       node.textContent = String(areaNumber(id)).padStart(2, '0');
-      node.setAttribute('aria-label', `${areaNumber(id)}: ${areaCatalog[id].name}`);
+      node.setAttribute('aria-label', `${areaNumber(id)}: ${areaCatalog[id].name}, en preparación`);
       map.append(node);
       if (offset === 0) {
         const corridor = document.createElement('span');
@@ -22,12 +25,18 @@ export function createPamphlet(): void {
 
   areaOrder.forEach((id) => {
     const item = document.createElement('li');
-    if (id === 'roma') item.className = 'pamphlet-rome';
+    item.dataset.areaId = id;
+    item.dataset.availability = areaCatalog[id].availability;
+    item.style.setProperty('--area-accent', areaCatalog[id].accent);
     const number = document.createElement('span');
     number.textContent = String(areaNumber(id)).padStart(2, '0');
     const name = document.createElement('span');
     name.textContent = areaCatalog[id].name;
-    item.append(number, name);
+    const status = document.createElement('span');
+    status.className = 'pamphlet-status';
+    status.textContent = 'WIP';
+    status.setAttribute('aria-label', 'En preparación');
+    item.append(number, name, status);
     index.append(item);
   });
 }
