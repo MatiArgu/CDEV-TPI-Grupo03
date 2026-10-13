@@ -23,18 +23,18 @@ export type MuseumWorld = {
   update: (delta: number, visitor?: THREE.Camera) => void;
 };
 
-function sign(parent: THREE.Object3D, label: string, position: [number, number, number], width: number): THREE.Mesh {
+function sign(parent: THREE.Object3D, label: string, position: [number, number, number], width: number, dark = false): THREE.Mesh {
   const canvas = document.createElement('canvas');
   canvas.width = 768;
   canvas.height = 164;
   const context = canvas.getContext('2d')!;
-  context.fillStyle = '#f0f2e5';
+  context.fillStyle = dark ? '#252d29' : '#f0f2e5';
   context.fillRect(0, 0, canvas.width, canvas.height);
   context.strokeStyle = '#b59b70';
   context.lineWidth = 2;
   context.strokeRect(9, 9, 750, 146);
   context.strokeRect(15, 15, 738, 134);
-  context.fillStyle = '#354044';
+  context.fillStyle = dark ? '#d9cba9' : '#354044';
   context.font = '42px Georgia, serif';
   context.textAlign = 'center';
   context.textBaseline = 'middle';
@@ -272,7 +272,8 @@ export function createMuseumScene(): MuseumWorld {
   const decorationColliders: Collider[] = [];
   scene.background = new THREE.Color(0xc5e1dc);
   scene.fog = new THREE.Fog(0xc5e1dc, 48, 105);
-  scene.add(new THREE.HemisphereLight(0xfff7df, 0x819e99, 1.65));
+  const daylight = new THREE.HemisphereLight(0xfff7df, 0x819e99, 1.65);
+  scene.add(daylight);
   const sun = new THREE.DirectionalLight(0xffe7c8, 1.6);
   sun.position.set(-9, 16, 12);
   sun.castShadow = true;
@@ -283,6 +284,15 @@ export function createMuseumScene(): MuseumWorld {
   sun.shadow.camera.bottom = -25;
   sun.shadow.normalBias = 0.035;
   scene.add(sun);
+  // The entrance is a gradual lighting transition into the curated interior.
+  // Apply before rendering so photographs and paused frames use the same lighting.
+  const eye = new THREE.Vector3();
+  scene.onBeforeRender = (_renderer, _scene, camera) => {
+    camera.getWorldPosition(eye);
+    const indoors = THREE.MathUtils.smoothstep(-eye.z, 3.5, 8);
+    daylight.intensity = THREE.MathUtils.lerp(1.65, 0.25, indoors);
+    sun.intensity = THREE.MathUtils.lerp(1.6, 0.1, indoors);
+  };
 
   const galleryBack = galleryLayout.frontZ - galleryLayout.step * 5;
   const groundSize = Math.max(110, 2 * (Math.abs(galleryBack) + 10));
@@ -320,8 +330,8 @@ export function createMuseumScene(): MuseumWorld {
   const entranceGate = turnstiles(scene);
   const attendant = createGuard(scene);
 
-  createHall(scene, decorationColliders, marble);
-  sign(scene, 'GALERÍA DEL TIEMPO', [0, 4.7, -21.08], 4.4);
+  createHall(scene, decorationColliders);
+  sign(scene, 'GALERÍA DEL TIEMPO', [0, 4.7, -21.08], 4.4, true);
   const gallery = createGallery(scene);
   const romeExhibit = installRomeExhibit(gallery.rooms.find((room) => room.id === 'roma')!);
   const exhibits = new Map<AreaId, { artifact: THREE.Object3D; photoSolids: THREE.Object3D[] }>([
