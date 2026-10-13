@@ -340,5 +340,227 @@
     "textures": [
       "assets/kenney/train-kit/Textures/colormap.png"
     ]
+  },
+  {
+    "id": "mini-dungeon/key",
+    "file": "assets/kenney/mini-dungeon/key.glb",
+    "source": "3D assets/Mini Dungeon/Models/GLB format/key.glb",
+    "pack": "Mini Dungeon",
+    "license": "CC0-1.0",
+    "bytes": 16812,
+    "sha256": "b13f87b22e157761f48016f0c905adc17f54f9bbc445e536b4857e3bc118894f",
+    "textures": [
+      "assets/kenney/mini-dungeon/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-dungeon/chest",
+    "file": "assets/kenney/mini-dungeon/chest.glb",
+    "source": "3D assets/Mini Dungeon/Models/GLB format/chest.glb",
+    "pack": "Mini Dungeon",
+    "license": "CC0-1.0",
+    "bytes": 34048,
+    "sha256": "64cc6c44786a0833bbe53c694cbad9f10d4fdd9e99d4b5ec03fcb3b8b5dd71e0",
+    "textures": [
+      "assets/kenney/mini-dungeon/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-dungeon/shield-rectangle",
+    "file": "assets/kenney/mini-dungeon/shield-rectangle.glb",
+    "source": "3D assets/Mini Dungeon/Models/GLB format/shield-rectangle.glb",
+    "pack": "Mini Dungeon",
+    "license": "CC0-1.0",
+    "bytes": 13196,
+    "sha256": "16e3d0131666e7ad9bdad313253ff5dcc70cddfb86c28864b3b965ee5c65ac3b",
+    "textures": [
+      "assets/kenney/mini-dungeon/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-dungeon/weapon-sword",
+    "file": "assets/kenney/mini-dungeon/weapon-sword.glb",
+    "source": "3D assets/Mini Dungeon/Models/GLB format/weapon-sword.glb",
+    "pack": "Mini Dungeon",
+    "license": "CC0-1.0",
+    "bytes": 9284,
+    "sha256": "8e69eb27977f8c84a9b7cd423cd5830eddcf0d07ac1d7fed1969931387015b28",
+    "textures": [
+      "assets/kenney/mini-dungeon/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-dungeon/table",
+    "file": "assets/kenney/mini-dungeon/table.glb",
+    "source": "3D assets/Mini Dungeon/Models/GLB format/table.glb",
+    "pack": "Mini Dungeon",
+    "license": "CC0-1.0",
+    "bytes": 15312,
+    "sha256": "533dcb6447d90ff4dd8137e77e8d51e16162cc773f1b9ce49e60ab5e58bd3e16",
+    "textures": [
+      "assets/kenney/mini-dungeon/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-dungeon/character-human",
+    "file": "assets/kenney/mini-dungeon/character-human.glb",
+    "source": "3D assets/Mini Dungeon/Models/GLB format/character-human.glb",
+    "pack": "Mini Dungeon",
+    "license": "CC0-1.0",
+    "bytes": 218072,
+    "sha256": "6a149b22f52f5ea6b2983dd38cb164b112be66bad5a51d640d089aafd2647a7b",
+    "textures": [
+      "assets/kenney/mini-dungeon/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "castle-kit/wall",
+    "file": "assets/kenney/castle-kit/wall.glb",
+    "source": "3D assets/Castle Kit/Models/GLB format/wall.glb",
+    "pack": "Castle Kit",
+    "license": "CC0-1.0",
+    "bytes": 16552,
+    "sha256": "b2ea00acbf4ba91ff0d4b8b942edf9fa12d821abd0b2c945c57a2b9b3153cfe3",
+    "textures": [
+      "assets/kenney/castle-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "castle-kit/tower-square-base",
+    "file": "assets/kenney/castle-kit/tower-square-base.glb",
+    "source": "3D assets/Castle Kit/Models/GLB format/tower-square-base.glb",
+    "pack": "Castle Kit",
+    "license": "CC0-1.0",
+    "bytes": 4456,
+    "sha256": "996887e98957eeea2ba7b5d14f0d17877c91e4e99e1c5b8ee57d87b7f7c9d5e8",
+    "textures": [
+      "assets/kenney/castle-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "castle-kit/tower-square-top-roof",
+    "file": "assets/kenney/castle-kit/tower-square-top-roof.glb",
+    "source": "3D assets/Castle Kit/Models/GLB format/tower-square-top-roof.glb",
+    "pack": "Castle Kit",
+    "license": "CC0-1.0",
+    "bytes": 11256,
+    "sha256": "5516fb45c3158e03773e15e83f5fc8b9bafbbcb3f35fc8e1e06e823cdb01e3bb",
+    "textures": [
+      "assets/kenney/castle-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "castle-kit/gate",
+    "file": "assets/kenney/castle-kit/gate.glb",
+    "source": "3D assets/Castle Kit/Models/GLB format/gate.glb",
+    "pack": "Castle Kit",
+    "license": "CC0-1.0",
+    "bytes": 13880,
+    "sha256": "fdc3d5b07f619dcacbf2af36024dc9a356696e541f6ce409a5305be782665ec9",
+    "textures": [
+      "assets/kenney/castle-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "castle-kit/flag-banner-long",
+    "file": "assets/kenney/castle-kit/flag-banner-long.glb",
+    "source": "3D assets/Castle Kit/Models/GLB format/flag-banner-long.glb",
+    "pack": "Castle Kit",
+    "license": "CC0-1.0",
+    "bytes": 6660,
+    "sha256": "e6a4433f5770b9fc31bf67d72424a877d5c010486d5b7373ce7af900566827e4",
+    "textures": [
+      "assets/kenney/castle-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "castle-kit/siege-catapult",
+    "file": "assets/kenney/castle-kit/siege-catapult.glb",
+    "source": "3D assets/Castle Kit/Models/GLB format/siege-catapult.glb",
+    "pack": "Castle Kit",
+    "license": "CC0-1.0",
+    "bytes": 86164,
+    "sha256": "35a7484ff74630228e474fae885bdc9176c30e0af0d94def80307bdbc87b7583",
+    "textures": [
+      "assets/kenney/castle-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "nature-kit/tree_palmDetailedTall",
+    "file": "assets/kenney/nature-kit/tree_palmDetailedTall.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/tree_palmDetailedTall.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 28204,
+    "sha256": "2cbea0f9621cde884c63a7b4ad787bda1d051fa27ef3c66b9f2b65328dc53683",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/tree_palmBend",
+    "file": "assets/kenney/nature-kit/tree_palmBend.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/tree_palmBend.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 14820,
+    "sha256": "8af9dae16ce3c03183f9457996ebdd135167199514e8f4f944ee2bd82828d5c9",
+    "textures": []
+  },
+  {
+    "id": "nature-kit/statue_obelisk",
+    "file": "assets/kenney/nature-kit/statue_obelisk.glb",
+    "source": "3D assets/Nature Kit/Models/GLTF format/statue_obelisk.glb",
+    "pack": "Nature Kit",
+    "license": "CC0-1.0",
+    "bytes": 4416,
+    "sha256": "e18013044ad6453a1850226be29f63c37d67e0002141f5f6a4d14a46bde69e00",
+    "textures": []
+  },
+  {
+    "id": "graveyard-kit/urn-round",
+    "file": "assets/kenney/graveyard-kit/urn-round.glb",
+    "source": "3D assets/Graveyard Kit/Models/GLB format/urn-round.glb",
+    "pack": "Graveyard Kit",
+    "license": "CC0-1.0",
+    "bytes": 23712,
+    "sha256": "9a80d295c1c2124435eea72166fc16d7a4fe54e538950aa320dfb63a704b5e37",
+    "textures": [
+      "assets/kenney/graveyard-kit/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-arena/trophy",
+    "file": "assets/kenney/mini-arena/trophy.glb",
+    "source": "3D assets/Mini Arena/Models/GLB format/trophy.glb",
+    "pack": "Mini Arena",
+    "license": "CC0-1.0",
+    "bytes": 23768,
+    "sha256": "111dd4de2c77560ed664bd7769839aad8d82d8e9148712aa0d349875042b69da",
+    "textures": [
+      "assets/kenney/mini-arena/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-arena/weapon-rack",
+    "file": "assets/kenney/mini-arena/weapon-rack.glb",
+    "source": "3D assets/Mini Arena/Models/GLB format/weapon-rack.glb",
+    "pack": "Mini Arena",
+    "license": "CC0-1.0",
+    "bytes": 20072,
+    "sha256": "315d16126396f720152e7d7878747a8887ca3d80e78ffa5e3364aeb9cf6dba9b",
+    "textures": [
+      "assets/kenney/mini-arena/Textures/colormap.png"
+    ]
+  },
+  {
+    "id": "mini-arena/weapon-sword",
+    "file": "assets/kenney/mini-arena/weapon-sword.glb",
+    "source": "3D assets/Mini Arena/Models/GLB format/weapon-sword.glb",
+    "pack": "Mini Arena",
+    "license": "CC0-1.0",
+    "bytes": 9360,
+    "sha256": "d553970787ebdb41032141e166dc2a2e5874772df6588d53c2a95a246797414f",
+    "textures": [
+      "assets/kenney/mini-arena/Textures/colormap.png"
+    ]
   }
 ]

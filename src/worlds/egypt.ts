@@ -108,7 +108,8 @@ export function installEgyptExhibit(room: GalleryRoom) {
     if (side > 0) object.position.y = 0.82;
     addSolid(object);
     addSolid(plinth(root, x, 3.15, 1.3, 0.64));
-    const pot = placeModel('pot', root, [x, 0.8, 3.15], { height: 0.7, width: 0.66, color: side < 0 ? 0xb4845c : 0x639b97 }); addSolid(pot);
+    const relic = placeModel(side < 0 ? 'obelisk' : 'urn', root, [x, 0.8, 3.15], { height: side < 0 ? 1.7 : 0.92, width: side < 0 ? 0.66 : 0.82, color: side < 0 ? 0xc6b285 : 0x639b97 }); addSolid(relic);
+    exhibitLabel(root, side < 0 ? 'OBELISCO VOTIVO' : 'VASO CEREMONIAL', 'PIEDRA Y CERÁMICA', [x, 0.64, 3.82], 1.05);
     const panel = mesh(new THREE.PlaneGeometry(2.4, 3.2), relief, [side * (room.width / 2 - 0.29), 2.78, 0], root);
     panel.rotation.y = -side * Math.PI / 2; panel.castShadow = false; photoSolids.push(panel);
     lights.push(exhibitSpot(root, x, -3.45, 5.17, 13, 2.0), exhibitSpot(root, x, 3.15, 5.17, 9, 2.0));
@@ -141,8 +142,9 @@ export function createEgyptWorld(): HistoricalWorld {
     solid(7.8, 8.1, 3, side * 5.45, -7);
     box(8.1, 0.42, 3.3, dark, [side * 5.45, 8.25, -7], scene);
     box(7.85, 0.16, 3.08, teal, [side * 5.45, 7.68, -7], scene);
-    const obelisk = mesh(new THREE.CylinderGeometry(0.42, 0.68, 7, 4), stone, [side * 8.7, 3.65, 7.5], scene); obelisk.rotation.y = Math.PI / 4; colliders.push(modelCollider(obelisk));
-    mesh(new THREE.ConeGeometry(0.59, 1.0, 4), dark, [side * 8.7, 7.64, 7.5], scene).rotation.y = Math.PI / 4;
+    const obelisk = placeModel('obelisk', scene, [side * 8.7, 0.17, 7.5], { height: 7.1, width: 1.4, color: 0xc9b88f }); colliders.push(modelCollider(obelisk));
+    for (const z of [10, -4]) placeModel(side < 0 ? 'palm' : 'bentPalm', scene, [side * 14.2, 0, z], { height: 7.7, rotation: side * 0.7 + z });
+    for (const z of [-13, -22]) { const vessel = placeModel('urn', scene, [side * 7.3, 0.17, z], { height: 1.15, width: 0.92, color: 0xae895c }); colliders.push(modelCollider(vessel)); }
     const statue = pharaoh(scene, side * 6.5, 1.5, 4.7); colliders.push(modelCollider(statue));
     for (const z of [8, -1, -12, -18, -24]) {
       const column = egyptianColumn(scene, side * 4.8, z, z < -8 ? 6.85 : 4.8); colliders.push(modelCollider(column));

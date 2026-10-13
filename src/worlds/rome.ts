@@ -44,10 +44,16 @@ export function installRomeExhibit(room: GalleryRoom): { artifact: THREE.Object3
     const relicBase = plinth(root, x, relicZ, 1.12, 0.55);
     const relic = side < 0
       ? amphora(root, [x, 0.7, relicZ])
-      : placeModel('brokenColumn', root, [x, 0.7, relicZ], { height: 1.35, width: 0.87, color: 0xc4bba4 });
+      : placeModel('trophy', root, [x, 0.7, relicZ], { height: 1.18, width: 0.78, color: 0xbca16c });
     for (const object of [statueBase, bust, relicBase, relic]) {
       photoSolids.push(object);
       colliders.push(modelCollider(object));
+    }
+    if (side > 0) {
+      const armory = plinth(root, x, -0.65, 1.15, 0.55);
+      const blade = placeModel('gladius', root, [x, 0.73, -0.65], { height: 1.25 });
+      photoSolids.push(armory, blade); colliders.push(modelCollider(armory));
+      exhibitLabel(root, 'GLADIUS', 'ARMA DE EXHIBICIÓN', [x, 0.61, -0.06], 1);
     }
     lights.push(exhibitSpot(root, x, statueZ, 5.17, 10, 1.9));
     lights.push(exhibitSpot(root, x, relicZ, 5.17, 8, 1.8));
@@ -57,7 +63,7 @@ export function installRomeExhibit(room: GalleryRoom): { artifact: THREE.Object3
       for (const edge of [-1.45, 1.45]) box(0.1, 2.85, 0.035, bronze, [side * (halfWidth - 0.25), 1.65, z + edge], root);
     }
     box(0.08, 0.13, depth - 0.5, stone, [side * (halfWidth - 0.21), 4.87, 0], root);
-    exhibitLabel(root, side < 0 ? 'ÁNFORA' : 'PIEDRA Y MEMORIA', 'COLECCIÓN ROMANA', [x, 0.51, relicZ + 0.57], 0.85);
+    exhibitLabel(root, side < 0 ? 'ÁNFORA' : 'TROFEO DE LA ARENA', 'COLECCIÓN ROMANA', [x, 0.51, relicZ + 0.57], 0.85);
     exhibitLabel(root, 'FIGURA ROMANA', 'ESCULTURA · ESTUDIO', [x, 0.61, statueZ + 0.55], 0.85);
   }
   for (const z of [-columnZ, -0.45, columnZ]) {
@@ -266,6 +272,9 @@ export function createRomeWorld(): HistoricalWorld {
     const arm = figure.getObjectByName(side < 0 ? 'arm-left' : 'arm-right');
     if (arm) arm.rotation.z = side * 0.65;
     placeModel('spear', scene, [side * 4.2, 0.68, -18.9], { height: 2.35 });
+    placeModel('weaponRack', scene, [side * 4.6, 0.68, -21], { height: 1.55, width: 1.65, rotation: -side * 0.4 });
+    box(1.4, 0.7, 1.4, trim, [side * 3.6, 0.33, -15.2], scene);
+    placeModel('trophy', scene, [side * 3.6, 0.68, -15.2], { height: 1.2, color: 0xba9f68 });
   }
 
   const guide = createRouteHelp(scene, [5, 1, -3, -7, -11, -15].map((z) => [0, 0.36, z]), foam);

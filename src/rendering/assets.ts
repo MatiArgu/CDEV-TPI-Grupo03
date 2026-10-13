@@ -5,6 +5,26 @@ import type { Collider } from '../game/collision';
 import { materials as mat, outline, toon } from './visual';
 
 const sources = {
+  key: 'mini-dungeon/key',
+  chest: 'mini-dungeon/chest',
+  shield: 'mini-dungeon/shield-rectangle',
+  medievalSword: 'mini-dungeon/weapon-sword',
+  medievalTable: 'mini-dungeon/table',
+  knight: 'mini-dungeon/character-human',
+  castleWall: 'castle-kit/wall',
+  castleTower: 'castle-kit/tower-square-base',
+  castleRoof: 'castle-kit/tower-square-top-roof',
+  castleGate: 'castle-kit/gate',
+  castleBanner: 'castle-kit/flag-banner-long',
+  catapult: 'castle-kit/siege-catapult',
+  palm: 'nature-kit/tree_palmDetailedTall',
+  bentPalm: 'nature-kit/tree_palmBend',
+  obelisk: 'nature-kit/statue_obelisk',
+  urn: 'graveyard-kit/urn-round',
+  trophy: 'mini-arena/trophy',
+  weaponRack: 'mini-arena/weapon-rack',
+  gladius: 'mini-arena/weapon-sword',
+
   oak: 'nature-kit/tree_oak',
   tree: 'nature-kit/tree_detailed',
   slenderTree: 'nature-kit/tree_thin',
@@ -81,7 +101,7 @@ export async function loadModels(): Promise<void> {
         ? object.material.map((material) => convert(material as THREE.MeshStandardMaterial))
         : convert(object.material as THREE.MeshStandardMaterial);
       object.castShadow = true;
-      object.receiveShadow = !['oak', 'tree', 'slenderTree', 'cypress', 'bush', 'smallBush', 'flowers', 'yellowFlowers', 'leaves', 'locomotive', 'passengerCar'].includes(id);
+      object.receiveShadow = !['oak', 'tree', 'slenderTree', 'cypress', 'bush', 'smallBush', 'flowers', 'yellowFlowers', 'leaves', 'palm', 'bentPalm', 'locomotive', 'passengerCar'].includes(id);
       object.userData.sharedAsset = true;
       if (['statue', 'column', 'brokenColumn', 'rowboat'].includes(id)) {
         outline(object, 0.22);
