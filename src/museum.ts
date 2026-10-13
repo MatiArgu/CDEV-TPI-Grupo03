@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { batchStaticMeshes } from './staticMeshes';
 import { modelCollider, placeModel } from './assets';
 import type { AreaId } from './catalog';
 import { courtyardPaving, createCourtyardArrival } from './courtyard';
@@ -7,7 +8,7 @@ import { createGuard } from './guard';
 import { createHall } from './hall';
 import { galleryLayout, museumLayout } from './museumLayout';
 import { installEgyptExhibit } from './egypt';
-import { addLowPolySky } from './sky';
+import { addSky } from './sky';
 import { installRomeExhibit } from './rome';
 import type { Collider } from './scene';
 import { box, hippedRoof, materials as mat, mesh, outline, palette, silhouette, toon } from './visual';
@@ -49,7 +50,7 @@ function sign(parent: THREE.Object3D, label: string, position: [number, number, 
   return panel;
 }
 
-function courtyardDetails(scene: THREE.Scene, colliders: Collider[]): void {
+function courtyardDetails(scene: THREE.Object3D, colliders: Collider[]): void {
   const grass = toon(0x9fbd91);
   const bronze = toon(0x567573);
   const glow = new THREE.MeshBasicMaterial({ color: 0xffedbf });
@@ -113,7 +114,7 @@ function courtyardDetails(scene: THREE.Scene, colliders: Collider[]): void {
   }
 }
 
-function upperFacade(scene: THREE.Scene): void {
+function upperFacade(scene: THREE.Object3D): void {
   const roof = toon(0x607b80);
   for (const side of [-1, 1]) {
     box(9.5, 2.55, 4.4, mat.cream, [side * 7.75, 6.72, -5.6], scene);
@@ -268,7 +269,7 @@ function turnstiles(parent: THREE.Object3D): { wings: THREE.Group[]; colliders: 
 export function createMuseumScene(): MuseumWorld {
   const scene = new THREE.Scene();
   const decorationColliders: Collider[] = [];
-  addLowPolySky(scene);
+  addSky(scene);
   scene.fog = new THREE.Fog(0xd9e8dd, 60, 120);
   const daylight = new THREE.HemisphereLight(0xfff7df, 0x819e99, 1.65);
   scene.add(daylight);
@@ -276,6 +277,8 @@ export function createMuseumScene(): MuseumWorld {
   sun.position.set(-9, 16, 12);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.autoUpdate = false;
+  sun.shadow.needsUpdate = true;
   sun.shadow.camera.left = -25;
   sun.shadow.camera.right = 25;
   sun.shadow.camera.top = 25;
@@ -299,9 +302,13 @@ export function createMuseumScene(): MuseumWorld {
   ground.castShadow = false;
   courtyardPaving(scene);
   pyramid(scene, -3, 8);
-  courtyardDetails(scene, decorationColliders);
+  const landscaping = new THREE.Group(); scene.add(landscaping);
+  courtyardDetails(landscaping, decorationColliders);
+  batchStaticMeshes(landscaping);
   const arrival = createCourtyardArrival(scene, decorationColliders);
-  upperFacade(scene);
+  const facade = new THREE.Group(); scene.add(facade);
+  upperFacade(facade);
+  batchStaticMeshes(facade);
 
   // The open portal shows the hall from the courtyard; the central turnstile controls entry.
   for (const side of [-1, 1]) {
@@ -374,9 +381,10 @@ export function createMuseumScene(): MuseumWorld {
       if (!door.opening && door.progress === 0) door.opening = true;
     },
     update: (delta, visitor) => {
-      if (visitor) arrival.update(delta, visitor);
+      if (visitor && arrival.update(delta, visitor)) sun.shadow.needsUpdate = true;
       attendant.update(delta);
       if (entranceOpening && entranceProgress < 1) {
+        sun.shadow.needsUpdate = true;
         entranceProgress = Math.min(1, entranceProgress + delta * 1.3);
         entranceGate.wings[0].rotation.y = entranceProgress * 1.35;
         entranceGate.wings[1].rotation.y = -entranceProgress * 1.35;

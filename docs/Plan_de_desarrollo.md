@@ -69,7 +69,7 @@ El MVP termina cuando Roma y Egipto se pueden completar de principio a fin en un
 
 **Objetivo:** demostrar que el sistema es reutilizable y cerrar una experiencia de dos épocas.
 
-**Trabajo:** exhibición del escarabajo; templo ceremonial egipcio pequeño con recorrido propio; reutilización de foto, validación, transición, ayuda y regreso. Completar audio ambiental, persistencia local, pantalla de inicio y pausa, conclusión discreta y opción de reiniciar partida.
+**Trabajo:** exhibición del escarabajo; templo ceremonial egipcio pequeño con recorrido propio; reutilización de foto, validación, transición, ayuda y regreso. Mantener el efecto de disparo sin viento ambiental continuo, persistencia local, pantalla de inicio y pausa, conclusión discreta y opción de reiniciar partida.
 
 **Aceptación:** un jugador nuevo puede completar Egipto y Roma en secuencia, ver ambas fotos y artefactos en el panfleto y recibir el cierre 2/5. Puede volver al hall por las puertas abiertas o empezar de nuevo; las otras tres salas siguen visitables sin viajes. Recargar el navegador conserva el progreso.
 

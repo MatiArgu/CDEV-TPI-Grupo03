@@ -217,3 +217,45 @@ Segunda revisión del 13 de octubre de 2026. Esta sección actualiza el estado d
 | Exhibición egipcia | [Escarabajo y sala](capturas/egipto-exhibicion.png) |
 | Viaje a Egipto | [Patio ceremonial](capturas/egipto-templo-patio.png) y [templo](capturas/egipto-templo-interior.png) |
 | Ambos viajes completados | [Panfleto con dos recuerdos](capturas/egipto-roma-dos-recuerdos.png) |
+
+
+## Fluidez, cielo suave y reorganización del hall
+
+Revisión posterior del 13 de octubre de 2026, a partir de las observaciones de uso:
+
+- Se sustituyó la cúpula facetada por un fondo de gradiente suave sin geometría visible. Las nubes low-poly continúan en patio y viajes, con una paleta cálida para Egipto.
+- Se eliminó el bucle de viento sintetizado. El menú permite silenciar el sonido puntual del disparo; explorar ya no inicia un contexto de audio ambiental.
+- Las seis columnas del hall tienen fuste más esbelto, base escalonada y capitel sencillo de piedra clara. Cada lateral contiene tres conjuntos espaciados: una escultura, un cuadro con banco orientado hacia él y una vitrina. Se retiraron las duplicaciones anteriores y se mantuvieron libres los pasillos y la distribución hacia las salas.
+- El render omite la pasada de manos cuando no hay objeto levantado y evita volver a procesar sombras en esa pasada. Las sombras estáticas se reutilizan, conservando actualizaciones para el tren y los accesos móviles. Las piezas opacas de casas, jardinería y fachada se agrupan por material; puertas y artefactos permanecen independientes.
+- Los materiales se precargan al iniciar y abrir una sala mantiene la lista de luces estable. Se redujo la densidad máxima de píxeles de 1,75 a 1,5.
+
+### Comparación de carga
+
+Misma cámara, resolución de 1280 × 800, todas las salas iluminadas y sin objetos sostenidos. Contadores de `renderer.info`, sumando las pasadas de cada fotograma, con los mapas estáticos ya generados:
+
+| Vista | Llamadas antes | Llamadas después | Reducción |
+| --- | ---: | ---: | ---: |
+| Patio hacia museo | 2709 | 1185 | 56% |
+| Hall frontal | 1972 | 806 | 59% |
+| Hall lateral | 1464 | 190 | 87% |
+| Roma | 1475 | 269 | 82% |
+
+Son contadores de trabajo de render, no una medición de FPS. Chrome usa SwiftShader en este entorno: queda pendiente medir la fluidez en una GPU real. Mientras el tren se mueve, su mapa de sombras se actualiza y el costo es superior al de estas vistas estáticas.
+
+### Capturas
+
+- [Patio y cielo con gradiente](capturas/cielo-gradiente-patio.png).
+- [Columnas y eje central del hall](capturas/hall-columnas-esbeltas.png).
+- [Distribución lateral con espacios entre objetos](capturas/hall-lateral-espaciado.png).
+
+
+### Verificación de esta revisión
+
+- `npm run typecheck`, `npm run build` y `git diff --check`: correctos. Persiste el aviso de Vite por el tamaño del bundle principal.
+- Recorrido real Egipto → Roma: fotos inválida y válida, revelado físico, pausa durante transición, bloqueo de controles, ayuda, recogida, ambos recuerdos, recarga, silencio y reinicio comprobados.
+- No se crea un contexto de audio al comenzar la exploración exterior; entrar a Egipto conserva únicamente el contexto usado por el disparo, sin agregar ambiente.
+- 296 muestras de paso libres para el radio del jugador en el hall y 35 rayos hacia los techos sin aberturas. Se verificaron seis columnas y dos vitrinas, con las colisiones en sus posiciones nuevas.
+- El portón y el tren invalidan el mapa solar mientras se mueven; al terminar la partida del tren se reutiliza el mapa. Encender todas las salas no aumenta el número de programas de shaders.
+- Se revisaron visualmente patio, hall, lateral, Roma, exhibición egipcia y patio del templo con el nuevo render. Las herramientas de inspección son temporales y no se incorporan al juego.
+
+- Compilado de producción: 31 modelos y cuatro texturas cargados; inicio jugable y modo estudio sin errores de ejecución.

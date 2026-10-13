@@ -178,6 +178,8 @@ export function createGuard(parent: THREE.Object3D): GuardModel {
     arms.push({ shoulder, elbow });
   }
 
+  // The contact shadow is the soft blob; tiny idle gestures need no dynamic sun map.
+  root.traverse((object) => { object.castShadow = false; });
   let elapsed = 0;
   let handoff = -1;
   let delivered = false;

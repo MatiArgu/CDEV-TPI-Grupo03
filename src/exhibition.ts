@@ -38,6 +38,8 @@ export function exhibitSpot(parent: THREE.Object3D, x: number, z: number, height
   light.castShadow = shadows;
   if (shadows) {
     light.shadow.mapSize.set(512, 512);
+    light.shadow.autoUpdate = false;
+    light.shadow.needsUpdate = true;
     light.shadow.camera.near = 0.15;
     light.shadow.normalBias = 0.025;
   }

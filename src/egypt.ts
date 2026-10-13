@@ -5,7 +5,7 @@ import type { GalleryRoom } from './gallery';
 import { createRouteHelp } from './help';
 import { disposeHistoricalScene, type HistoricalWorld } from './history';
 import type { Collider } from './scene';
-import { addLowPolySky } from './sky';
+import { addSky } from './sky';
 import { box, mesh, outline, toon } from './visual';
 
 export function createScarab(parent: THREE.Object3D, position: [number, number, number], scale = 1): THREE.Group {
@@ -121,10 +121,11 @@ export function installEgyptExhibit(room: GalleryRoom) {
 }
 
 export function createEgyptWorld(): HistoricalWorld {
-  const scene = new THREE.Scene(); addLowPolySky(scene, true);
+  const scene = new THREE.Scene(); addSky(scene, true);
   scene.fog = new THREE.Fog(0xe7d3ae, 42, 95);
   const hemi = new THREE.HemisphereLight(0xffecd1, 0xb4926c, 1.25); scene.add(hemi);
   const sun = new THREE.DirectionalLight(0xffe0ae, 1.35); sun.position.set(-14, 25, 12); sun.castShadow = true;
+  sun.shadow.autoUpdate = false; sun.shadow.needsUpdate = true;
   sun.shadow.mapSize.set(1024, 1024); sun.shadow.camera.left = -28; sun.shadow.camera.right = 28; sun.shadow.camera.top = 34; sun.shadow.camera.bottom = -34; sun.shadow.normalBias = 0.06; sun.shadow.bias = -0.0005; scene.add(sun);
   const eye = new THREE.Vector3();
   scene.onBeforeRender = (_renderer, _scene, camera) => { camera.getWorldPosition(eye); hemi.intensity = THREE.MathUtils.lerp(1.25, 0.48, THREE.MathUtils.smoothstep(-eye.z, 5, 11)); };
