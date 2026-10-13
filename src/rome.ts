@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { modelCollider, placeModel } from './assets';
 import type { AreaId } from './catalog';
-import type { GalleryRoom } from './gallery';
+import { galleryLayout, type GalleryRoom } from './gallery';
+import { exhibition, exhibitSpot, plinth } from './exhibition';
 import { createRouteHelp } from './help';
 import { createRomanHelmet as helmet } from './helmet';
 import type { Collider } from './scene';
@@ -9,52 +10,82 @@ import { box, inkStroke, materials as mat, mesh, outline, palette, toon } from '
 
 export function installRomeExhibit(room: GalleryRoom): { artifact: THREE.Object3D; photoSolids: THREE.Object3D[]; colliders: Collider[] } {
   const root = room.root;
+  const halfWidth = galleryLayout.wingX - galleryLayout.innerX;
+  const depth = galleryLayout.step;
+  const statueZ = -depth * 0.23;
+  const relicZ = depth * 0.16;
+  const columnZ = depth / 2 - 1.7;
   const photoSolids: THREE.Object3D[] = [];
   const colliders: Collider[] = [];
-  const base = box(1.7, 0.78, 1.5, mat.sand, [0, 0.52, -0.45], root);
-  outline(base, 0.65);
-  const top = box(1.9, 0.14, 1.67, mat.stone, [0, 0.98, -0.45], root);
-  outline(top, 0.7);
-  const artifact = helmet(root, [0, 1.48, -0.45], { gold: mat.gold, dark: mat.darkGold, coral: mat.coral, ink: mat.ink });
-  const rug = toon(0xb6785e);
-  box(2.5, 0.025, 7.2, rug, [0, 0.15, 1.95], root).castShadow = false;
-  for (const x of [-1.13, 1.13]) box(0.035, 0.005, 7.1, mat.sand, [x, 0.167, 1.95], root).castShadow = false;
+  const dark = toon(exhibition.plinth);
+  const bronze = toon(exhibition.bronze);
+  const stone = toon(exhibition.stone);
+  const base = box(1.05, 0.78, 0.92, dark, [0, 0.56, -0.45], root);
+  const foot = box(1.25, 0.14, 1.12, dark, [0, 0.24, -0.45], root);
+  const top = box(1.2, 0.12, 1.08, bronze, [0, 1.01, -0.45], root);
+  outline(base, 0.35);
+  box(1.1, 0.035, 0.98, dark, [0, 1.09, -0.45], root);
+  mesh(new THREE.CylinderGeometry(0.055, 0.075, 0.38, 10), dark, [0, 1.3, -0.45], root);
+  const artifact = helmet(root, [0, 1.44, -0.45], { gold: toon(0x9e8c68), dark: bronze, coral: toon(0x935b46), ink: mat.ink });
+  artifact.scale.setScalar(0.55);
+  // Warm focal light and quieter lateral lighting share the door's flicker/completion lifecycle.
+  const lights = [exhibitSpot(root, 0, -0.45, 5.17, 23, 2.25, true, true)];
   for (const side of [-1, 1]) {
-    const x = side * 2.42;
-    const column = placeModel('column', root, [x, 0.15, -3.4], { height: 2.7, width: 0.9, depth: 0.9, color: 0xe5d4b7 });
-    const bust = placeModel('statue', root, [x, 0.15, -1.25], { height: 1.65, width: 0.85, color: 0xdad3bd, rotation: -side * 0.32 });
+    const x = side * (halfWidth - 1.05);
+    for (const z of [-columnZ, columnZ]) {
+      const column = placeModel('column', root, [x, 0.17, z], { height: 4.95, width: 0.78, depth: 0.78, color: 0xaaa28b });
+      photoSolids.push(column);
+      colliders.push(modelCollider(column));
+    }
+    const statueBase = plinth(root, x, statueZ, 1.08, 0.7);
+    const bust = placeModel('statue', root, [x, 0.85, statueZ], { height: 1.85, width: 0.85, color: 0xc4bba4, rotation: -side * 0.32 });
+    const relicBase = plinth(root, x, relicZ, 1.12, 0.55);
     const relic = side < 0
-      ? amphora(root, [x, 0.16, 2.1])
-      : placeModel('brokenColumn', root, [x, 0.15, 2.1], { height: 1.3, width: 0.95, color: 0xdbbd9f });
-    for (const object of [column, bust, relic]) {
+      ? amphora(root, [x, 0.7, relicZ])
+      : placeModel('brokenColumn', root, [x, 0.7, relicZ], { height: 1.35, width: 0.87, color: 0xc4bba4 });
+    for (const object of [statueBase, bust, relicBase, relic]) {
       photoSolids.push(object);
       colliders.push(modelCollider(object));
     }
-    placeModel('banner', root, [side * 1.75, 1.65, -5.85], { height: 1.75, width: 0.8 });
-    const shield = box(0.055, 1.15, 0.7, mat.coral, [side * 3.26, 1.9, 3.8], root);
-    outline(shield, 0.45);
-    mesh(new THREE.SphereGeometry(0.11, 8, 6), mat.gold, [side * 3.21, 1.9, 3.8], root);
-    for (const z of [3.46, 4.14]) box(0.015, 1.08, 0.035, mat.gold, [side * 3.22, 1.9, z], root);
+    lights.push(exhibitSpot(root, x, statueZ, 5.17, 10, 1.9));
+    lights.push(exhibitSpot(root, x, relicZ, 5.17, 8, 1.8));
+    // Recessed exhibit bays keep the collections against the perimeter.
+    for (const z of [statueZ, relicZ]) {
+      box(0.065, 2.85, 2.9, dark, [side * (halfWidth - 0.19), 1.65, z], root);
+      for (const edge of [-1.45, 1.45]) box(0.1, 2.85, 0.035, bronze, [side * (halfWidth - 0.25), 1.65, z + edge], root);
+    }
+    box(0.08, 0.13, depth - 0.5, stone, [side * (halfWidth - 0.21), 4.87, 0], root);
+    exhibitLabel(root, side < 0 ? 'ÁNFORA' : 'PIEDRA Y MEMORIA', 'COLECCIÓN ROMANA', [x, 0.51, relicZ + 0.57], 0.85);
+    exhibitLabel(root, 'FIGURA ROMANA', 'ESCULTURA · ESTUDIO', [x, 0.61, statueZ + 0.55], 0.85);
   }
-  const mural = romanMural(root, [3.28, 2.25, -2.8]);
+  for (const z of [-columnZ, -0.45, columnZ]) {
+    box(halfWidth * 2 - 0.4, 0.12, 0.18, dark, [0, 5.26, z], root);
+    for (const x of [-1.55, 1.55]) box(0.08, 0.05, depth - 0.6, dark, [x, 5.33, 0], root);
+  }
+  const mural = romanMural(root, [halfWidth - 0.31, 3.82, -0.7]);
   mural.rotation.y = -Math.PI / 2;
   photoSolids.push(mural);
-  exhibitLabel(root, 'EL ECO DE LA ARENA', 'BRONCE · ROMA ANTIGUA', [0, 0.63, 0.315], 1.25);
-  for (const side of [-1, 1]) exhibitLabel(root, side < 0 ? 'ÁNFORA' : 'PIEDRA Y MEMORIA', 'COLECCIÓN ROMANA', [side * 2.42, 0.5, 2.71], 0.75);
-  const collider = {
-    minX: room.center.x - 0.95, maxX: room.center.x + 0.95,
-    minZ: room.center.y - 1.3, maxZ: room.center.y + 0.4,
+  exhibitLabel(root, 'EL ECO DE LA ARENA', 'CASCO DE GLADIADOR · BRONCE', [0, 0.68, 0.02], 0.9);
+  const setRoomLight = root.userData.setLight as (strength: number) => void;
+  root.userData.setLight = (strength: number) => {
+    setRoomLight(strength);
+    lights.forEach((setLight) => setLight(strength));
   };
-  return { artifact, photoSolids: [base, top, ...photoSolids], colliders: [collider, ...colliders] };
+  root.userData.setLight(0);
+  const collider = {
+    minX: room.center.x - 0.625, maxX: room.center.x + 0.625,
+    minZ: room.center.y - 1.01, maxZ: room.center.y + 0.11,
+  };
+  return { artifact, photoSolids: [base, top, foot, ...photoSolids], colliders: [collider, ...colliders] };
 }
 
 function exhibitLabel(parent: THREE.Object3D, title: string, subtitle: string, position: [number, number, number], width: number): void {
   const canvas = document.createElement('canvas');
   canvas.width = 768; canvas.height = 192;
   const ctx = canvas.getContext('2d')!;
-  ctx.fillStyle = '#f4edda'; ctx.fillRect(0, 0, 768, 192);
+  ctx.fillStyle = '#252d29'; ctx.fillRect(0, 0, 768, 192);
   ctx.strokeStyle = '#b2986f'; ctx.strokeRect(8, 8, 752, 176);
-  ctx.textAlign = 'center'; ctx.fillStyle = '#354044';
+  ctx.textAlign = 'center'; ctx.fillStyle = '#e4d7b7';
   ctx.font = '38px Georgia'; ctx.fillText(title, 384, 85);
   ctx.font = '20px sans-serif'; ctx.fillText(subtitle, 384, 135);
   const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
@@ -96,7 +127,7 @@ function romanMural(parent: THREE.Object3D, position: [number, number, number]):
   ctx.fillStyle = '#bc795d'; ctx.fillRect(509, 216, 13, 122);
   ctx.strokeStyle = '#f3dfb7'; ctx.lineWidth = 14; ctx.strokeRect(15, 15, 994, 482);
   const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace;
-  const mural = mesh(new THREE.PlaneGeometry(3.05, 1.52), new THREE.MeshBasicMaterial({ map: texture }), position, parent);
+  const mural = mesh(new THREE.PlaneGeometry(3.05, 1.52), new THREE.MeshLambertMaterial({ map: texture }), position, parent);
   mural.castShadow = false; return mural;
 }
 

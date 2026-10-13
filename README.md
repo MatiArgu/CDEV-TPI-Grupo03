@@ -1,6 +1,6 @@
 # Museo de viajes en el tiempo
 
-Proyecto de videojuego 3D en primera persona para navegador. El recorrido comienza en el andén de una plaza: al mirar atrás, el portón termina de cerrarse y el tren parte; el museo ficticio inspirado en el Louvre queda enfrente. Casas de uno y dos pisos, jardines y una baranda delimitan el patio. Se puede recibir un panfleto, recorrer el hall con obras y vitrinas y completar Roma en la primera sala de un circuito en U. Las diez salas tienen lugar físico; Egipto y las otras ocho permanecen cerradas hasta instalar sus exhibiciones.
+Proyecto de videojuego 3D en primera persona para navegador. El recorrido comienza en el andén de una plaza: al mirar atrás, el portón termina de cerrarse y el tren parte; el museo ficticio inspirado en el Louvre queda enfrente. Casas de uno y dos pisos, jardines y una baranda delimitan el patio. Se puede recibir un panfleto, recorrer un hall de piedra oscura con obras, vitrinas y luz cálida y completar Roma en la primera sala de un circuito en U. Las diez salas tienen lugar físico; Egipto y las otras ocho permanecen cerradas hasta instalar sus exhibiciones.
 
 ## Ejecutar el prototipo
 

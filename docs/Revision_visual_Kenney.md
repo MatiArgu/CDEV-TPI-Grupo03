@@ -1,5 +1,35 @@
 # Renovación visual con Kenney
 
+## Actualización del interior — referencia de sala romana
+
+La referencia aportada se aplica al hall, la exhibición romana y la arquitectura común de las diez salas: paredes verde carbón, losas de piedra cálida, bases oscuras y molduras de bronce. La geometría sigue siendo low-poly y el sombreado de las piezas es toon. Las áreas WIP comparten los acabados, pero conservan sus puertas cerradas y no incorporan exhibiciones nuevas.
+
+- **Hall:** bóveda opaca y cerrada, casetones oscuros, cuadros que reciben iluminación y vitrinas con focos y haces suaves. Se conservan bancos, esculturas, reloj e itinerario.
+- **Roma:** techo de 5,4 m, columnas altas, esculturas y reliquias sobre pedestales, mural elevado y cartelería oscura. El casco de bronce queda centrado bajo un foco cálido con sombra; dos pasos laterales permiten rodearlo.
+- **Luz:** la luz general disminuye gradualmente al atravesar el acceso. El ajuste se realiza antes de cada render, también al fotografiar. Los cinco focos de Roma acompañan el encendido de la puerta y se apagan al completar la sala. El patio conserva su iluminación diurna.
+- **Coste:** las losas se dibujan con instancias; los haces son geometría transparente suave. Solo el foco central agrega un mapa de sombras de 512 × 512. Las luces generales de salas que no se abrieron permanecen fuera del render. No se agregaron modelos, texturas externas ni dependencias.
+
+### Capturas actuales
+
+| Vista | Captura |
+| --- | --- |
+| Hall desde el acceso | [Hall](capturas/atmosfera-hall-entrada.png) |
+| Vitrinas y pared lateral | [Detalle del hall](capturas/atmosfera-hall-lateral.png) |
+| Sala de Roma | [Exhibición](capturas/atmosfera-roma.png) |
+| Polaroid en el juego | [Visor](capturas/atmosfera-visor.png) |
+| Foto y regreso | [Panfleto 1/10](capturas/atmosfera-completado.png) |
+
+### Verificación de esta actualización
+
+- Tipos y compilación correctos. El bundle principal queda en aproximadamente 713 kB antes de gzip; continúa el aviso de Vite por superar 500 kB.
+- Revisión en Chrome de hall, Roma, patio y visor a altura de jugador. Recorrido completo con guardia, panfleto, puerta 01, foto inválida, foto válida, viaje, recogida y regreso con 1/10; pausa y reanudación correctas.
+- Casco centrado, en un borde y parcialmente tapado: aceptados. Fuera de cuadro y totalmente oculto: rechazados.
+- Controlador real: ocho aproximaciones a bases/columnas, bloqueo del pedestal central y circulación por sus dos lados. Rayos verticales verifican techo en las diez salas y cuatro puntos del hall.
+- Los cinco focos comienzan apagados, se encienden con la sala y vuelven a cero al completarla. Las otras nueve salas conservan sus luces generales deshabilitadas.
+
+Estas pruebas usan Chrome con SwiftShader; la fluidez con GPU real sigue pendiente de medición. Las capturas y notas siguientes documentan revisiones anteriores.
+
+
 Esta revisión mejora los escenarios y las herramientas existentes de las etapas 1 a 6. Se mantiene el recorrido jugable del [plan](Plan_de_desarrollo.md): inicio, guardia, panfleto, primera puerta, exhibición, fotografía, naumaquia y regreso con Roma completada. Egipto y las otras ocho épocas permanecen WIP.
 
 ## Actualización: jardines, portón y galería principal

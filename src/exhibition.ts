@@ -1,0 +1,85 @@
+import * as THREE from 'three';
+import { box, mesh, toon } from './visual';
+
+// Shared museum finishes; the outdoor scenes keep their daylight palette.
+export const exhibition = {
+  wall: 0x303732, panel: 0x222924, ceiling: 0x202723,
+  stone: 0xaaa28b, bronze: 0x9c8153, plinth: 0x252d29,
+};
+
+export function stoneFloor(parent: THREE.Object3D, width: number, depth: number, x: number, z: number, y: number): void {
+  const columns = Math.ceil(width / 1.25);
+  const rows = Math.ceil(depth / 1.6);
+  const tiles = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 0.035, 1), toon(exhibition.stone), columns * rows);
+  const tile = new THREE.Object3D();
+  const color = new THREE.Color();
+  for (let row = 0; row < rows; row++) for (let column = 0; column < columns; column++) {
+    const index = row * columns + column;
+    tile.position.set(x - width / 2 + (column + 0.5) * width / columns, y, z - depth / 2 + (row + 0.5) * depth / rows);
+    tile.scale.set(width / columns - 0.025, 1, depth / rows - 0.025);
+    tile.updateMatrix();
+    tiles.setMatrixAt(index, tile.matrix);
+    tiles.setColorAt(index, color.setScalar(0.76 + ((column * 17 + row * 13) % 7) * 0.035));
+  }
+  tiles.receiveShadow = true;
+  tiles.name = 'losas-museo';
+  parent.add(tiles);
+}
+
+/** A real downlight plus a subtle, feathered cone; no postprocessing or shadow map per lamp. */
+export function exhibitSpot(parent: THREE.Object3D, x: number, z: number, height: number, intensity: number, radius: number, beam = false, shadows = false): (strength: number) => void {
+  const housing = toon(exhibition.plinth);
+  mesh(new THREE.CylinderGeometry(0.2, 0.25, 0.18, 12), housing, [x, height + 0.12, z], parent);
+  const glow = new THREE.MeshBasicMaterial({ color: 0xffebbe });
+  mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.012, 16), glow, [x, height + 0.025, z], parent).castShadow = false;
+  const light = new THREE.SpotLight(0xffe6b7, intensity, height + 2, Math.atan(radius / height), 0.7, 1.3);
+  light.position.set(x, height, z);
+  light.target.position.set(x, 0, z);
+  light.castShadow = shadows;
+  if (shadows) {
+    light.shadow.mapSize.set(512, 512);
+    light.shadow.camera.near = 0.15;
+    light.shadow.normalBias = 0.025;
+  }
+  parent.add(light, light.target);
+  let haze: THREE.Mesh | undefined;
+  if (beam) {
+    const geometry = new THREE.CylinderGeometry(0.1, radius, height - 0.2, 32, 1, true);
+    const material = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, side: THREE.DoubleSide,
+      uniforms: { strength: { value: 1 } },
+      vertexShader: `varying vec2 vUv; varying vec3 vNormal; varying vec3 vView;
+        void main() { vUv = uv; vec4 p = modelViewMatrix * vec4(position, 1.0);
+          vNormal = normalize(normalMatrix * normal); vView = -p.xyz;
+          gl_Position = projectionMatrix * p; }`,
+      fragmentShader: `varying vec2 vUv; varying vec3 vNormal; varying vec3 vView;
+        uniform float strength;
+        void main() { float edge = pow(abs(dot(normalize(vNormal), normalize(vView))), 1.5);
+          float fade = smoothstep(0.0, 0.22, vUv.y) * (1.0 - smoothstep(0.88, 1.0, vUv.y));
+          gl_FragColor = vec4(1.0, 0.9, 0.64, 0.065 * edge * fade * strength); }`,
+    });
+    haze = mesh(geometry, material, [x, height / 2 + 0.1, z], parent);
+    haze.castShadow = haze.receiveShadow = false;
+    haze.name = 'haz-de-luz';
+  }
+  return (strength) => {
+    light.intensity = intensity * strength;
+    // Keep the light in the shader list during the short opening flicker.
+    glow.color.set(0xffebbe).multiplyScalar(0.12 + strength * 0.88);
+    if (haze) {
+      haze.visible = strength > 0;
+      (haze.material as THREE.ShaderMaterial).uniforms.strength.value = strength;
+    }
+  };
+}
+
+export function plinth(parent: THREE.Object3D, x: number, z: number, width: number, height: number): THREE.Group {
+  const group = new THREE.Group();
+  group.position.set(x, 0.15, z);
+  parent.add(group);
+  const dark = toon(exhibition.plinth);
+  box(width, 0.1, width, dark, [0, 0.05, 0], group);
+  box(width * 0.87, height - 0.16, width * 0.87, dark, [0, height / 2, 0], group);
+  box(width, 0.08, width, toon(exhibition.bronze), [0, height - 0.04, 0], group);
+  return group;
+}
