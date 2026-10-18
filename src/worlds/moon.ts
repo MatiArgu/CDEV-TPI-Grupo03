@@ -8,6 +8,7 @@ import type { GalleryRoom } from '../museum/gallery';
 import type { Collider } from '../game/collision';
 import { createRouteHelp } from '../game/help';
 import { disposeHistoricalScene, type HistoricalWorld } from './history';
+import type { Arrival } from './ride';
 
 export function installMoonExhibit(room:GalleryRoom) {
   const root=new THREE.Group();room.root.add(root);root.rotation.y=room.center.x>0?Math.PI:0;
@@ -114,5 +115,15 @@ export function createMoonWorld():HistoricalWorld {
       } else if(state==='finished') camera.position.copy(seat).add(new THREE.Vector3(0,9,0));
     },
   };
-  return {id:'luna',scene,colliders,spawn:new THREE.Vector2(0,14),artifact:new THREE.Vector3(0,1.5,-26.1),boarding,helpActive:guide.active,update:guide.update,dispose:()=>disposeHistoricalScene(scene)};
+  // Touchdown seen from the cabin, through the open hatch; then time freezes at the first step.
+  let descent=0;
+  const arrival:Arrival={facing:Math.PI,cut:true,update(delta,camera){
+    descent+=delta;
+    const t=Math.min(descent/6,1);
+    ship.root.position.y=22*(1-t)**3;ship.hatch.position.x=t<1?1.3:0;
+    if(delta>0)sun.shadow.needsUpdate=true;
+    camera.position.copy(seat).add(new THREE.Vector3(0,ship.root.position.y+(t===1?Math.max(0,.6-(descent-6))*.04*Math.sin(descent*40):0),0));
+    return descent>7;
+  }};
+  return {id:'luna',scene,colliders,spawn:new THREE.Vector2(0,14),arrival,artifact:new THREE.Vector3(0,1.5,-26.1),boarding,helpActive:guide.active,update:guide.update,dispose:()=>disposeHistoricalScene(scene)};
 }

@@ -7,6 +7,8 @@ import { disposeHistoricalScene, type HistoricalWorld } from './history';
 import type { Collider } from '../game/collision';
 import { addSky } from '../rendering/sky';
 import { box, mesh, outline, toon } from '../rendering/visual';
+import { camel } from '../rendering/mounts';
+import { createRide } from './ride';
 
 export function createScarab(parent: THREE.Object3D, position: [number, number, number], scale = 1): THREE.Group {
   const root = new THREE.Group(); root.name = 'escarabajo-egipcio'; root.position.set(...position); root.scale.setScalar(scale); parent.add(root);
@@ -157,7 +159,9 @@ export function createEgyptWorld(): HistoricalWorld {
     const pyramid = mesh(new THREE.ConeGeometry(15, 17, 4), dark, [side * 32, 8.3, -36 - side * 5], scene); pyramid.rotation.y = Math.PI / 4;
     for (let i = 0; i < 4; i++) placeModel('rock', scene, [side * (14 + i * 3), 0, 3 - i * 10], { height: 1.1 + i * 0.3, width: 2.3 });
   }
-  solid(23, 2.4, 0.6, 0, 15);
+  // The camel enters through a gap in the low front wall; an unseen bar keeps the court closed.
+  for (const side of [-1, 1]) solid(9.8, 2.4, 0.6, side * 6.6, 15);
+  colliders.push({ minX: -1.7, maxX: 1.7, minZ: 14.7, maxZ: 15.3 });
   solid(23, 7.2, 0.6, 0, -29);
   solid(0.6, 7.2, 21, -9.55, -18.5); solid(0.6, 7.2, 21, 9.55, -18.5);
   box(19.7, 0.35, 21.6, dark, [0, 7.35, -18.4], scene).receiveShadow = false;
@@ -190,5 +194,8 @@ export function createEgyptWorld(): HistoricalWorld {
   for (let i = 0; i < 70; i++) dustPositions.push(Math.sin(i * 6.7) * 7.5, 0.6 + i % 13 * 0.38, -10 - (i * 17 % 180) / 10);
   const dust = new THREE.Points(new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(dustPositions, 3)), new THREE.PointsMaterial({ color: 0xf4d9a1, size: 0.035, transparent: true, opacity: 0.5, depthWrite: false })); scene.add(dust);
   const guide = createRouteHelp(scene, [10, 6, 2, -2, -6, -10, -14, -18, -22].map((z) => [0, 0.17, z]), new THREE.MeshBasicMaterial({ color: 0xb8cfc0 }));
-  return { id: 'egipto', scene, colliders, spawn: new THREE.Vector2(0, 12), artifact: artifact.position.clone(), helpActive: guide.active, update: guide.update, dispose: () => disposeHistoricalScene(scene) };
+  const spawn = new THREE.Vector2(0, 12);
+  const mount = camel(scene);
+  const arrival = createRide({ vehicle: mount.root, path: [[0, 0, 36], [0, 0, 26], [0, 0, 16.8]], seat: mount.seat, duration: 6.5, spawn, gait: mount.gait, onMove: () => { sun.shadow.needsUpdate = true; } });
+  return { id: 'egipto', scene, colliders, spawn, arrival, artifact: artifact.position.clone(), helpActive: guide.active, update: guide.update, dispose: () => disposeHistoricalScene(scene) };
 }

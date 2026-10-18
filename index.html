@@ -41,6 +41,16 @@
       <div id="held-description" class="sr-only" role="status" hidden></div>
       <div id="time-transition" class="time-transition" aria-hidden="true" hidden><span>UN INSTANTE FUERA DEL TIEMPO</span></div>
       <div id="game-toast" class="game-toast" role="status" hidden></div>
+      <section id="finale" class="finale" role="dialog" aria-labelledby="finale-title" hidden>
+        <canvas id="finale-confetti" class="finale-confetti" aria-hidden="true"></canvas>
+        <div class="finale-card">
+          <span class="finale-eyebrow">MUSEO DE VIAJES EN EL TIEMPO</span>
+          <h2 id="finale-title">¡Visita completa!</h2>
+          <p class="finale-count">5 de 5 épocas descubiertas</p>
+          <p>La visita termina, la historia no: cada recuerdo guarda mucho más para leer y descubrir. Hasta la próxima exposición.</p>
+          <div class="finale-actions"><span><kbd>M</kbd> Nueva visita</span><span><kbd>E</kbd> Seguir recorriendo</span></div>
+        </div>
+      </section>
       <section id="game-menu" class="game-overlay" role="dialog" aria-labelledby="menu-title">
         <div class="game-card">
           <span class="game-eyebrow">MUSEO DE VIAJES EN EL TIEMPO / LA LLEGADA</span>
@@ -48,7 +58,16 @@
           <p id="menu-text">Acabás de bajar del tren. El museo te espera al otro lado de la plaza. Acercate al guardia: él tiene algo para vos.</p>
           <button id="menu-button" class="game-button" type="button">Comenzar visita <span aria-hidden="true">↗</span></button>
           <div class="pause-options"><button id="sound-button" type="button" aria-pressed="true">Sonido: activado</button><button id="restart-button" type="button">Reiniciar visita</button></div>
-          <small>WASD caminar · Shift correr · Mouse mirar · E interactuar · M panfleto · C Polaroid · Clic fotografiar · Escape pausar</small>
+          <dl class="controls-list" aria-label="Controles">
+            <div><dt><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></dt><dd>Caminar</dd></div>
+            <div><dt><kbd>⇧ Shift</kbd></dt><dd>Correr</dd></div>
+            <div><dt>Mouse / trackpad</dt><dd>Mirar</dd></div>
+            <div><dt><kbd>E</kbd></dt><dd>Interactuar</dd></div>
+            <div><dt><kbd>M</kbd></dt><dd>Panfleto</dd></div>
+            <div><dt><kbd>C</kbd></dt><dd>Polaroid</dd></div>
+            <div><dt>Clic</dt><dd>Fotografiar</dd></div>
+            <div><dt><kbd>Esc</kbd></dt><dd>Pausa</dd></div>
+          </dl>
         </div>
       </section>
       <div id="error" class="error" hidden></div>

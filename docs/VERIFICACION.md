@@ -35,8 +35,9 @@ node scripts/qa/performance.mjs review
 1. Recorrer patio, hall y las cinco salas; fotografiar un artefacto, completar cada mundo y regresar. La foto inválida se revela sin iniciar viaje.
 2. Aceptar un objeto visible en un extremo del encuadre y rechazarlo si está totalmente ocluido, fuera de cuadro o invisible. Ignorar obstáculos visualmente ocultos.
 3. Mostrar ayuda tras 20 segundos solo si falta recuperar el objeto; mantenerla sobre una ruta transitable.
-4. Abrir el panfleto y liberar cursor; pausar durante puertas, revelado, transición y ascenso lunar sin avanzar esos procesos.
-5. Recargar con fotos completadas y conservarlas por ID; reordenar Egipto y Luna en `areaOrder` y comprobar que sala, letrero, panfleto y guardado sigan asociados al ID. Reiniciar solo la partida del juego.
-6. Comprobar límites transitables, techos desde abajo y liberación/recreación de escenas tras cada regreso.
+4. Abrir el panfleto y liberar cursor; pausar durante puertas, revelado, transición, llegada en vehículo, salida dorada y ascenso lunar sin avanzar esos procesos. Durante la llegada solo se puede mirar.
+5. Completar la quinta época muestra el cartel dorado; E lo cierra y abre el panfleto, M reinicia la visita desde el patio.
+6. Recargar con fotos completadas y conservarlas por ID; reordenar Egipto y Luna en `areaOrder` y comprobar que sala, letrero, panfleto y guardado sigan asociados al ID. Reiniciar solo la partida del juego.
+7. Comprobar límites transitables, techos desde abajo y liberación/recreación de escenas tras cada regreso.
 
 El [barrido del 13 de octubre de 2026](historico/Revision_end_to_end.md) registra los resultados y capturas de la última revisión. Es evidencia de esa versión, no una garantía automática para cambios futuros.

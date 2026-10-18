@@ -6,7 +6,12 @@ import { museumLayout } from './museum/museumLayout';
 import { createMuseumScene } from './museum/museum';
 import { createPamphlet } from './game/pamphlet';
 import { createPlayerControls } from './game/player';
-import { artifactVisible, captureFrame, createCameraModel, getFrameBounds, playShutter } from './game/photo';
+import { artifactVisible, captureFrame, createCameraModel, getFrameBounds } from './game/photo';
+import { createMusic } from './game/music';
+import { createFinale } from './game/finale';
+import { createDeparture } from './game/departure';
+import type { Arrival } from './worlds/ride';
+import { playCelestial, playDoor, playFanfare, playLaunch, playPaper, playShutter, playStep, playTimeWarp, setSoundEnabled } from './game/sound';
 import { createRomeWorld } from './worlds/rome';
 import { createMoonWorld } from './worlds/moon';
 import { createSpaceHelmet } from './game/spaceHelmet';
@@ -119,13 +124,20 @@ try {
     const completedAreas = new Set<AreaId>(Object.keys(saved.photos) as AreaId[]);
     const visitedRooms = new Set<string>();
     let history: HistoricalWorld | null = null;
+    let arrival: Arrival | null = null;
+    let cutting = false;
+    let departure: ReturnType<typeof createDeparture> | null = null;
+    const finale = createFinale();
     let acceptedPhoto: string | null = null;
     let museumColliders = [...world.colliders];
     let toastTimer = 0;
     let soundEnabled = true;
+    const music = createMusic();
+    startButton.addEventListener('click', () => music.play(history?.id ?? 'museo'));
+    startButton.addEventListener('click', () => showHelp(help.textContent!));
     const soundButton = document.querySelector<HTMLButtonElement>('#sound-button')!;
     soundButton.addEventListener('click', () => {
-      const enabled = soundEnabled = !soundEnabled; soundButton.textContent = enabled ? 'Sonido: activado' : 'Sonido: silenciado';
+      const enabled = soundEnabled = !soundEnabled; setSoundEnabled(enabled); music.setEnabled(enabled); soundButton.textContent = enabled ? 'Sonido: activado' : 'Sonido: silenciado';
       soundButton.setAttribute('aria-pressed', String(enabled));
     });
     document.querySelector('#restart-button')!.addEventListener('click', () => {
@@ -142,7 +154,9 @@ try {
         const room = world.rooms.find((item) => item.id === id)!;
         room.root.userData.setLight(0); visitedRooms.add(id);
       }
-      document.querySelector('#menu-text')!.textContent = 'Tu panfleto y tus recuerdos están guardados. Continuá la visita desde el hall.';
+      document.querySelector('#menu-text')!.textContent = completedAreas.size === areaOrder.length
+        ? 'Recorriste las cinco épocas y tus recuerdos siguen en el panfleto. El museo queda abierto hasta la próxima exposición.'
+        : 'Tu panfleto y tus recuerdos están guardados. Continuá la visita desde el hall.';
     }
     function persist(): boolean {
       saved.hasPamphlet = hasPamphlet;
@@ -150,6 +164,14 @@ try {
     }
     const toGuard = new THREE.Vector3();
     const toDoor = new THREE.Vector3();
+
+    let helpTimer = 0;
+    function showHelp(text: string): void {
+      help.textContent = text;
+      help.classList.add('visible');
+      window.clearTimeout(helpTimer);
+      helpTimer = window.setTimeout(() => { help.classList.remove('visible'); }, 6000);
+    }
 
     function showToast(message: string): void {
       toast.textContent = message;
@@ -172,7 +194,7 @@ try {
       const photo = captureFrame(renderer, viewfinder);
       const valid = artifactVisible(camera, exhibit.artifact, exhibit.photoSolids, frame);
       cameraModel.root.visible = true;
-      if (soundEnabled) playShutter();
+      playShutter();
       await cameraModel.develop(photo, `${areaCatalog[active].name.toUpperCase()} / ${String(world.rooms.find((room) => room.id === active)!.number).padStart(2, '0')}`);
       if (!valid) {
         cameraModel.hidePrint();
@@ -182,18 +204,40 @@ try {
       }
       acceptedPhoto = await photoForSave(photo);
       controls.setCinematic('transition');
+      playTimeWarp();
       await playTimeTransition(transition, async () => {
         cameraModel.hidePrint();
         scene.remove(camera);
         museumColliders = [...world.colliders];
         history = active === 'luna' ? createMoonWorld() : active === 'japon' ? createJapanWorld() : active === 'egipto' ? createEgyptWorld() : active === 'medieval' ? createMedievalWorld() : createRomeWorld();
         setSpacesuit(active === 'luna');
+        music.play(active);
         scene = history.scene;
         scene.add(camera);
         world.colliders.splice(0, world.colliders.length, ...history.colliders);
-        controls.teleport(history.spawn);
+        arrival = history.arrival ?? null;
+        departure = history.boarding ? null : createDeparture(history.scene, history.artifact);
+        controls.teleport(history.spawn, arrival?.facing ?? 0);
         updateScene = (delta) => {
           if (!history) return;
+          if (arrival) {
+            const finished = arrival.update(app.dataset.playState === 'riding' ? delta : 0, camera);
+            if (finished && !cutting) {
+              if (arrival.cut) {
+                cutting = true;
+                void playTimeTransition(transition, () => { arrival = null; cutting = false; controls.teleport(history!.spawn, 0); }, () => app.dataset.playState === 'paused').then(beginExploring);
+              } else {
+                arrival = null;
+                controls.teleport(history.spawn, camera.rotation.y);
+                beginExploring();
+              }
+            }
+            return;
+          }
+          if (departure?.running()) {
+            if (departure.update(app.dataset.playState === 'transition' ? delta : 0)) void finishHistory();
+            return;
+          }
           const boarding = history.boarding;
           if (boarding && ['climbing', 'launching', 'finished'].includes(boarding.state())) {
             const result = boarding.update(app.dataset.playState === 'transition' ? delta : 0, camera);
@@ -201,7 +245,7 @@ try {
               world.colliders.splice(0, world.colliders.length, ...boarding.cabinColliders);
               controls.teleport(new THREE.Vector2(boarding.seat.x, boarding.seat.z), 0, boarding.seat.y - 1.7);
               controls.finishCinematic(false);
-              help.textContent = 'MIRAR CON EL MOUSE · E INICIAR ASCENSO · ESC PAUSAR';
+              showHelp('MIRAR CON EL MOUSE · E INICIAR ASCENSO · ESC PAUSAR');
               showToast('Ya estás a bordo. Iniciá el ascenso desde los controles frente a vos.');
             } else if (result === 'return') void finishHistory();
             return;
@@ -213,9 +257,19 @@ try {
         };
         await renderer.compileAsync(scene, camera);
       }, () => app.dataset.playState === 'paused');
+      if (arrival) {
+        controls.finishCinematic(false);
+        controls.setCinematic('riding');
+        if (active === 'luna') playLaunch();
+      } else beginExploring();
+    }
+
+    function beginExploring(): void {
+      if (!history) return;
+      const active = history.id;
       controls.finishCinematic(false);
-      help.textContent = active === 'luna' ? 'WASD CAMINAR · E SUBIR A LA NAVE · M PANFLETO · ESC PAUSAR' : 'WASD CAMINAR · SHIFT CORRER · E RECOGER · M PANFLETO · ESC PAUSAR';
-      showToast(active === 'luna' ? 'El primer paso quedó detenido en el tiempo. Explorá el alunizaje y subí a la nave para iniciar el regreso.' : active === 'japon' ? 'El jardín quedó detenido en el tiempo. Cruzá el puente y buscá la máscara bajo el techo del templo.' : active === 'egipto' ? 'El tiempo se detuvo en el templo. Buscá el escarabajo del sol.' : active === 'medieval' ? 'El tiempo se detuvo en la fortaleza. Recuperá la llave junto al portón.' : 'El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
+      showHelp(active === 'luna' ? 'WASD CAMINAR · E SUBIR A LA NAVE · M PANFLETO · ESC PAUSAR' : 'WASD CAMINAR · SHIFT CORRER · E RECOGER · M PANFLETO · ESC PAUSAR');
+      showToast(active === 'luna' ? 'El primer paso quedó detenido en el tiempo. Explorá el alunizaje y subí a la nave para iniciar el regreso.' : active === 'japon' ? 'El jardín quedó detenido en el tiempo. Seguí los torii y buscá la máscara bajo el techo del templo.' : active === 'egipto' ? 'El tiempo se detuvo en el templo. Buscá el escarabajo del sol.' : active === 'medieval' ? 'El tiempo se detuvo en la fortaleza. Recuperá la llave junto al portón.' : 'El tiempo se detuvo en la naumaquia. Seguí la pasarela.');
     }
 
     async function finishHistory(): Promise<void> {
@@ -223,11 +277,13 @@ try {
       const completedId = history.id;
       let stored = true;
       controls.setCinematic('transition');
+      playTimeWarp();
       await playTimeTransition(transition, () => {
         scene.remove(camera);
         history!.dispose();
         history = null;
         setSpacesuit(false);
+        music.play('museo');
         scene = world.scene;
         scene.add(camera);
         world.colliders.splice(0, world.colliders.length, ...museumColliders);
@@ -241,12 +297,33 @@ try {
         controls.teleport(new THREE.Vector2(room.center.x, room.center.y + (facesSouth ? -4.15 : 4.15)), facesSouth ? Math.PI : 0);
         updateScene = updateMuseum;
       }, () => app.dataset.playState === 'paused');
+      const next = areaOrder.find((id) => availabilityOf(id) === 'playable' && !completedAreas.has(id));
+      const unsaved = 'Recuerdo recuperado. El navegador no pudo guardarlo: se conservará solo durante esta visita.';
+      if (!next) {
+        // Stay in the cinematic state: the golden card waits for M (new visit) or E (keep exploring).
+        finale.show();
+        playFanfare();
+        if (!stored) showToast(unsaved);
+        return;
+      }
       controls.finishCinematic(false);
       controls.openPamphlet();
-      help.textContent = 'WASD CAMINAR · SHIFT CORRER · M PANFLETO · E PUERTAS · ESC PAUSAR';
-      const next = areaOrder.find((id) => availabilityOf(id) === 'playable' && !completedAreas.has(id));
-      showToast(!stored ? 'Recuerdo recuperado. El navegador no pudo guardarlo: se conservará solo durante esta visita.' : next ? `${areaCatalog[completedId].name}: recuerdo recuperado. El próximo viaje está en ${areaCatalog[next].name}.` : `${completedAreas.size} viajes, ${completedAreas.size} recuerdos. La visita continúa: podés recorrer las cinco salas.`);
+      showHelp('WASD CAMINAR · SHIFT CORRER · M PANFLETO · E PUERTAS · ESC PAUSAR');
+      showToast(!stored ? unsaved : `${areaCatalog[completedId].name}: recuerdo recuperado. El próximo viaje está en ${areaCatalog[next].name}.`);
     }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.repeat || !finale.ready() || app.dataset.playState !== 'transition') return;
+      if (event.code === 'KeyM') {
+        if (resetProgress()) location.reload();
+        else showToast('No se pudo borrar el guardado del navegador.');
+      } else if (event.code === 'KeyE') {
+        finale.hide();
+        controls.finishCinematic(false);
+        controls.openPamphlet();
+        showHelp('WASD CAMINAR · SHIFT CORRER · M PANFLETO · E PUERTAS · ESC PAUSAR');
+      }
+    });
 
     const controls = createPlayerControls(camera, renderer.domElement, {
       colliders: world.colliders,
@@ -257,17 +334,21 @@ try {
           if (boarding?.state() === 'cabin') {
             if (gaze.z > -0.25) return null;
             return { label: 'Iniciar ascenso · volver al museo', activate: () => {
-              controls.setCinematic('transition'); boarding.launch();
+              controls.setCinematic('transition'); boarding.launch(); playLaunch();
               showToast('Ascenso iniciado. El viaje de regreso te lleva al museo.');
             } };
           }
           const toArtifact = history.artifact.clone().sub(new THREE.Vector3(position.x, 1.7, position.y));
           if (Math.hypot(toArtifact.x, toArtifact.z) > (boarding ? 1.9 : 2.9) || gaze.dot(toArtifact.normalize()) < 0.38) return null;
           if (boarding) return { label: 'Subir por la escalerilla de la nave', activate: () => {
-            controls.setCinematic('transition'); boarding.start(camera);
+            controls.setCinematic('transition'); boarding.start(camera); playCelestial();
             showToast('Subiendo a la cabina…');
           } };
-          return { label: `Recoger ${areaCatalog[history.id].artifact.toLowerCase()}`, activate: () => { void finishHistory(); } };
+          return { label: `Recoger ${areaCatalog[history.id].artifact.toLowerCase()}`, activate: () => {
+            playCelestial();
+            controls.setCinematic('transition');
+            departure!.start();
+          } };
         }
         if (!hasPamphlet) {
           toGuard.set(world.guard.x - position.x, world.guard.y - 1.7, world.guard.z - position.y);
@@ -276,10 +357,11 @@ try {
             label: 'Recibir panfleto del guardia',
             activate: () => {
               hasPamphlet = true;
+              playPaper();
               app.dataset.storyState = 'pamphlet-received';
               world.openEntrance();
               const stored = persist();
-              help.textContent = 'WASD CAMINAR · SHIFT CORRER · C POLAROID · M PANFLETO · E PUERTAS · ESC PAUSAR';
+              showHelp('WASD CAMINAR · SHIFT CORRER · C POLAROID · M PANFLETO · E PUERTAS · ESC PAUSAR');
               showToast(stored ? 'El guardia te entregó el panfleto. Pulsá M para desplegarlo.' : 'Pulsá M para abrir el panfleto. El navegador no pudo guardar esta visita.');
             },
           };
@@ -293,7 +375,7 @@ try {
         const target = door.target;
         return {
           label: `Abrir ${target ? areaCatalog[target].name : 'regreso al hall'}`,
-          activate: () => { world.openDoor(door); },
+          activate: () => { world.openDoor(door); playDoor(); },
         };
       },
       canOpenPamphlet: () => hasPamphlet,
@@ -307,9 +389,12 @@ try {
         app.dataset.mode = equipped ? 'photo' : 'player';
       },
       onShutter: () => { void takePhoto(); },
+      onStep: () => playStep(history?.id ?? 'museo'),
       onPamphletChange: (open) => {
         pamphletView.setOpen(open);
+        playPaper();
         if (open) toast.hidden = true;
+        else showHelp(help.textContent!);
         if (open && !hasSeenMap) {
           hasSeenMap = true;
           app.dataset.storyState = 'map-seen';
@@ -350,6 +435,7 @@ try {
     updateControls = (delta) => {
       updatePlayer(delta);
       if (spaceHelmet.root.visible) spaceHelmet.update();
+      music.update(delta, app.dataset.playState === 'paused');
       const running = app.dataset.playState !== 'paused' && app.dataset.playState !== 'intro';
       if (running) {
         pamphletView.update(delta);

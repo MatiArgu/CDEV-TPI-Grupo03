@@ -234,21 +234,3 @@ export function createCameraModel(camera: THREE.PerspectiveCamera) {
     },
   };
 }
-
-let audioContext: AudioContext | null = null;
-export function playShutter(): void {
-  audioContext ??= new AudioContext();
-  const now = audioContext.currentTime;
-  for (const [delay, frequency] of [[0, 220], [0.07, 125]] as const) {
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    oscillator.type = 'square';
-    oscillator.frequency.setValueAtTime(frequency, now + delay);
-    gain.gain.setValueAtTime(0.0001, now + delay);
-    gain.gain.exponentialRampToValueAtTime(0.08, now + delay + 0.008);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + 0.055);
-    oscillator.connect(gain).connect(audioContext.destination);
-    oscillator.start(now + delay);
-    oscillator.stop(now + delay + 0.06);
-  }
-}

@@ -45,7 +45,7 @@ async function view(name){report.views[name]=await evaluate(`(()=>{const g=windo
 async function paused(){await press('Escape');await pause(120);assert.equal((await state()).play,'paused');const p=(await state()).pos;await run(40);assert.deepEqual((await state()).pos,p);}
 async function resume(){await click('#menu-button');await run(1);assert.equal((await state()).lock,true);}
 async function openDoor(){assert.equal((await state()).interact,true,JSON.stringify(await state()));await press('KeyE');await run(40);}
-async function waitState(play,location){for(let i=0;i<200;i++){await run(1);const s=await state();if(s.play===play&&(!location||s.location===location))return;await pause(100);}throw Error('State timeout '+JSON.stringify(await state()));}
+async function waitState(play,location){for(let i=0;i<400;i++){await run(1);const s=await state();if(s.play===play&&(!location||s.location===location))return;await pause(100);}throw Error('State timeout '+JSON.stringify(await state()));}
 async function photograph(id,invalid=false){
   await press('KeyC');await pause(500);await run(30);assert.equal((await state()).play,'camera');await view(id+'-sala');
   if(invalid){const yaw=(await state()).yaw;await face(yaw+Math.PI);await click('#scene canvas');await run(80);await pause(100);assert.equal((await state()).play,'camera');assert.equal(await evaluate('Object.keys(window.__game.getProgress().photos).length'),0);await face(yaw);}
@@ -54,10 +54,12 @@ async function photograph(id,invalid=false){
   if(id==='egipto'){
     await paused();const before=await evaluate('window.__game.getHistory()?.id || null');const opacity=await evaluate("document.querySelector('#time-transition').style.opacity");await pause(2200);assert.equal(await evaluate('window.__game.getHistory()?.id || null'),before);assert.equal(await evaluate("document.querySelector('#time-transition').style.opacity"),opacity);await resume();
   }
+  // Arrival ride: the player can only look around until stepping down.
+  await waitState('riding',id+'-history');await run(70);await view(id+'-viaje');const riding=(await state()).pos;await key('KeyW');await run(5);await key('KeyW','keyUp');assert.equal((await state()).play,'riding');assert.notDeepEqual((await state()).pos,riding);
   await waitState('playing',id+'-history');await view(id+'-llegada');
   assert.equal(await evaluate('window.__game.getHistory().helpActive()'),false);await run(401);assert.equal(await evaluate('window.__game.getHistory().helpActive()'),true);
 }
-async function collect(id,count){assert.equal((await state()).interact,true,JSON.stringify(await state()));await view(id+'-destino');await press('KeyE');await waitState('pamphlet');await run(35);assert.equal((await state()).lock,false);assert.equal(await evaluate('Object.keys(window.__game.getProgress().photos).length'),count);assert.match(await evaluate("document.querySelector('#held-description').textContent"),new RegExp(count+'/5'));report.journeys.push(id);await press('KeyM');await pause(120);await run(1);}
+async function collect(id,count){assert.equal((await state()).interact,true,JSON.stringify(await state()));await view(id+'-destino');await press('KeyE');await run(20);assert.equal((await state()).play,'transition');await view(id+'-salida');await waitState('pamphlet');await run(35);assert.equal((await state()).lock,false);assert.equal(await evaluate('Object.keys(window.__game.getProgress().photos).length'),count);assert.match(await evaluate("document.querySelector('#held-description').textContent"),new RegExp(count+'/5'));report.journeys.push(id);await press('KeyM');await pause(120);await run(1);}
 try {
 await resume();await view('patio');
 await face(Math.PI);await run(40);await view('estacion');await paused();await resume();await face(0);
@@ -75,7 +77,9 @@ await walkTo(5.1,-49.6);await walkTo(5.1,-39.6);await walkTo(7.05,-39.6);await f
 await press('KeyM');await run(35);await view('guantes');await press('KeyM');await pause(150);await walkTo(0,-24.6);assert.match((await state()).prompt,/Subir/);await press('KeyE');await run(15);await paused();await resume();await run(60);
 assert.equal(await evaluate('window.__game.getHistory().boarding.state()'),'cabin');assert.ok(Math.abs((await state()).pos[1]-3.25)<.03);await view('luna-cabina');
 await press('KeyM');await run(35);await press('KeyM');await pause(150);await run(1);assert.ok(Math.abs((await state()).pos[1]-3.25)<.03);assert.equal(await evaluate('Object.keys(window.__game.getProgress().photos).length'),4);
-await press('KeyE');await run(12);await paused();await resume();await run(60);await waitState('pamphlet');await run(35);await view('cinco-recuerdos');report.journeys.push('luna');
+await press('KeyE');await run(12);await paused();await resume();await run(60);
+for(let i=0;i<200&&await evaluate("document.querySelector('#finale').hidden");i++){await run(1);await pause(100);}
+assert.equal(await evaluate("document.querySelector('#finale').hidden"),false);await pause(1600);await view('final-dorado');await press('KeyE');await waitState('pamphlet');assert.equal(await evaluate("document.querySelector('#finale').hidden"),true);await run(35);await view('cinco-recuerdos');report.journeys.push('luna');
 assert.equal(await evaluate("window.__game.camera.getObjectByName('visor-casco-espacial').visible"),false);assert.equal(await evaluate('window.__game.camera.far'),100);assert.equal(await evaluate('Object.keys(window.__game.getProgress().photos).length'),5);
 await press('KeyM');await pause(150);await walkTo(5.1,-33.6);await walkTo(5.1,-23.6);await walkTo(7.05,-23.6);await face(Math.PI);await openDoor();await walkTo(7.05,-18.5);await walkTo(0,-18.5);await view('regreso-hall');
 await reload();assert.equal(await evaluate('Object.keys(window.__game.getProgress().photos).length'),5);await resume();await press('KeyM');await run(35);await view('recarga-cinco');

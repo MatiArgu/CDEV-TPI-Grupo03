@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import type { Collider } from './collision';
 
-type Mode = 'intro' | 'playing' | 'paused' | 'pamphlet' | 'camera' | 'revealing' | 'transition';
+type Mode = 'intro' | 'playing' | 'paused' | 'pamphlet' | 'camera' | 'revealing' | 'transition' | 'riding';
+type Cinematic = 'revealing' | 'transition' | 'riding';
 
 export type Interaction = { label: string; activate: () => void };
 
@@ -15,11 +16,12 @@ type PlayerOptions = {
   onCameraChange?: (equipped: boolean) => void;
   canEquipCamera?: () => boolean;
   onShutter?: () => void;
+  onStep?: () => void;
 };
 
 export type PlayerControls = {
   update: (delta: number) => void;
-  setCinematic: (mode: 'revealing' | 'transition') => void;
+  setCinematic: (mode: Cinematic) => void;
   finishCinematic: (cameraEquipped: boolean) => void;
   openPamphlet: () => void;
   teleport: (start: THREE.Vector2, facing?: number, floorHeight?: number) => void;
@@ -56,7 +58,7 @@ export function createPlayerControls(
   let bobPhase = 0;
   let bobOffset = 0;
   let cameraEquipped = false;
-  let cinematic: 'revealing' | 'transition' | null = null;
+  let cinematic: Cinematic | null = null;
 
   camera.rotation.order = 'YXZ';
   camera.position.set(position.x, eyeHeight, position.y);
@@ -112,7 +114,8 @@ export function createPlayerControls(
     if (mode !== 'playing') menuText.textContent = 'No se pudo capturar el mouse. Hacé clic para intentarlo de nuevo.';
   });
   document.addEventListener('mousemove', (event) => {
-    if ((mode !== 'playing' && mode !== 'camera') || document.pointerLockElement !== canvas) return;
+    // Riders can look around while the arrival vehicle carries them.
+    if ((mode !== 'playing' && mode !== 'camera' && mode !== 'riding') || document.pointerLockElement !== canvas) return;
     yaw -= event.movementX * 0.0022;
     pitch = THREE.MathUtils.clamp(pitch - event.movementY * 0.0022, -1.35, 1.35);
   });
@@ -195,7 +198,11 @@ export function createPlayerControls(
     }
     heldLook = THREE.MathUtils.damp(heldLook, mode === 'pamphlet' ? -0.48 - pitch : 0, 7, step);
     camera.rotation.set(pitch + heldLook, yaw, 0);
-    if (moving) bobPhase += step * 10;
+    if (moving) {
+      const stride = Math.floor(bobPhase / Math.PI);
+      bobPhase += step * 10;
+      if (Math.floor(bobPhase / Math.PI) !== stride) options.onStep?.();
+    }
     const targetBob = moving ? Math.sin(bobPhase) * 0.025 : 0;
     bobOffset = THREE.MathUtils.lerp(bobOffset, targetBob, Math.min(step * 14, 1));
     camera.position.set(position.x, eyeHeight + floorHeight + bobOffset, position.y);
@@ -214,7 +221,7 @@ export function createPlayerControls(
         cameraEquipped = equipped;
         options.onCameraChange?.(equipped);
       }
-      if (mode === 'revealing' || mode === 'transition') setMode(equipped ? 'camera' : 'playing');
+      if (mode === 'revealing' || mode === 'transition' || mode === 'riding') setMode(equipped ? 'camera' : 'playing');
     },
     openPamphlet,
     teleport: (start, facing = 0, floor = 0) => {

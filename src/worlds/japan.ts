@@ -9,6 +9,8 @@ import type { GalleryRoom } from '../museum/gallery';
 import type { Collider } from '../game/collision';
 import { createRouteHelp } from '../game/help';
 import { disposeHistoricalScene, type HistoricalWorld } from './history';
+import { rowboat } from '../rendering/mounts';
+import { createRide } from './ride';
 
 export function installJapanExhibit(room: GalleryRoom) {
   const root=new THREE.Group();room.root.add(root);
@@ -125,6 +127,10 @@ export function createJapanWorld():HistoricalWorld {
   for(let i=0;i<160;i++){dummy.position.set(Math.sin(i*13.7)*11,.19,16-(i*3.17)%56);dummy.rotation.set(-Math.PI/2,0,i);dummy.updateMatrix();petals.setMatrixAt(i,dummy.matrix);}scenery.add(petals);
   for(const side of [-1,1])for(const z of [0,1.4]){const ripple=mesh(new THREE.TorusGeometry(.7,.014,3,20),m.paper,[side*5.5,-.145,z],scenery);ripple.rotation.x=-Math.PI/2;ripple.castShadow=false;}
   batchStaticMeshes(scenery);
-  const guide=createRouteHelp(scene,[15,11,7,3,0,-4,-9,-14,-19,-24,-29,-34,-38].map(z=>[0,.2,z]),new THREE.MeshBasicMaterial({color:0xf4dfb8}));
-  return {id:'japon',scene,colliders,spawn:new THREE.Vector2(0,17),artifact:artifact.position.clone(),helpActive:guide.active,update:guide.update,dispose:()=>disposeHistoricalScene(scene)};
+  const guide=createRouteHelp(scene,[0,-4,-9,-14,-19,-24,-29,-34,-38].map(z=>[0,.2,z]),new THREE.MeshBasicMaterial({color:0xf4dfb8}));
+  // A lantern boat drifts down the stream and stops beside the bridge.
+  const spawn=new THREE.Vector2(0,1);
+  const boat=rowboat(scene,0x9b6a45);box(.05,.9,.05,m.wood,[.5,.95,1.3],boat.root);mesh(new THREE.IcosahedronGeometry(.17,1),new THREE.MeshBasicMaterial({color:0xffd9a0}),[.5,1.45,1.3],boat.root);
+  const arrival=createRide({vehicle:boat.root,path:[[-21,-.2,1.2],[-12,-.2,.6],[-3.4,-.2,1]],seat:boat.seat,duration:6.5,spawn,gait:boat.gait,bob:.03,onMove:()=>{sun.shadow.needsUpdate=true;}});
+  return {id:'japon',scene,colliders,spawn,arrival,artifact:artifact.position.clone(),helpActive:guide.active,update:guide.update,dispose:()=>disposeHistoricalScene(scene)};
 }
