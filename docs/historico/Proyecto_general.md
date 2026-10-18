@@ -170,7 +170,7 @@ Debe parecer un papel desplegable ilustrado, como un mapa turístico.
 El panfleto contiene:
 
 - Un mapa simplificado del museo.
-- Diez áreas históricas numeradas.
+- Cinco áreas históricas numeradas.
 - Indicación visual del área actualmente activa.
 - Las áreas completadas.
 - Espacios donde se colocan las fotografías Polaroid y los artefactos recolectados.

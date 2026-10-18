@@ -77,7 +77,7 @@ export function createPamphlet(camera: THREE.PerspectiveCamera) {
           c.fillStyle = areaCatalog[id].accent; c.fillRect(78, y - 34, 68, 58);
           text(String(index + 1).padStart(2, '0'), 86, y + 6, 39);
           text(areaCatalog[id].name.replace(' · 1969', ''), 177, y, 44);
-          text(completed.has(id) ? 'RECUERDO RECUPERADO' : id === active ? 'VIAJE DISPONIBLE · POLAROID' : availabilityOf(id) === 'playable' ? `PRIMERO SALA ${String(areaOrder.indexOf(active!) + 1).padStart(2, '0')}` : 'VISITABLE · VIAJE EN PREPARACIÓN', 177, y + 46, 27, '#766952');
+          text(`SALA ${String(index + 1).padStart(2, '0')} · ${completed.has(id) ? 'RECUERDO RECUPERADO' : id === active ? 'VIAJE DISPONIBLE · POLAROID' : availabilityOf(id) === 'playable' ? 'VIAJE PENDIENTE' : 'VISITABLE · VIAJE EN PREPARACIÓN'}`, 177, y + 46, 27, '#766952');
           c.strokeStyle = '#c8bca1'; c.beginPath(); c.moveTo(80, y + 76); c.lineTo(930, y + 76); c.stroke();
         });
         const memories = areaOrder.filter((id) => completed.has(id));
@@ -120,12 +120,12 @@ export function createPamphlet(camera: THREE.PerspectiveCamera) {
           text('Cinco épocas te esperan al otro lado', 80, 1130, 33);
           text('de la fotografía. Empezá por la sala 01.', 80, 1180, 33);
         }
-        text(`${completed.size} / ${areaOrder.length} RECUERDOS${!active ? " · VISITA COMPLETADA" : ""}`, 80, 1260, 28);
+        text(`${completed.size} / ${areaOrder.length} RECUERDOS${!active ? " · HASTA LA PRÓXIMA EXPOSICIÓN" : ""}`, 80, 1260, 28);
         text('M GUARDAR · CLIC VOLVER AL RECORRIDO', 80, 1320, 28);
       }
       texture.needsUpdate = true;
     }
-    description.textContent = `Panfleto: ${areaOrder.map((id, i) => `${i + 1}. ${areaCatalog[id].name}, ${completed.has(id) ? 'completada' : id === active ? 'viaje disponible' : availabilityOf(id) === 'playable' ? 'viaje posterior al área activa' : 'visitable, viaje en preparación'}`).join('. ')}. ${completed.size}/${areaOrder.length} recuerdos. M o clic para guardar.`;
+    description.textContent = `Panfleto: ${areaOrder.map((id, i) => `Sala ${i + 1}, ${areaCatalog[id].name}: ${completed.has(id) ? 'completada' : id === active ? 'viaje disponible' : availabilityOf(id) === 'playable' ? 'viaje pendiente' : 'visitable, viaje en preparación'}`).join('. ')}. ${completed.size}/${areaOrder.length} recuerdos. M o clic para guardar.`;
   }
   redraw();
   foreground(root);

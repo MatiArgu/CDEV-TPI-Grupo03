@@ -29,9 +29,12 @@ docs/                    Guías vigentes, histórico y capturas
 | IDs, disponibilidad y orden de las cinco épocas | [game/catalog.ts](../src/game/catalog.ts): `areaOrder` es la fuente única del orden |
 | Movimiento, colisiones, Pointer Lock, modos y pausa | [game/player.ts](../src/game/player.ts); contrato de límites en [collision.ts](../src/game/collision.ts) |
 | Captura, encuadre, oclusión, Polaroid y disparo | [game/photo.ts](../src/game/photo.ts) |
+| Efectos de sonido sintetizados (obturador, pasos, puertas, papel, artefacto, viaje, despegue) | [game/sound.ts](../src/game/sound.ts) |
+| Música por época con fundidos y loop cruzado; créditos en [CREDITOS.md](../public/assets/music/CREDITOS.md) | [game/music.ts](../src/game/music.ts) |
 | Panfleto 3D, mapa y recuerdos | [game/pamphlet.ts](../src/game/pamphlet.ts); manos y capa visual en [held.ts](../src/game/held.ts) |
 | Guardado por ID y reinicio | [game/progress.ts](../src/game/progress.ts), clave `museo-del-tiempo:v1` |
 | Transiciones y ayuda tras 20 segundos | [game/timeTransition.ts](../src/game/timeTransition.ts), [help.ts](../src/game/help.ts) |
+| Llegada en vehículo, salida dorada y cartel final 5/5 | [worlds/ride.ts](../src/worlds/ride.ts), [rendering/mounts.ts](../src/rendering/mounts.ts) (camello, caballo, bote), [game/departure.ts](../src/game/departure.ts), [game/finale.ts](../src/game/finale.ts) |
 | Composición del museo, fachada y acceso | [museum/museum.ts](../src/museum/museum.ts) |
 | Planta, posiciones, puertas y luces de salas | [museum/museumLayout.ts](../src/museum/museumLayout.ts), [gallery.ts](../src/museum/gallery.ts) |
 | Patio, casas, andén y tren | [museum/courtyard.ts](../src/museum/courtyard.ts); jardines y pirámide en `museum.ts` |

@@ -30,7 +30,9 @@ npm run build
 | Levantar o guardar el panfleto | M; también clic para guardarlo |
 | Pausar | Escape |
 
-El guardia entrega el panfleto en el hall. Abrirlo libera el cursor; cerrarlo vuelve a capturarlo. Una foto inválida también se revela y permite reintentar. La ayuda de ruta aparece después de 20 segundos en cada viaje. **Reiniciar visita** borra, previa confirmación, la partida guardada por este juego en ese navegador. Una visita histórica interrumpida antes del regreso no se registra como completa.
+Los controles son los mismos en Mac: Shift es la tecla ⇧ y el clic del trackpad sirve para fotografiar. WASD se lee por posición física, así que funciona con cualquier distribución de teclado. La pantalla de inicio y la pausa muestran la tabla de teclas; durante el juego, los controles de cada momento aparecen arriba unos segundos.
+
+El guardia entrega el panfleto en el hall. Abrirlo libera el cursor; cerrarlo vuelve a capturarlo. Una foto inválida también se revela y permite reintentar. Cada viaje empieza con una llegada en vehículo (camello, bote, caballo, bote con farol y alunizaje) en la que solo se puede mirar, y termina con una espiral dorada al recoger el artefacto. La ayuda de ruta aparece después de 20 segundos en cada viaje. Al completar las cinco épocas aparece un cartel dorado: **M** empieza una nueva visita desde el patio (borra el progreso y el guardia vuelve a entregar el panfleto) y **E** permite seguir recorriendo el museo. **Reiniciar visita** borra, previa confirmación, la partida guardada por este juego en ese navegador. Una visita histórica interrumpida antes del regreso no se registra como completa.
 
 ## Documentación
 

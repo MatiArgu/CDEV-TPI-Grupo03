@@ -8,6 +8,8 @@ import { addSky } from '../rendering/sky';
 import { createRouteHelp } from '../game/help';
 import { createRomanHelmet as helmet } from '../rendering/helmet';
 import type { Collider } from '../game/collision';
+import { rowboat } from '../rendering/mounts';
+import { createRide } from './ride';
 import { box, inkStroke, materials as mat, mesh, outline, palette, toon } from '../rendering/visual';
 
 export function installRomeExhibit(room: GalleryRoom): { artifact: THREE.Object3D; photoSolids: THREE.Object3D[]; colliders: Collider[] } {
@@ -285,8 +287,12 @@ export function createRomeWorld(): HistoricalWorld {
     { minX: -1.9, maxX: 1.9, minZ: -21.3, maxZ: -21.05 },
     { minX: -1.15, maxX: 1.15, minZ: -20.03, maxZ: -17.97 },
   ];
+  // A rowboat crosses the flooded arena and stops beside the walkway.
+  const spawn = new THREE.Vector2(0, 7.5);
+  const boat = rowboat(scene);
+  const arrival = createRide({ vehicle: boat.root, path: [[-14, 0, 9], [-8, 0, 11.5], [-3.6, 0, 9.5], [-3.4, 0, 7.2]], seat: boat.seat, duration: 6.5, spawn, gait: boat.gait, bob: 0.03 });
   return {
-    id: 'roma', scene, colliders, spawn: new THREE.Vector2(0, 7.5), artifact: artifact.position.clone(),
+    id: 'roma', scene, colliders, spawn, arrival, artifact: artifact.position.clone(),
     helpActive: guide.active,
     update: guide.update,
     dispose: () => disposeHistoricalScene(scene),

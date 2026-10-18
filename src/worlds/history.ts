@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import type { AreaId } from '../game/catalog';
 import type { Collider } from '../game/collision';
+import type { Arrival } from './ride';
 
 export type HistoricalWorld = {
   id: AreaId;
@@ -8,6 +9,7 @@ export type HistoricalWorld = {
   colliders: Collider[];
   spawn: THREE.Vector2;
   artifact: THREE.Vector3;
+  arrival?: Arrival;
   boarding?: {
     state: () => 'outside' | 'climbing' | 'cabin' | 'launching' | 'finished';
     seat: THREE.Vector3;

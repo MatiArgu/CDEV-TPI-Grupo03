@@ -8,6 +8,8 @@ import type { GalleryRoom } from '../museum/gallery';
 import type { Collider } from '../game/collision';
 import { createRouteHelp } from '../game/help';
 import { disposeHistoricalScene, type HistoricalWorld } from './history';
+import { horse } from '../rendering/mounts';
+import { createRide, type Arrival } from './ride';
 
 function ancientKey(parent: THREE.Object3D, position: [number, number, number]): THREE.Group {
   const artifact = new THREE.Group(); artifact.position.set(...position); parent.add(artifact);
@@ -95,9 +97,17 @@ export function createMedievalWorld(): HistoricalWorld {
     }
   }
   for (const z of [13.2, -25.2]) {
+    if (z > 0) continue;
     placeModel('castleGate', architecture, [0, 0.13, z], { width: 1.25, height: 6.8, depth: 6, rotation: Math.PI / 2 });
     box(3.8, 4.2, 0.15, wood, [0, 2.15, z + 0.1], architecture);
   }
+  // Arrival gatehouse: an open arch whose portcullis rises into the masonry for the rider.
+  const gatehouse = toon(0xb8bca5);
+  for (const side of [-1, 1]) box(1.1, 8, 1.4, gatehouse, [side * 2.45, 4.13, 13.2], architecture);
+  box(6, 3.6, 1.4, gatehouse, [0, 6.33, 13.2], architecture);
+  const arrivalDoor = box(3.8, 4.4, 0.15, wood, [0, 2.33, 13.2], scene); arrivalDoor.receiveShadow = false;
+  for (let x = -1.5; x <= 1.5; x += 0.75) box(0.08, 4.4, 0.2, trim, [x, 0, 0], arrivalDoor);
+  box(3.6, 0.04, 36, toon(0x9c8a6a), [0, 0, 31.6], scene).castShadow = false;
   // Keep wall shading clean on the large, stretched low-poly faces. They still cast onto the court.
   architecture.traverse((object) => { if (object instanceof THREE.Mesh) object.receiveShadow = false; });
   batchStaticMeshes(architecture);
@@ -116,5 +126,19 @@ export function createMedievalWorld(): HistoricalWorld {
   const artifact = ancientKey(scene, [0, 1.8, -20]);
   box(0.045, 0.5, 0.045, trim, [0, 1.55, -20.12], scene);
   const guide = createRouteHelp(scene, [9, 5, 1, -3, -7, -11, -15, -17.5].map((z) => [0, 0.17, z]), new THREE.MeshBasicMaterial({ color: 0xf4dbaa }));
-  return { id: 'medieval', scene, colliders, spawn: new THREE.Vector2(0, 10.5), artifact: artifact.position.clone(), helpActive: guide.active, update: guide.update, dispose: () => disposeHistoricalScene(scene) };
+  const spawn = new THREE.Vector2(0, 10.5);
+  const mount = horse(scene);
+  colliders.push({ minX: -2.1, maxX: -1.1, minZ: 10.4, maxZ: 12.8 });
+  const ride = createRide({ vehicle: mount.root, path: [[0, 0, 40], [0, 0, 24], [0, 0.05, 14.5], [-1.6, 0.14, 11.6]], seat: mount.seat, duration: 7, spawn, gait: mount.gait, onMove: () => { sun.shadow.needsUpdate = true; } });
+  let elapsed = 0;
+  const arrival: Arrival = {
+    facing: ride.facing,
+    update(delta, camera) {
+      elapsed += delta;
+      // The gate rises as the rider approaches and drops again once inside.
+      arrivalDoor.position.y = 2.33 + 3.4 * THREE.MathUtils.smoothstep(elapsed, 2.5, 4) * (1 - THREE.MathUtils.smoothstep(elapsed, 7.2, 8.2));
+      return ride.update(delta, camera) && elapsed > 8.2;
+    },
+  };
+  return { id: 'medieval', scene, colliders, spawn, arrival, artifact: artifact.position.clone(), helpActive: guide.active, update: guide.update, dispose: () => disposeHistoricalScene(scene) };
 }

@@ -48,8 +48,8 @@ h1 em { color: #4eaa76; font-style: normal; }
 .interaction-prompt kbd { display: inline-block; margin-right: 7px; padding: 2px 5px; border: 1px solid #354044; background: #e98569; font: inherit; }
 .player-help { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); color: #354044; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-align: center; white-space: nowrap; text-shadow: 0 1px #f0f2e5; }
 .game-overlay { position: absolute; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: flex-start; padding: clamp(28px, 8vw, 130px); background: linear-gradient(90deg, #35404408, #35404465); }
-#app[data-mode="player"] .game-overlay { justify-content: flex-end; }
-#app[data-mode="photo"] .game-overlay { justify-content: flex-end; }
+#app[data-mode="player"] .game-overlay,
+#app[data-mode="photo"] .game-overlay { justify-content: center; background: #35404440; }
 .game-card { width: min(440px, 100%); padding: 38px 36px; border: 1px solid #b49d76; border-top: 4px solid #cc8869; background: #f5f0e4; box-shadow: 0 18px 65px #243d3a40, inset 0 0 0 8px #ebe3d0; }
 .game-eyebrow { color: #5d786f; font-size: 10px; font-weight: 700; letter-spacing: .15em; }
 .game-card h1, .game-card h2 { margin: 24px 0 20px; font: 400 clamp(38px, 4.4vw, 62px)/1.02 Georgia, serif; letter-spacing: -.045em; text-transform: none; }
@@ -59,7 +59,11 @@ h1 em { color: #4eaa76; font-style: normal; }
 .game-button:hover { background: #f0a084; }
 .game-button:disabled { cursor: wait; opacity: .65; }
 .game-button:focus-visible { outline: 2px solid #354044; outline-offset: 4px; }
-.game-card small { display: block; margin-top: 17px; color: #5d786f; font-size: 11px; line-height: 1.5; }
+.controls-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; margin: 20px 0 0; padding-top: 16px; border-top: 1px solid #d8ccb3; color: #536c67; font-size: 12px; }
+.controls-list div { display: flex; align-items: center; gap: 8px; }
+.controls-list dt { display: flex; flex-shrink: 0; gap: 3px; color: #354044; font-weight: 700; }
+.controls-list dd { margin: 0; }
+.controls-list kbd { min-width: 20px; padding: 2px 5px; border: 1px solid #354044; border-bottom-width: 2px; border-radius: 3px; background: #fff9ec; color: #354044; font-family: inherit; font-size: 11px; font-weight: 700; line-height: 1.3; text-align: center; }
 .game-toast { position: absolute; z-index: 3; top: 25px; left: 50%; transform: translateX(-50%); max-width: min(580px, calc(100vw - 40px)); padding: 11px 18px; border: 1.5px solid #354044; background: #f0f2e5ed; box-shadow: 4px 4px 0 #35404463; color: #354044; font-size: 13px; font-weight: 700; text-align: center; }
 .photo-hud { display: none; position: absolute; inset: 0; z-index: 2; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .16s; }
 #app[data-mode="photo"] .photo-hud { display: flex; }
@@ -78,8 +82,21 @@ h1 em { color: #4eaa76; font-style: normal; }
   .view-controls { left: 50%; transform: translateX(-50%); bottom: 24px; }
 }
 
-/* The paper, camera instructions and developing photo live in the 3D scene. */
-.player-help { display: none; }
+/* Controls appear briefly when they change, then give the scene back. */
+.player-help { top: 22px; bottom: auto; padding: 7px 14px; background: #23322abe; color: #f4e8d1; text-shadow: none; opacity: 0; transition: opacity .6s; }
+.player-help.visible { opacity: 1; }
+
+/* Golden closing card: above the HUD and toasts, below the pause menu. */
+.finale { position: absolute; inset: 0; z-index: 6; display: flex; align-items: center; justify-content: center; padding: 24px; background: radial-gradient(circle at 50% 45%, #fff2c440, #35404480); }
+.finale-confetti { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.finale-card { position: relative; width: min(470px, 100%); padding: 40px 38px 34px; border: 2px solid #9c7426; background: linear-gradient(150deg, #fff6d6, #f3d78e 48%, #dcae54); box-shadow: 0 0 0 7px #f7e3a8, 0 0 0 9px #9c7426, 0 22px 70px #4a351299, 0 0 90px #f2c75c88; color: #4a3512; text-align: center; animation: finale-in .9s cubic-bezier(.2, 1.4, .4, 1); }
+.finale-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .18em; color: #7a5a1c; }
+.finale-card h2 { margin: 16px 0 6px; font: 400 clamp(36px, 4.2vw, 54px)/1.05 Georgia, serif; letter-spacing: -.03em; }
+.finale-count { margin: 0 0 16px; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #7a5a1c; }
+.finale-card p { margin: 0 auto 14px; max-width: 360px; font-size: 14px; line-height: 1.6; }
+.finale-actions { display: flex; justify-content: center; gap: 22px; margin-top: 22px; padding-top: 18px; border-top: 1px solid #b48c3c; font-size: 13px; font-weight: 700; }
+.finale-actions kbd { display: inline-block; min-width: 24px; margin-right: 6px; padding: 3px 7px; border: 1px solid #4a3512; border-bottom-width: 3px; border-radius: 4px; background: #fffaf0; font-family: inherit; }
+@keyframes finale-in { from { opacity: 0; transform: scale(.82) translateY(14px); } to { opacity: 1; transform: none; } }
 .crosshair { width: 3px; height: 3px; opacity: .65; }
 .interaction-prompt { border: 0; background: #23322abe; color: #f4e8d1; font-weight: 500; }
 .interaction-prompt kbd { border: 1px solid #c5b89b; background: transparent; }
